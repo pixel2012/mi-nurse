@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/breast/index",
+    "pages/mine/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "#FFF",
+    "navigationBarBackgroundColor": "#FF4578",
+    "navigationBarTitleText": "咪小护",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/breast/index",
+        "text": "智能美胸",
+        "color": "#000",
+        "selectedColor": "#000",
+        "iconPath": "common/img/breast.png",
+        "selectedIconPath": "common/img/breast-active.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "咪小护",
+        "color": "#000",
+        "selectedColor": "#ooo",
+        "iconPath": "common/img/index.png",
+        "selectedIconPath": "common/img/index-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "本宫",
+        "color": "#000",
+        "selectedColor": "#ooo",
+        "iconPath": "common/img/mine.png",
+        "selectedIconPath": "common/img/mine-active.png"
+      }
+    ]
+  },
+  "debug": false
+}
