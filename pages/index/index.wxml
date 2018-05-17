@@ -1,1 +1,57 @@
-<view>咪小护</view>
+<view class='mi-container'>
+  <view class='mi-box'>
+    <view class='row'>
+      <view class='col-50'>
+        <view class='mi-status'>
+          <image src='img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
+          <text class='mi-text'>未连接</text>
+        </view>
+        <view class='mi-status'>
+          <image src='img/status.png' style="width:18rpx;height:18rpx;"></image>
+          <text class='mi-text'>未同步</text>
+        </view>
+      </view>
+      <view class='col-50 mi-r'>
+        <view class='mi-status'>
+          <image src='img/cell.png' style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>未知</text>
+        </view>
+      </view>
+    </view>
+    <view class='mi-meter'>
+      <image src='img/meter.png' style='width:462rpx;height:243rpx;'></image>
+      <view class='mi-score-box'>
+        <view class='mi-score-title'>健康指数</view>
+        <text class='mi-score'>00.0</text>
+        <text class='mi-score-unit'>分</text>
+      </view>
+    </view>
+    <view class='mi-block'>
+      <view class='mi-button'>立即连接</view>
+    </view>
+  </view>
+  <view class='mi-tem-box row'>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上外</view>
+      <view class='mi-lt-tep'>未知</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上内</view>
+      <view class='mi-lt-tep'>未知</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上内</view>
+      <view class='mi-lt-tep'>未知</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上外</view>
+      <view class='mi-lt-tep'>未知</view>
+    </view>
+  </view>
+
+
+</view>

@@ -1,8 +1,119 @@
-.block{
-  margin:20rpx;
-  box-sizing:border-box;
+page {
+  height: 100%;
 }
-.title,.value{
-  font-size: 25rpx;
-  text-align:left;
+
+.mi-container {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #faf4f6;
+}
+
+.mi-box {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10rpx 30rpx 60rpx;
+  background: #fff;
+}
+
+.mi-row {
+  /* justify-content:center; */
+}
+
+.mi-status {
+  display: inline-block;
+  margin-right: 20rpx;
+}
+
+.mi-status:last-child {
+  margin-right: 0;
+}
+
+.mi-status image {
+  vertical-align: middle;
+  margin-right: 10rpx;
+}
+
+.mi-text {
+  font-size: 24rpx;
+}
+
+.mi-r {
+  text-align: right;
+}
+
+.mi-meter {
+  display: block;
+  text-align: center;
+  margin-top: 80rpx;
+  position: relative;
+}
+
+.mi-score-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin: 0 auto;
+}
+
+.mi-score-title {
+  color: #888;
+  font-size: 30rpx;
+  margin-bottom: 10rpx;
+}
+
+.mi-score {
+  color: #888;
+  font-size: 60rpx;
+  vertical-align: bottom;
+}
+
+.mi-score-unit {
+  color: #353535;
+  font-size: 30rpx;
+  margin-left: 20rpx;
+}
+
+.mi-block {
+  margin-top: 100rpx;
+  text-align: center;
+}
+
+.mi-button {
+  display: inline-block;
+  color: #ff4578;
+  border: 1px solid #ff4578;
+  width: 308rpx;
+  padding: 10rpx;
+  text-align: center;
+  font-size: 30rpx;
+  border-radius: 8rpx;
+}
+
+.mi-tc {
+  text-align: center;
+}
+
+.mi-tem-box {
+  background-color: #fff;
+  margin-top: 30rpx;
+  padding: 30rpx 0;
+}
+
+.mi-lt-pos {
+  display: block;
+  width: 100%;
+  font-size: 28rpx;
+  color: #353535;
+  line-height: 36rpx;
+  margin-top: 10rpx;
+}
+.mi-lt-tep{
+  display: block;
+  width: 100%;
+  font-size: 24rpx;
+  color: #888888;
+  line-height: 36rpx;
 }
