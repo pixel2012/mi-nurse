@@ -110,10 +110,86 @@ page {
   line-height: 36rpx;
   margin-top: 10rpx;
 }
-.mi-lt-tep{
+
+.mi-lt-tep {
   display: block;
   width: 100%;
   font-size: 24rpx;
-  color: #888888;
+  color: #888;
   line-height: 36rpx;
+}
+
+.mi-assess-box {
+  background-color: #fff;
+}
+.mi-assess-wrap{
+border-bottom: 1px solid #F1F1F1;
+padding: 30rpx;
+}
+.mi-assess-title {
+  width: 157rpx;
+  height: 49rpx;
+  font-size: 36rpx;
+  color: #353535;
+  
+}
+.mi-assess-dt{
+  display: inline-block;
+  font-size:28rpx;
+  color:#353535;
+  padding-left: 20rpx;
+  font-weight: bold;
+}
+.blue{
+  border-left: 6rpx solid #12C8C8;
+}
+.yellow{
+  border-left: 6rpx solid #FFB72B;
+}
+.mi-assess-content {
+  box-sizing: border-box;
+  width: 100%;
+  padding:10rpx;
+  font-size: 24rpx;
+  color: #888;
+  padding: 30rpx;
+  background-color: #f7f7f7;
+  margin-top: 20rpx;
+}
+
+.mi-assess-time {
+  text-align: right;
+  font-size: 24rpx;
+  color: #888888;
+  vertical-align: bottom;
+}
+.mi-assess-box2{
+  padding: 20rpx 30rpx;
+}
+.scroll-view_H{
+  display: block;
+  width:100%;
+  white-space: nowrap;
+}
+.scroll-view-item_H{
+  display: inline-block;
+  color: #666;
+  width: 80rpx;
+  text-align: center;
+  padding:20rpx;
+  font-size: 28rpx;
+}
+.scroll-view-item_H.active{
+  color: #FF4578;
+}
+.mi-line{
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding:30rpx;
+  margin-bottom: 100rpx;
+}
+canvas{
+  width: 100%;
+    height: 200px;
 }
