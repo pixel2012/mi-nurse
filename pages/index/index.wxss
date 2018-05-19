@@ -9,40 +9,6 @@ page {
   background-color: #faf4f6;
 }
 
-.mi-box {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10rpx 30rpx 60rpx;
-  background: #fff;
-}
-
-.mi-row {
-  /* justify-content:center; */
-}
-
-.mi-status {
-  display: inline-block;
-  margin-right: 20rpx;
-}
-
-.mi-status:last-child {
-  margin-right: 0;
-}
-
-.mi-status image {
-  vertical-align: middle;
-  margin-right: 10rpx;
-}
-
-.mi-text {
-  font-size: 24rpx;
-}
-
-.mi-r {
-  text-align: right;
-}
-
 .mi-meter {
   display: block;
   text-align: center;

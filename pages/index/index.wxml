@@ -4,17 +4,17 @@
     <view class='row'>
       <view class='col-50'>
         <view class='mi-status'>
-          <image src='img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
+          <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
           <text class='mi-text'>未连接</text>
         </view>
         <view class='mi-status'>
-          <image src='img/status.png' style="width:18rpx;height:18rpx;"></image>
+          <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
           <text class='mi-text'>未同步</text>
         </view>
       </view>
       <view class='col-50 mi-r'>
         <view class='mi-status'>
-          <image src='img/cell.png' style="width:26rpx;height:18rpx;"></image>
+          <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
           <text class='mi-text'>未知</text>
         </view>
       </view>

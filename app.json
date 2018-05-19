@@ -1,8 +1,9 @@
 {
   "pages": [
-    "pages/mine/index",
     "pages/breast/index",
-    "pages/index/index"
+    "pages/index/index",
+   
+    "pages/mine/index"
   ],
   "window": {
     "backgroundTextStyle": "#FFF",

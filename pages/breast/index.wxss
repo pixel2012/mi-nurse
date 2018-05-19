@@ -1,0 +1,35 @@
+.mi-tab-box {
+  border-top: 1rpx solid #7d7d7d;
+  border-bottom: 1rpx solid #7d7d7d;
+}
+
+.mi-tab {
+  text-align: center;
+  color: #7d7d7d;
+  font-size: 30rpx;
+  position: relative;
+  overflow: hidden;
+  padding: 20rpx 0;
+}
+
+.mi-tab:first-child {
+  box-sizing: border-box;
+  border-right: 1rpx solid #7d7d7d;
+}
+
+.mi-tab.active {
+  color: #ff4578;
+}
+.mi-swuper-item{
+  padding:30rpx;
+}
+.swiper-item{
+  width: 650rpx;
+  height: 798rpx;
+}
+.mi-step{
+  padding:20rpx 0;
+}
+.mi-des{
+  padding-left:70rpx;
+}

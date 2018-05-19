@@ -1,1 +1,33 @@
-<view>智能美胸</view>
+<view class='mi-box' style='padding-bottom:10rpx;'>
+  <view class='row'>
+    <view class='col-50'>
+      <view class='mi-status'>
+        <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
+        <text class='mi-text'>未连接</text>
+      </view>
+      <view class='mi-status'>
+        <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
+        <text class='mi-text'>未同步</text>
+      </view>
+    </view>
+    <view class='col-50 mi-r'>
+      <view class='mi-status'>
+        <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
+        <text class='mi-text'>未知</text>
+      </view>
+    </view>
+  </view>
+</view>
+<view class='mi-tab-box row no-gutter'>
+  <view class='col-50 mi-tab active'>智能按摩</view>
+  <view class='col-50 mi-tab'>DIY按摩</view>
+</view>
+<swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px">
+  <swiper-item>
+    <view class='mi-swuper-item'>
+      <view class='mi-step'> <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image> 当前正处于第 <text>2</text> 个循环的第 <text>1</text> 步中</view>
+      <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+      <view class='mi-li'></view>
+    </view>
+  </swiper-item>
+</swiper>
