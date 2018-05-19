@@ -1,8 +1,108 @@
-.block{
-  margin:20rpx;
-  box-sizing:border-box;
+.my-container {
+  padding-top: 1rpx;
+  min-height: 1110rpx;
+  background: #f7f7f7;
+  font-family: "PingFangSC";
 }
-.title,.value{
-  font-size: 25rpx;
-  text-align:left;
+.my-header-box {
+  padding-top: 20rpx;
+  padding-bottom: 38rpx;
+  margin-bottom: 20rpx;
+  background: #fff;
+}
+.my-user-header-box {
+  box-sizing: border-box;
+  width:228rpx;
+  height:228rpx;
+  padding: 12rpx;
+  margin: 0 auto 28rpx;
+  border: 1rpx solid #FDC330;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.my-user-header-img {
+  width:204rpx; 
+  height:204rpx;
+  border-radius: 50%;
+}
+.my-nickname-box {
+  text-align: center;
+}
+.my-nickname-text {
+  display: inline-block;
+  max-width: 60%;
+  line-height: 45rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 32rpx;
+  color: #353535;
+}
+.my-params-box,
+.my-list-box {
+  box-sizing: border-box;
+  width: 680rpx;
+  margin:0 auto;
+  border-radius: 10rpx;
+  background: #fff;
+}
+.my-params-box {
+  margin-bottom: 20rpx;
+  padding: 23rpx 45rpx;
+  display: flex;
+  justify-content: space-between;
+}
+.my-params-item {
+  padding-top: 25rpx;
+  padding-bottom: 17rpx;
+}
+.my-params-item-img-box {
+  width: 58rpx;
+  height: 58rpx;
+  margin: 0 auto 10rpx;
+}
+.my-params-item-img {
+  width: 100%;
+  height: 100%;
+}
+.my-params-item-text-box {
+  line-height: 45rpx;
+  font-size: 32rpx;
+  color: #12C8C8;
+}
+.my-params-item:nth-child(2) .my-params-item-text-box {
+  color: #FFB72B;
+}
+.my-params-item:nth-child(3) .my-params-item-text-box {
+  color: #FF4578;
+}
+.my-list-box {
+  width: 686rpx;
+  background: #f7f7f7;
+}
+.my-list-item {
+  padding: 23rpx 20rpx 23rpx 37rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  margin-bottom: 2rpx;
+}
+.my-list-item:last-child {
+  margin-bottom: 0;
+}
+.my-list-item-left {
+  display: flex;
+  align-items: center;
+}
+.my-list-item-left-text {
+  margin-left: 25rpx;
+  font-size: 28rpx;
+  color: #5E5E5E;
+  line-height: 1;
+}
+
+.my-list-item-right-icon {
+  width: 17rpx;
+  height: 32rpx;
 }

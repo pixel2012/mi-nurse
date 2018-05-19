@@ -1,1 +1,74 @@
-<view>本宫</view>
+<view class='my-container'>
+  <view class='my-header-box'>
+    <view class='my-user-header-box'>
+      <image class="my-user-header-img" src='img/chest-form.png' ></image>
+    </view>
+    <view class='my-nickname-box'>
+      <text class='my-nickname-text'>遇事冷静 脸小三分脸小三分脸小三分脸小三分脸小三分脸小三分</text>
+    </view>
+  </view>
+  <view class='my-params-box'>
+    <view class='my-params-item'>
+      <view class='my-params-item-img-box'>
+        <image class='my-params-item-img' src='img/age.png'></image>
+      </view>
+      <view class='my-params-item-text-box'>
+        <text class='my-params-item-text'>芳龄几何</text>
+      </view>
+    </view>
+    <view class='my-params-item'>
+      <view class='my-params-item-img-box'>
+        <image class='my-params-item-img' src='img/chest-size.png'></image>
+      </view>
+      <view class='my-params-item-text-box'>
+        <text class='my-params-item-text'>窈窕几许</text>
+      </view>
+    </view>
+    <view class='my-params-item'>
+      <view class='my-params-item-img-box'>
+        <image class='my-params-item-img' src='img/chest-form.png'></image>
+      </view>
+      <view class='my-params-item-text-box'>
+        <text class='my-params-item-text'>酥胸形状</text>
+      </view>
+    </view>
+  </view>
+  <view class='my-list-box'>
+    <view class='my-list-item'>
+      <view class='my-list-item-left'>
+        <image class='my-list-item-left-icon' src='img/bluetoot.png' style='width:31rpx;height:34rpx;'></image>
+        <text class='my-list-item-left-text'>蓝牙配置</text>
+      </view>
+      <view class='my-list-item-right'>
+        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      </view>
+    </view>
+    <view class='my-list-item'>
+      <view class='my-list-item-left'>
+        <image class='my-list-item-left-icon' src='img/feedback.png' style='width:31rpx;height:34rpx;'></image>
+        <text class='my-list-item-left-text'>意见反馈</text>
+      </view>
+      <view class='my-list-item-right'>
+        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      </view>
+    </view>
+    <view class='my-list-item'>
+      <view class='my-list-item-left'>
+        <image class='my-list-item-left-icon' src='img/help.png' style='width:31rpx;height:34rpx;'></image>
+        <text class='my-list-item-left-text'>使用帮助</text>
+      </view>
+      <view class='my-list-item-right'>
+        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      </view>
+    </view>
+    <view class='my-list-item'>
+      <view class='my-list-item-left'>
+        <image class='my-list-item-left-icon' src='img/update.png' style='width:31rpx;height:34rpx;'></image>
+        <text class='my-list-item-left-text'>检测新版本</text>
+      </view>
+      <view class='my-list-item-right'>
+        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      </view>
+    </view>
+  </view>
+</view>
