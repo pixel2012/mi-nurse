@@ -1,0 +1,10 @@
+<view class='fb-container'>
+  <textarea bindblur="bindTextAreaBlur" auto-height placeholder="娘娘，有什么不爽就说出来吧..." />
+  <input type='text' placeholder="留个邮箱吧，方便小的给您回复" />
+  <view class='fb-add-img'>
+    <image src='img/add.png' style='width:108rpx;height:108rpx;'></image>
+  </view>
+</view>
+<view class='ble-button-box'>
+  <view class='ble-button'>提交</view>
+</view>

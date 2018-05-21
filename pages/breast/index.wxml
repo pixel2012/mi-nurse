@@ -19,15 +19,288 @@
   </view>
 </view>
 <view class='mi-tab-box row no-gutter'>
-  <view class='col-50 mi-tab active'>智能按摩</view>
-  <view class='col-50 mi-tab'>DIY按摩</view>
+  <view class='col-50 mi-tab active'>
+    <text class='mi-tab-text'>普通按摩</text>
+  </view>
+  <view class='col-50 mi-tab'>
+    <view class='mi-tab-text'>DIY按摩</view>
+  </view>
 </view>
-<swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px">
-  <swiper-item>
-    <view class='mi-swuper-item'>
-      <view class='mi-step'> <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image> 当前正处于第 <text>2</text> 个循环的第 <text>1</text> 步中</view>
-      <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
-      <view class='mi-li'></view>
+<view class='mi-tab-content'>
+  <!--普通按摩  -->
+  <view class='mi-tab-item'>
+  <image src='img/menu.png' class='menu'></image>
+    <view class='mi-tab-menu'>
+      <view class='mi-tab-menu-item active'>
+        <text>盛夏\n如花</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>高山\n流水</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>阵阵\n酥麻</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>小鹿\n乱撞</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>浪花\n迭起</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>琴瑟\n长鸣</text>
+      </view>
+      <view class='mi-tab-menu-item'>
+        <text>随机</text>
+      </view>
     </view>
-  </swiper-item>
-</swiper>
+    <view class='mi-tab-main'>
+      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" next-margin="30px">
+        <!--第一步  -->
+        <swiper-item>
+          <view class='mi-swiper-item'>
+            <view class='mi-step'>
+              <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
+              当前正处于第
+              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>1</text> 步中</view>
+            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩穴位</view>
+                <view class='mi-fun-des'>
+                  <text>膺窗穴、乳中穴</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-des'>
+                  <image src='img/auto-01-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
+                  <image src='img/auto-01-right.png' style='width:80rpx;height:80rpx;'></image>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩作用</view>
+                <view class='mi--fun-des'>
+                  <text>膺窗穴：缓解咳嗽气喘、胸胁胀满、乳痈等。\n 乳中穴：开窍苏厥,改善性冷淡，丰满胸部。哺乳 期女性按摩可充盈乳汁。</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>小贴士</view>
+                <view class='mi--fun-des'>
+                  <text>乳痈变现为：乳房肿胀疼痛，或出现硬块，伴有发 热。多由乳汁排出不畅引起。 开窍苏厥:开窍即疏通，苏厥即醒神。</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+        <!--第二步  -->
+        <swiper-item>
+          <view class='mi-swiper-item'>
+            <view class='mi-step'>
+              <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
+              当前正处于第
+              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>2</text> 步中</view>
+            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩穴位</view>
+                <view class='mi-fun-des'>
+                  <text>乳根穴</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-des'>
+                  <image src='img/auto-02-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
+                  <image src='img/auto-02-right.png' style='width:80rpx;height:80rpx;'></image>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩作用</view>
+                <view class='mi--fun-des'>
+                  <text>紧实胸部肌肉，促进雌性激素分泌，产后催乳</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>小贴士</view>
+                <view class='mi--fun-des'>
+                  <text>乳根穴是调节乳肌的重要穴道，若是胃气不足所致的乳房扁平细小或乳房下坠，则按摩乳根穴隆胸有奇效，产后女性长按此穴有助于乳汁分泌。</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+        <!--第三步  -->
+        <swiper-item>
+          <view class='mi-swiper-item'>
+            <view class='mi-step'>
+              <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
+              当前正处于第
+              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>3</text> 步中</view>
+            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩穴位</view>
+                <view class='mi-fun-des'>
+                  <text>天溪穴</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-des'>
+                  <image src='img/auto-03-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
+                  <image src='img/auto-03-right.png' style='width:80rpx;height:80rpx;'></image>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩作用</view>
+                <view class='mi--fun-des'>
+                  <text>宽胸通乳，令乳腺发达，使胸部变得更丰盈。</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>小贴士</view>
+                <view class='mi--fun-des'>
+                  <text>按摩天溪穴除了丰胸外，还有助于缓解咳嗽、哮喘、支气管炎、痰多、乳痈、少乳等症状。配合按摩膻中穴还可缓解胸胁胀痛。</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+        <!--第四步  -->
+        <swiper-item>
+          <view class='mi-swiper-item'>
+            <view class='mi-step'>
+              <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
+              当前正处于第
+              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>4</text> 步中</view>
+            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩穴位</view>
+                <view class='mi-fun-des'>
+                  <text>膺窗穴、乳中穴、乳根穴、天溪穴</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi--fun-des'>
+                  <text>同1,2,3的分布位置。</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>按摩作用</view>
+                <view class='mi--fun-des'>
+                  <text>开窍苏厥，理气止咳，紧实胸部，宽胸通乳。</text>
+                </view>
+              </view>
+            </view>
+            <view class='mi-step row no-gutter'>
+              <view class='col-10 mi-c'>
+                <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
+              </view>
+              <view class='col-90 mi-fun-box'>
+                <view class='mi-fun-title'>小贴士</view>
+                <view class='mi--fun-des'>
+                  <text>综合膺窗、乳中、乳根、天溪四大穴位的按摩功效，同时疏通足阳明胃经、足太阴脾经，对肠胃、脾脏有保健作用，也有助于预防妇科疾病。</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view class='mi-player-box'>
+        <view class='mi-player-row row'>
+          <view class='col-20 mi-player-control'>
+            <image src='img/play.png' style='width:85rpx;height:85rpx;'></image>
+          </view>
+          <view class='col-80 mi-player-process'>
+            <view class='mi-player-title'>盛夏如花</view>
+            <view class='mi-play-detail row'>
+              <view class='col-25 mi-play-detail-left'>震动强度</view>
+              <view class='col-75 mi-play-detail-right'>
+                <view class='mi-play-line'></view>
+                <image src='img/01-a.png' style='left:0;'></image>
+                <image src='img/02-a.png' style='left:30%;'></image>
+                <image src='img/03-a.png' style='left:55%;'></image>
+                <image src='img/04-a.png' style='left:85%;'></image>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!--DIY按摩  -->
+  <view class='mi-tab-item'></view>
+</view>

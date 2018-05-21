@@ -154,3 +154,15 @@
 .mi-r {
   text-align: right;
 }
+.mi-l {
+  text-align: left;
+}
+.mi-c {
+  text-align: center;
+}
+.mi-main-color{
+  color: #ff4578;
+}
+.mi-main-background-color{
+  background-color: #ff4578;
+}

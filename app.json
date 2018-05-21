@@ -1,9 +1,18 @@
 {
   "pages": [
     "pages/breast/index",
+    "pages/mine/index",
+    "pages/feedback/index",
+    "pages/ble-set/index",
+    "pages/ble-config/index",
+    
+    
+    
+    
     "pages/index/index",
-   
-    "pages/mine/index"
+    
+    "pages/help/index",
+    "pages/update/index"
   ],
   "window": {
     "backgroundTextStyle": "#FFF",

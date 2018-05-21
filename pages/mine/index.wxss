@@ -106,3 +106,117 @@
   width: 17rpx;
   height: 32rpx;
 }
+/*弹框  */
+.my-alert-box{
+  position: fixed;
+  left:0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+}
+.my-figure-box{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 20rpx 20rpx;
+  border-top-left-radius: 10rpx;
+  border-top-right-radius: 10rpx;
+}
+.my-figure-input{
+  display: inline-block;
+  width: 155rpx;
+  height: 64rpx;
+  vertical-align: middle;
+  margin-right: 10rpx;
+  border: 1rpx solid #D7D7D7;
+  font-size: 28rpx;
+  padding: 10rpx;
+  box-sizing: border-box;
+}
+.my-figure-input::placeholder{
+  color: #DFDBC6;
+  font-size: 28rpx;
+}
+.my-figure-unit{
+  display: inline-block;
+  width: 66rpx;
+  height: 36rpx;
+  color: #888;
+  font-size: 32rpx;
+}
+.my-figure-save{
+  display: inline-block;
+  width: 100%;
+  height: 63rpx;
+  padding: 10rpx;
+  line-height: 1.2;
+  font-size: 32rpx;
+  background-color: #fff;
+  color: #FF4578;
+}
+.my-figure-save:after{
+  border: 1rpx solid #FF4578;
+}
+.my-breast-box{
+  height: 100%;
+  background-color: #fff;
+}
+.my-breast-slider-type{
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #FBFAF7;
+  padding: 30rpx;
+  text-align: center;
+}
+.my-breast-slider-type .my-breast-text{
+  font-size: 30rpx;
+  color: #888;
+}
+.my-breast-slider-box{
+  display: inline-block;
+  width: 100%;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  text-align: center;
+}
+.my-breast-slider-box .my-breast-text{
+  font-size: 20rpx;
+  color: #888;
+}
+.my-breast-slider-show{
+  display: inline-block;
+  width: 426rpx;
+  background-color: #F7F7FF;
+  padding: 30rpx 0;
+  border-radius: 16rpx;
+  color: #888;
+  font-size: 28rpx;
+}
+.my-breast-slider-number{
+  color: #FF4578;
+}
+.my-breast-ok-box{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  text-align: center;
+  background-color: #F7F7F7;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+.my-breast-ok-button{
+  color: #888;
+  font-size: 32rpx;
+}
+.my-breast-ok-button.active{
+  color: #FF4578;
+}

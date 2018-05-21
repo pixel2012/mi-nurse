@@ -1,0 +1,11 @@
+<view class='ble-container'>
+  <view class='ble-li'>
+   <input type="number" placeholder='请输入新密码'/>
+  </view>
+  <view class='ble-li'>
+    <input type="number" placeholder='确认输入新密码'/>
+  </view>
+  <view class='ble-button-box'>
+   <view class='ble-button'>确认保存</view>
+  </view>
+</view>

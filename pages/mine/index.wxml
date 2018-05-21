@@ -1,7 +1,7 @@
 <view class='my-container'>
   <view class='my-header-box'>
     <view class='my-user-header-box'>
-      <image class="my-user-header-img" src='img/chest-form.png' ></image>
+      <image class="my-user-header-img" src='img/chest-form.png'></image>
     </view>
     <view class='my-nickname-box'>
       <text class='my-nickname-text'>遇事冷静 脸小三分脸小三分脸小三分脸小三分脸小三分脸小三分</text>
@@ -9,14 +9,16 @@
   </view>
   <view class='my-params-box'>
     <view class='my-params-item'>
-      <view class='my-params-item-img-box'>
-        <image class='my-params-item-img' src='img/age.png'></image>
-      </view>
-      <view class='my-params-item-text-box'>
-        <text class='my-params-item-text'>芳龄几何</text>
-      </view>
+      <picker mode="date" value="{{currentDate}}" fields="month" start="{{dateStart}}" end="{{dataEnd}}" bindchange="bindDateChange">
+        <view class='my-params-item-img-box'>
+          <image class='my-params-item-img' src='img/age.png'></image>
+        </view>
+        <view class='my-params-item-text-box'>
+          <text class='my-params-item-text'>芳龄几何</text>
+        </view>
+      </picker>
     </view>
-    <view class='my-params-item'>
+    <view class='my-params-item' bindtap="bindFigureChange">
       <view class='my-params-item-img-box'>
         <image class='my-params-item-img' src='img/chest-size.png'></image>
       </view>
@@ -24,7 +26,7 @@
         <text class='my-params-item-text'>窈窕几许</text>
       </view>
     </view>
-    <view class='my-params-item'>
+    <view class='my-params-item' bindtap="bindBreastChange">
       <view class='my-params-item-img-box'>
         <image class='my-params-item-img' src='img/chest-form.png'></image>
       </view>
@@ -34,40 +36,100 @@
     </view>
   </view>
   <view class='my-list-box'>
-    <view class='my-list-item'>
-      <view class='my-list-item-left'>
-        <image class='my-list-item-left-icon' src='img/bluetoot.png' style='width:31rpx;height:34rpx;'></image>
-        <text class='my-list-item-left-text'>蓝牙配置</text>
+    <navigator url="/pages/ble-config/index">
+      <view class='my-list-item'>
+        <view class='my-list-item-left'>
+          <image class='my-list-item-left-icon' src='img/bluetoot.png' style='width:31rpx;height:34rpx;'></image>
+          <text class='my-list-item-left-text'>蓝牙配置</text>
+        </view>
+        <view class='my-list-item-right'>
+          <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+        </view>
       </view>
-      <view class='my-list-item-right'>
-        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+    </navigator>
+    <navigator url="/pages/feedback/index">
+      <view class='my-list-item'>
+        <view class='my-list-item-left'>
+          <image class='my-list-item-left-icon' src='img/feedback.png' style='width:31rpx;height:34rpx;'></image>
+          <text class='my-list-item-left-text'>意见反馈</text>
+        </view>
+        <view class='my-list-item-right'>
+          <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+        </view>
+      </view>
+    </navigator>
+    <navigator url="/pages/help/index">
+      <view class='my-list-item'>
+        <view class='my-list-item-left'>
+          <image class='my-list-item-left-icon' src='img/help.png' style='width:31rpx;height:34rpx;'></image>
+          <text class='my-list-item-left-text'>使用帮助</text>
+        </view>
+        <view class='my-list-item-right'>
+          <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+        </view>
+      </view>
+    </navigator>
+    <navigator url="/pages/update/index">
+      <view class='my-list-item'>
+        <view class='my-list-item-left'>
+          <image class='my-list-item-left-icon' src='img/update.png' style='width:31rpx;height:34rpx;'></image>
+          <text class='my-list-item-left-text'>检测新版本</text>
+        </view>
+        <view class='my-list-item-right'>
+          <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+        </view>
+      </view>
+    </navigator>
+  </view>
+  <!--芳龄几何弹框  -->
+  <!--窈窕几许弹框  -->
+  <view class='my-alert-box' wx:if="{{isFigure}}" bindtap="hideAll">
+    <view class='my-figure-box row no-gutter' catchtap="preventBubble">
+      <view class='col-40'>
+        <input placeholder="身高" class="my-figure-input" auto-focus/>
+        <text class='my-figure-unit'>cm</text>
+      </view>
+      <view class='col-40'>
+        <input placeholder="体重" class="my-figure-input" />
+        <text class='my-figure-unit'>kg</text>
+      </view>
+      <view class='col-20'>
+        <button class='my-figure-save'>保存</button>
       </view>
     </view>
-    <view class='my-list-item'>
-      <view class='my-list-item-left'>
-        <image class='my-list-item-left-icon' src='img/feedback.png' style='width:31rpx;height:34rpx;'></image>
-        <text class='my-list-item-left-text'>意见反馈</text>
+  </view>
+  <!--酥胸形状弹框  -->
+  <view class='my-alert-box' wx:if="{{isBreast}}">
+    <view class='my-breast-box'>
+      <view class='my-breast-slider-type'>
+        <text class='my-breast-text'>酥胸</text>
       </view>
-      <view class='my-list-item-right'>
-        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px">
+        <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+          <swiper-item>
+            <image src="{{item}}" class="slide-image" width="355" height="150" />
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class='my-breast-slider-type'>
+        <text class='my-breast-text'>圆盘形</text>
       </view>
-    </view>
-    <view class='my-list-item'>
-      <view class='my-list-item-left'>
-        <image class='my-list-item-left-icon' src='img/help.png' style='width:31rpx;height:34rpx;'></image>
-        <text class='my-list-item-left-text'>使用帮助</text>
+      <view class='my-breast-slider-box'>
+        <slider bindchange="bindsliderChange" min="63" max="112" block-size="20" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <text class='my-breast-text'>上胸围（cm）</text>
       </view>
-      <view class='my-list-item-right'>
-        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      <view class='my-breast-slider-box'>
+        <slider bindchange="bindsliderChange" min="63" max="112" block-size="20" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <text class='my-breast-text'>下胸围（cm）</text>
       </view>
-    </view>
-    <view class='my-list-item'>
-      <view class='my-list-item-left'>
-        <image class='my-list-item-left-icon' src='img/update.png' style='width:31rpx;height:34rpx;'></image>
-        <text class='my-list-item-left-text'>检测新版本</text>
+      <view class='my-breast-slider-box'>
+        <view class='my-breast-slider-show'>您的内衣尺寸
+          <text class='my-breast-slider-number'>65AA</text>
+        </view>
       </view>
-      <view class='my-list-item-right'>
-        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      <view class='my-breast-ok-box row'>
+        <view class='col-50 my-breast-ok-button' bindtap="closeBreast">取消</view>
+        <view class='col-50 my-breast-ok-button active'>保存</view>
       </view>
     </view>
   </view>
