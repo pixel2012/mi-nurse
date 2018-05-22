@@ -19,39 +19,23 @@
   </view>
 </view>
 <view class='mi-tab-box row no-gutter'>
-  <view class='col-50 mi-tab active'>
+  <view class="col-50 mi-tab {{tabIndex==0?'active':''}}" data-index='0' bindtap='bindTab'>
     <text class='mi-tab-text'>普通按摩</text>
   </view>
-  <view class='col-50 mi-tab'>
+  <view class="col-50 mi-tab {{tabIndex==1?'active':''}}" data-index='1' bindtap='bindTab'>
     <view class='mi-tab-text'>DIY按摩</view>
   </view>
 </view>
-<view class='mi-tab-content'>
+<view class='mi-tab-content' bindtap='hideMenu'>
   <!--普通按摩  -->
-  <view class='mi-tab-item'>
-  <image src='img/menu.png' class='menu'></image>
-    <view class='mi-tab-menu'>
-      <view class='mi-tab-menu-item active'>
-        <text>盛夏\n如花</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>高山\n流水</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>阵阵\n酥麻</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>小鹿\n乱撞</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>浪花\n迭起</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>琴瑟\n长鸣</text>
-      </view>
-      <view class='mi-tab-menu-item'>
-        <text>随机</text>
-      </view>
+  <view class='mi-tab-item' wx:if="{{tabIndex==0}}">
+    <image src='img/menu.png' class='menu' wx:if="{{!isMenu}}" catchtap='showMenu'></image>
+    <view class='mi-tab-menu {{isMenu?"active":""}}'>
+      <block wx:for='{{menuList}}' wx:key='item'>
+        <view class='mi-tab-menu-item {{menuIndex==item.id?"active":""}}' data-index='{{item.id}}' data-title='{{item.title}}' bindtap='showMenuItem'>
+          <text>{{item.title}}</text>
+        </view>
+      </block>
     </view>
     <view class='mi-tab-main'>
       <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" next-margin="30px">
@@ -282,18 +266,18 @@
       <view class='mi-player-box'>
         <view class='mi-player-row row'>
           <view class='col-20 mi-player-control'>
-            <image src='img/play.png' style='width:85rpx;height:85rpx;'></image>
+            <image src='img/{{play?"pause":"play"}}.png' style='width:85rpx;height:85rpx;' bindtap='bindPlay'></image>
           </view>
           <view class='col-80 mi-player-process'>
-            <view class='mi-player-title'>盛夏如花</view>
+            <view class='mi-player-title'>{{menuList[menuIndex].title}}</view>
             <view class='mi-play-detail row'>
               <view class='col-25 mi-play-detail-left'>震动强度</view>
               <view class='col-75 mi-play-detail-right'>
                 <view class='mi-play-line'></view>
-                <image src='img/01-a.png' style='left:0;'></image>
-                <image src='img/02-a.png' style='left:30%;'></image>
-                <image src='img/03-a.png' style='left:55%;'></image>
-                <image src='img/04-a.png' style='left:85%;'></image>
+                <image src='img/01-{{strength==1?"b":"a"}}.png' style='left:0;' data-index='1' bindtap='bindStrength'></image>
+                <image src='img/02-{{strength==2?"b":"a"}}.png' style='left:30%;' data-index='2' bindtap='bindStrength'></image>
+                <image src='img/03-{{strength==3?"b":"a"}}.png' style='left:55%;' data-index='3' bindtap='bindStrength'></image>
+                <image src='img/04-{{strength==4?"b":"a"}}.png' style='left:85%;' data-index='4' bindtap='bindStrength'></image>
               </view>
             </view>
           </view>
@@ -302,5 +286,5 @@
     </view>
   </view>
   <!--DIY按摩  -->
-  <view class='mi-tab-item'></view>
+  <view class='mi-tab-item' wx:if="{{tabIndex==1}}">diy</view>
 </view>
