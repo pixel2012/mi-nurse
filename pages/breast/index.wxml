@@ -286,5 +286,70 @@
     </view>
   </view>
   <!--DIY按摩  -->
-  <view class='mi-tab-item' wx:if="{{tabIndex==1}}">diy</view>
+  <view class='mi-tab-item' wx:if="{{tabIndex==1}}">
+    <view class='mi-c'>
+      <text class='massage-tip'>按住穴位，即可按摩</text>
+    </view>
+    <view class='row mi-c massage-box'>
+      <view class='col-50 massage-box-left'>
+        <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
+        <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
+        <view class='l-01'></view>
+        <view class='l-02'></view>
+        <view class='l-03'></view>
+        <view class='l-04'></view>
+      </view>
+      <view class='col-50 massage-box-right'>
+        <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
+        <view class='r-01'></view>
+        <view class='r-02'></view>
+        <view class='r-03'></view>
+        <view class='r-04'></view>
+      </view>
+    </view>
+    <view class='massage-box'>
+      <view class='mi-assess-box2'>
+        <view class='mi-assess-dt blue'>高阶玩法：我的按摩组合</view>
+        <view class='mi-bottom-line'></view>
+        <view class='massage-list'>
+          <view class='massage-li row'>
+            <view class='col-25 massage-item'>组合1</view>
+            <view class='col-25 massage-item'>
+              <view>00:08:35</view>
+              <view class='massage-progress'>
+                <view class='massage-bar' style='width:30%;'></view>
+              </view>
+            </view>
+            <view class='col-25 massage-item'>
+              <image src='img/play.png' style='width:48rpx;height:48rpx;'></image>
+            </view>
+            <view class='col-25 massage-item'>
+              <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+            </view>
+          </view>
+          <view class='massage-li row'>
+            <view class='col-25 massage-item'>组合1</view>
+            <view class='col-25 massage-item'>
+              <view>00:08:35</view>
+              <view class='massage-progress'>
+                <view class='massage-bar' style='width:50%;'></view>
+              </view>
+            </view>
+            <view class='col-25 massage-item'>
+              <image src='img/play.png' style='width:48rpx;height:48rpx;'></image>
+            </view>
+            <view class='col-25 massage-item'>
+              <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+            </view>
+          </view>
+        </view>
+
+        <view class='ble-button-box'>
+          <navigator url="/pages/massage/index">
+            <view class='ble-button'>添加按摩组合</view>
+            </navigator>
+        </view>
+      </view>
+    </view>
+  </view>
 </view>

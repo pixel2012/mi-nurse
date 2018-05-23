@@ -1,0 +1,75 @@
+.massage-block{
+  padding:0 30rpx;
+}
+.massage-title{
+  padding:30rpx;
+  font-size: 28rpx;
+  background-color: #F7F7F7;
+}
+.massage-title-key{
+  color: #5E5E5E;
+  font-weight: bold;
+}
+.massage-title-value{
+  color: #8D8D8D;
+  text-align: right;
+}
+.massage-add{
+  font-size: 28rpx;
+  padding: 30rpx;
+}
+.massage-list{
+  color:#5E5E5E;
+  font-size: 20rpx;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  border: 1rpx solid #12C8C8;
+  padding: 30rpx;
+  border-radius: 4rpx;
+  margin-bottom: 20rpx;
+}
+.massage-list:last-child{
+  margin-bottom: 0;
+}
+.order{
+  display: inline-block;
+  width: 26rpx;
+  height: 26rpx;
+  background-color: #12C8C8;
+  color: #fff;
+  border-radius: 100%;
+  text-align: center;
+  margin-right: 20rpx;
+  vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ble-button-box{
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 80rpx;
+}
+.ble-button{
+  display: inline-block;
+  width: 307rpx;
+  padding:20rpx;
+  border:1rpx solid #FF4578;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  color: #FF4578;
+}

@@ -1,0 +1,61 @@
+<view class='massage-box'>
+  <view class='massage-block massage-title row'>
+    <view class='col-50 massage-title-key'>组合名称</view>
+    <view class='col-50 massage-title-value'>组合1</view>
+  </view>
+  <view class='massage-block massage-add row'>
+    <view class='col-50 massage-title-key'>穴位设置</view>
+    <view class='col-50 massage-title-value'>
+      <navigator url="/pages/acupoint/index">
+        添加穴位
+        <image src='img/r.png' style='width:23rpx;height:40rpx;vertical-align: middle;margin-left:10rpx;'></image>
+      </navigator>
+    </view>
+  </view>
+  <view class='massage-block'>
+    <view class='massage-block massage-list row'>
+      <view class='col-25 massag-item1'>
+        <view class='order'>1</view>乳根穴
+      </view>
+      <view class='col-25 massag-item2'>
+        左胸
+      </view>
+      <view class='col-25 massag-item3'>
+        盛夏如花
+      </view>
+      <view class='col-25 massag-item4'>
+        03:10
+      </view>
+    </view>
+    <view class='massage-block massage-list row'>
+      <view class='col-25 massag-item1'>
+        <view class='order'>1</view>乳根穴
+      </view>
+      <view class='col-25 massag-item2'>
+        左胸
+      </view>
+      <view class='col-25 massag-item3'>
+        盛夏如花
+      </view>
+      <view class='col-25 massag-item4'>
+        03:10
+      </view>
+    </view>
+  </view>
+
+  <view class='ble-button-box'>
+    <view class='ble-button'>保存组合</view>
+  </view>
+
+
+
+
+
+
+
+
+
+
+
+
+</view>
