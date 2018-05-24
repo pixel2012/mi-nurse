@@ -1,0 +1,157 @@
+.acupoint-container {
+  background-color: #f7f7f7;
+}
+
+.massage-box {
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  margin-bottom: 10rpx;
+}
+
+.massage-box-left, .massage-box-right {
+  position: relative;
+}
+
+.l-01, .l-02, .l-03, .l-04, .r-01, .r-02, .r-03, .r-04 {
+  position: absolute;
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 100%;
+  z-index: 10;
+  background-color: #999;
+}
+
+.l-01.active, .l-02.active, .l-03.active, .l-04.active, .r-01.active,
+.r-02.active, .r-03.active, .r-04.active {
+  background-color: #ff4578;
+}
+
+.l-01 {
+  left: 50%;
+  top: 100rpx;
+  transform: translateX(-30%);
+}
+
+.l-02 {
+  left: 5%;
+  top: 50%;
+  transform: translateY(-60%);
+}
+
+.l-03 {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+}
+
+.l-04 {
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+}
+
+.r-01 {
+  left: 50%;
+  top: 100rpx;
+  transform: translateX(-60%);
+}
+
+.r-02 {
+  right: 5%;
+  top: 50%;
+  transform: translateY(-60%);
+}
+
+.r-03 {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+}
+
+.r-04 {
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+}
+
+.acupoint-block {
+  align-items: center;
+}
+
+.acupoint-title, .radio-group {
+  color: #5e5e5e;
+  font-size: 28rpx;
+}
+
+.acupoint-title {
+  font-weight: bold;
+}
+
+.radio-group label {
+  margin-right: 40rpx;
+}
+
+.acupoint-shake {
+  border: 1rpx solid #e3e1e1;
+  border-radius: 4px;
+}
+
+.acupoint-shake-title {
+  background-color: #f7f7f7;
+  padding: 10rpx 20rpx;
+  font-size: 28rpx;
+  color: #5e5e5e;
+}
+
+.acupoint-shake-content {
+  padding: 50rpx 20rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+  position: relative;
+}
+
+.acupoint-shake-content:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 64rpx;
+  height: 115rpx;
+  background: linear-gradient(-90deg, rgba(255, 255, 255, 1), rgba(251, 251, 251, 0.86), rgba(247, 247, 247, 0.43));
+}
+
+.acupoint-shake-content text {
+  margin-right: 20rpx;
+}
+
+.how-long {
+  width: 88rpx;
+  height: 88rpx;
+  background-color: #f7f7f7;
+  padding: 20rpx;
+  vertical-align: middle;
+}
+.how-long-title{
+  font-size: 36rpx;
+  color: #888;
+}
+.how-long-time{
+  font-size: 28rpx;
+  color: #FF4578;
+}
+.ble-button-box{
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 80rpx;
+  background-color: #fff;
+}
+.ble-button{
+  display: inline-block;
+  width: 307rpx;
+  padding:20rpx;
+  border:1rpx solid #FF4578;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  color: #FF4578;
+}

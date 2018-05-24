@@ -31,7 +31,7 @@
   height: 53rpx;
   left: 2%;
   top: 40%;
-  taansform: translateY(-50%);
+  transform: translateY(-50%);
   z-index: 100;
   padding: 10rpx;
   background-color: #fff;
@@ -42,7 +42,8 @@
   width: 0;
   white-space: normal;
   vertical-align: top;
-  transition: width 0.2s ease-in-out;
+  transition: width 0.1s ease-in-out;
+  border: 0rpx solid #12c6c6;
 }
 
 .mi-tab-menu.active {

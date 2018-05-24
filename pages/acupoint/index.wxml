@@ -1,1 +1,90 @@
-<view>添加穴位</view>
+<view class='acupoint-container'>
+  <view class='row mi-c massage-box'>
+    <view class='col-50 massage-box-left'>
+      <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
+      <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
+      <view class='l-01'></view>
+      <view class='l-02'></view>
+      <view class='l-03'></view>
+      <view class='l-04'></view>
+    </view>
+    <view class='col-50 massage-box-right'>
+      <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
+      <view class='r-01'></view>
+      <view class='r-02'></view>
+      <view class='r-03'></view>
+      <view class='r-04'></view>
+    </view>
+  </view>
+  <view class='massage-box'>
+    <view class='acupoint-block row no-gutter'>
+      <view class='col-20 acupoint-title'>选择穴位</view>
+      <view class='col-80'>
+        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange">
+          <label>
+            <radio value='1'>乳中+膺窗</radio>
+          </label>
+          <label>
+            <radio value='1'>天溪</radio>
+          </label>
+          <label>
+            <radio value='1'>乳根</radio>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+  </view>
+  <view class='massage-box'>
+    <view class='acupoint-block row no-gutter'>
+      <view class='col-20 acupoint-title'>穴位设置</view>
+      <view class='col-80'>
+        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange">
+          <label>
+            <radio value='1'>乳中+膺窗</radio>
+          </label>
+          <label>
+            <radio value='1'>天溪</radio>
+          </label>
+          <label>
+            <radio value='1'>乳根</radio>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+  </view>
+  <view class='massage-box'>
+    <view class='acupoint-shake'>
+      <view class='acupoint-shake-title'>震动模块</view>
+      <scroll-view scroll-x='true'>
+        <view class='acupoint-shake-content'>
+          <text>盛夏如花</text>
+          <text>高山流水</text>
+          <text>阵阵酥麻</text>
+          <text>小鹿乱撞</text>
+          <text>浪花迭起</text>
+          <text>盛夏如花</text>
+          <text>盛夏如花</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+  <view class='massage-box'>
+    <view class='acupoint-shake row' style='padding:10rpx;'>
+      <view class='col-20'>
+        <image src='img/how-long.png' class='how-long'></image>
+      </view>
+      <view class='col-80'>
+        <view class='how-long-title'>
+          按摩时长
+          <text class='how-long-time'>3分</text>
+          <view class='hong-long-box'>
+            <slider bindchange="slider3change" show-value/>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='ble-button-box'>
+      <view class='ble-button'>确认保存</view>
+    </view>
+  </view>
+</view>
