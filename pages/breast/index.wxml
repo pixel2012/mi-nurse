@@ -266,7 +266,13 @@
       <view class='mi-player-box'>
         <view class='mi-player-row row'>
           <view class='col-20 mi-player-control'>
-            <image src='img/{{play?"pause":"play"}}.png' style='width:85rpx;height:85rpx;' bindtap='bindPlay'></image>
+            <view class='circle-box circle' bindtap='bindPlay'>
+               <view class='circle-a circle'></view> 
+               <view class='circle-b circle' style=' transform:rotate({{playProgress}}deg);background-color: {{playBgc}};'></view>
+                <view class='circle-front'>
+                  <image src='img/{{play?"pause":"play"}}.png' style='width:40rpx;height:40rpx;'></image> 
+                </view>   
+            </view>
           </view>
           <view class='col-80 mi-player-process'>
             <view class='mi-player-title'>{{menuList[menuIndex].title}}</view>

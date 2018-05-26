@@ -50,9 +50,20 @@ Page({
     play:false,//震动状态
     playTitle:'',
     strength:1,//震动强度
+    playProgress:0,//0~360,
+    playBgc:'#F7F7F7',//播放进度条背景色
   },
   onLoad(){
-
+    var that=this;
+    var num=0
+    setInterval(function(){
+      if(num==360){
+        num=0;
+      }else{
+        num += 10;
+      }
+      that.setPlay(num);
+    },1000);
   },
   onShow(){
     
@@ -86,5 +97,18 @@ Page({
     this.setData({
       strength: e.currentTarget.dataset.index
     });
+  },
+  setPlay:function(num){
+    if(num<180){
+      this.setData({
+        playProgress: num,
+        playBgc: '#F7F7F7',//播放进度条背景色
+      });
+    }else{
+      this.setData({
+        playProgress: num-180,
+        playBgc: '#12C8C8',//播放进度条背景色
+      });
+    }
   }
 });

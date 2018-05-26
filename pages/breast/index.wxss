@@ -355,3 +355,35 @@ swiper-item {
   font-size: 20rpx;
   text-align: center;
 }
+/*圆形进度条  */
+.circle-box{
+  display: inline-block;
+  position: relative;
+  border: 2rpx solid #12C8C8;
+  background-color: #12C8C8;
+}
+.circle{
+  width: 86rpx;
+  height: 86rpx;
+  border-radius: 50%;
+}
+.circle-a{
+  position: absolute;
+  clip: rect(auto,43rpx,auto,auto);
+  background-color: #F7F7F7;
+}
+.circle-b{
+  position: absolute;
+  clip: rect(auto,auto,auto,43rpx);
+}
+.circle-front{
+  position: absolute;
+  width: 76rpx;
+  height: 76rpx;
+  left: 50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background-color: #F7F7F7;
+  border-radius: 50%;
+  line-height: 90rpx;
+}
