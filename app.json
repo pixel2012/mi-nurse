@@ -1,6 +1,6 @@
 {
   "pages": [
-    
+    "pages/index/index",
     "pages/breast/index",
     "pages/acupoint/index",
     "pages/massage/index",
@@ -9,7 +9,7 @@
     "pages/ble-set/index",
     "pages/ble-config/index",
     
-    "pages/index/index",
+
     "pages/help/index",
     "pages/update/index"
   ],
