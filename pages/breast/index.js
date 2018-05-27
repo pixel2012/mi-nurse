@@ -20,27 +20,27 @@ Page({
     menuList:[
       {
         id:0,
-        title:'盛夏\n如花'
+        title:'盛夏如花'
       },
       {
         id: 2,
-        title: '高山\n流水'
+        title: '高山流水'
       },
       {
         id: 3,
-        title: '阵阵\n酥麻'
+        title: '阵阵酥麻'
       },
       {
         id: 4,
-        title: '小鹿\n乱撞'
+        title: '小鹿乱撞'
       },
       {
         id: 5,
-        title: '浪花\n迭起'
+        title: '浪花迭起'
       },
       {
         id: 6,
-        title: '琴瑟\n长鸣'
+        title: '琴瑟长鸣'
       },
       {
         id: 7,

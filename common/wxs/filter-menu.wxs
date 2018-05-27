@@ -1,0 +1,3 @@
+module.exports = function (name){
+  return name.slice(0, 2) + '\n' + name.slice(2);
+}

@@ -1,3 +1,8 @@
+<!--引入过滤器模块  -->
+<wxs module="filterMenu" src="../../common/wxs/filter-menu.wxs"></wxs>
+
+
+<!--主框架  -->
 <view class='mi-box' style='padding-bottom:10rpx;'>
   <view class='row'>
     <view class='col-50'>
@@ -33,7 +38,7 @@
     <view class='mi-tab-menu {{isMenu?"active":""}}'>
       <block wx:for='{{menuList}}' wx:key='item'>
         <view class='mi-tab-menu-item {{menuIndex==item.id?"active":""}}' data-index='{{item.id}}' data-title='{{item.title}}' bindtap='showMenuItem'>
-          <text>{{item.title}}</text>
+          <text>{{filterMenu(item.title)}}</text>
         </view>
       </block>
     </view>
