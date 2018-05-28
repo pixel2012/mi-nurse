@@ -28,8 +28,8 @@
             </view>
         </view>
         <view class='mi-block'>
-            <view class='mi-button'>立即连接</view>
-            <button open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
+            <view class='mi-button' wx:if="{{isAuthorize}}">立即连接</view>
+            <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
         </view>
     </view>
     <!--乳温  -->
