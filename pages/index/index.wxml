@@ -1,109 +1,106 @@
 <view class='mi-container'>
-    <!--头部信息&仪表盘  -->
-    <view class='mi-box'>
-        <view class='row'>
-            <view class='col-50'>
-                <view class='mi-status'>
-                    <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
-                    <text class='mi-text'>未连接</text>
-                </view>
-                <view class='mi-status'>
-                    <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
-                    <text class='mi-text'>未同步</text>
-                </view>
-            </view>
-            <view class='col-50 mi-r'>
-                <view class='mi-status'>
-                    <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
-                    <text class='mi-text'>未知</text>
-                </view>
-            </view>
+  <!--头部信息&仪表盘  -->
+  <view class='mi-box'>
+    <view class='row'>
+      <view class='col-50'>
+        <view class='mi-status'>
+          <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
+          <text class='mi-text'>未连接</text>
         </view>
-        <view class='mi-meter'>
-            <image src='img/meter.png' style='width:462rpx;height:243rpx;'></image>
-            <view class='mi-score-box'>
-                <view class='mi-score-title'>健康指数</view>
-                <text class='mi-score'>00.0</text>
-                <text class='mi-score-unit'>分</text>
-            </view>
+        <view class='mi-status'>
+          <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
+          <text class='mi-text'>未同步</text>
         </view>
-        <view class='mi-block'>
-            <view class='mi-button' wx:if="{{isAuthorize}}">立即连接</view>
-            <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
+      </view>
+      <view class='col-50 mi-r'>
+        <view class='mi-status'>
+          <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>未知</text>
         </view>
+      </view>
     </view>
-    <!--乳温  -->
-    <view class='mi-tem-box row'>
-        <view class='col-25 mi-tc'>
-            <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
-            <view class='mi-lt-pos mi-tc'>左上外</view>
-            <view class='mi-lt-tep'>未知</view>
-        </view>
-        <view class='col-25 mi-tc'>
-            <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
-            <view class='mi-lt-pos mi-tc'>左上内</view>
-            <view class='mi-lt-tep'>未知</view>
-        </view>
-        <view class='col-25 mi-tc'>
-            <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
-            <view class='mi-lt-pos mi-tc'>右上内</view>
-            <view class='mi-lt-tep'>未知</view>
-        </view>
-        <view class='col-25 mi-tc'>
-            <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
-            <view class='mi-lt-pos mi-tc'>右上外</view>
-            <view class='mi-lt-tep'>未知</view>
-        </view>
+    <view class='mi-meter'>
+      <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
+      <view class='mi-score-box'>
+        <view class='mi-score-title'>健康指数</view>
+        <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
+        <text class='mi-score-unit'>分</text>
+      </view>
     </view>
-    <!--健康评估  -->
-    <view class='mi-assess-box'>
-        <view class='row mi-assess-wrap'>
-            <view class='col-50 mi-assess-title'>健康评估</view>
-            <view class='col-50 mi-assess-time'>4月13日 13:00</view>
-        </view>
-        <view class='mi-assess-box2'>
-            <view class='mi-assess-dt blue'>当前平均乳温高于正常范围</view>
-            <view class='mi-assess-content'>温馨提醒：长期测量，可获得更准确的结果。</view>
-        </view>
-        <view class='mi-assess-box2'>
-            <view class='mi-assess-dt yellow'>各测试部位未出现显著温差，要坚持测量乳房温度，防患于未然哦！</view>
-            <view class='mi-assess-content'>
-                温馨提醒：测量乳房温差变化，对于及早发现乳腺增生，肿瘤有积极作用。因为乳腺增生、恶性肿瘤部位血供丰富、代谢旺盛，产热增多，病灶处所产生的热导至皮肤可使皮肤表面温度高于病灶周围其他区域的温度。
-            </view>
-        </view>
+    <view class='mi-block'>
+      <view class='mi-button' wx:if="{{isAuthorize}}">立即连接</view>
+      <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
     </view>
-    <!--健康记录  -->
-    <view class='mi-assess-box'>
-        <view class='row mi-assess-wrap'>
-            <view class='col-50 mi-assess-title'>健康记录</view>
-            <view class='col-50 mi-assess-time'></view>
-        </view>
-        <scroll-view class="scroll-view_H" scroll-x='true' style="width: 100%">
-            <view class="scroll-view-item_H">1月</view>
-            <view class="scroll-view-item_H">2月</view>
-            <view class="scroll-view-item_H active">3月</view>
-            <view class="scroll-view-item_H">4月</view>
-            <view class="scroll-view-item_H">5月</view>
-            <view class="scroll-view-item_H">6月</view>
-            <view class="scroll-view-item_H">7月</view>
-            <view class="scroll-view-item_H">8月</view>
-            <view class="scroll-view-item_H">9月</view>
-            <view class="scroll-view-item_H">10月</view>
-            <view class="scroll-view-item_H">11月</view>
-            <view class="scroll-view-item_H">12月</view>
-        </scroll-view>
-        <view class='mi-assess-box2 row'>
-            <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
-                <text style='color:#ff4578;'>健康指数 87.6</text>
-                分
-            </view>
-            <view class='col-50 mi-assess-time'>点击查看详情></view>
-        </view>
+  </view>
+  <!--乳温  -->
+  <view class='mi-tem-box row'>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上外</view>
+      <view class='mi-lt-tep'>{{temp_lto?temp_lto:'未知'}}℃</view>
     </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上内</view>
+      <view class='mi-lt-tep'>{{temp_lti?temp_lti:'未知'}}℃</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上内</view>
+      <view class='mi-lt-tep'>{{temp_rti?temp_rti:'未知'}}℃</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上外</view>
+      <view class='mi-lt-tep'>{{temp_rto?temp_rto:'未知'}}℃</view>
+    </view>
+  </view>
+  <!--健康评估  -->
+  <view class='mi-assess-box'>
+    <view class='row mi-assess-wrap'>
+      <view class='col-50 mi-assess-title'>健康评估</view>
+      <view class='col-50 mi-assess-time'>4月13日 13:00</view>
+    </view>
+    <view class='mi-assess-box2'>
+      <view class="mi-assess-dt {{temp_avg_isNormal?'blue':'yellow'}}">{{temp_avg_title || '暂无'}}</view>
+      <view class='mi-assess-content'>{{temp_avg_detial || '暂无'}}</view>
+    </view>
+    <view class='mi-assess-box2'>
+      <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}<text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text></view>
+      <view class='mi-assess-content'>{{temp_diff_detial || '暂无'}}</view>
+    </view>
+  </view>
+  <!--健康记录  -->
+  <view class='mi-assess-box'>
+    <view class='row mi-assess-wrap'>
+      <view class='col-50 mi-assess-title'>健康记录</view>
+      <view class='col-50 mi-assess-time'></view>
+    </view>
+    <scroll-view class="scroll-view_H" scroll-x='true' style="width: 100%">
+      <view class="scroll-view-item_H">1月</view>
+      <view class="scroll-view-item_H">2月</view>
+      <view class="scroll-view-item_H active">3月</view>
+      <view class="scroll-view-item_H">4月</view>
+      <view class="scroll-view-item_H">5月</view>
+      <view class="scroll-view-item_H">6月</view>
+      <view class="scroll-view-item_H">7月</view>
+      <view class="scroll-view-item_H">8月</view>
+      <view class="scroll-view-item_H">9月</view>
+      <view class="scroll-view-item_H">10月</view>
+      <view class="scroll-view-item_H">11月</view>
+      <view class="scroll-view-item_H">12月</view>
+    </scroll-view>
+    <view class='mi-assess-box2 row'>
+      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+      </view>
+      <view class='col-50 mi-assess-time'>点击查看详情></view>
+    </view>
+  </view>
 
-    <view class='mi-line'>
-        <canvas canvas-id="lineCanvas" disable-scroll="true" class="canvas" bindtouchstart="touchHandler"></canvas>
-    </view>
+  <view class='mi-line'>
+    <canvas canvas-id="lineCanvas" disable-scroll="true" class="canvas" bindtouchstart="touchHandler"></canvas>
+  </view>
 
 
 </view>

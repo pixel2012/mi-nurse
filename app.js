@@ -1,5 +1,9 @@
 App({
-    onLaunch: function() {
-      
-    }
+  userInfo: {
+
+  },
+  onLaunch() {
+
+  }
+
 })

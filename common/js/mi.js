@@ -1,6 +1,6 @@
 let crypto = require('./crypto-js.min');
 const aesKey = 'u.!4pb.pLzh^sN)u';
-let mi = {
+const mi = {
   version: '0.0.1',
   ip: 'http://api.51mito.com/api/',
   ajax: function (param) {
@@ -168,7 +168,51 @@ let mi = {
       return crypto.enc.Utf8.stringify(result).toString();
     }
   },
+  user: {
+    getSetting: function (callback) {
+      wx.getSetting({
+        success: function (res) {
+          if (res.authSetting['scope.userInfo']) {
+            callback(true);
+          } else {
+            callback(false);
+          }
+        }
+      });
+    },//获取用户授权状态
+    getInfo: function (callback) {
+      wx.getUserInfo({
+        success: function (res) {
+          console.log(res);
+          res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
+          callback(res);
+          // mi.ajax({
+          //   url: api.bindThirdAccount,
+          //   method:'post',
+          //   data:{
 
+          //   },
+          //   success:function(){
+
+          //   }
+          // });
+        },
+        fail: function () {
+          wx.toast('获取用户信息失败');
+        }
+      });
+    }
+  },
+  getArryMax(arr) {
+    var max = arr[0];
+    var len = arr.length;
+    for (var i = 1; i < len; i++) {
+      if (arr[i] > max) {
+        max = arr[i];
+      }
+    }
+    return max;
+  }
 };
 module.exports = mi;
 
