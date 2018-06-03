@@ -66,7 +66,9 @@
       <view class='mi-assess-content'>{{temp_avg_detial || '暂无'}}</view>
     </view>
     <view class='mi-assess-box2'>
-      <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}<text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text></view>
+      <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}
+        <text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text>
+      </view>
       <view class='mi-assess-content'>{{temp_diff_detial || '暂无'}}</view>
     </view>
   </view>
@@ -96,11 +98,33 @@
       </view>
       <view class='col-50 mi-assess-time'>点击查看详情></view>
     </view>
+    <view class='mi-line'>
+      <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
+    </view>
+
+     <view class='mi-assess-box2 row'>
+      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+      </view>
+      <view class='col-50 mi-assess-time'>点击查看详情></view>
+    </view>
+    <view class='mi-line'>
+      <ec-canvas id="mychart-dom-line2" canvas-id="mychart-line2" ec="{{ ec2 }}"></ec-canvas>
+    </view>
+
+    <view class='mi-assess-box2 row'>
+      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+      </view>
+      <view class='col-50 mi-assess-time'>点击查看详情></view>
+    </view>
+    <view class='mi-line'>
+      <ec-canvas id="mychart-dom-line3" canvas-id="mychart-line3" ec="{{ ec3 }}"></ec-canvas>
+    </view> 
+
+
+
+
+
   </view>
-
-  <view class='mi-line'>
-    <canvas canvas-id="lineCanvas" disable-scroll="true" class="canvas" bindtouchstart="touchHandler"></canvas>
-  </view>
-
-
 </view>
