@@ -12,18 +12,8 @@ page {
 .mi-meter {
   display: block;
   text-align: center;
-  margin-top: 20rpx;
+  margin-top: 40rpx;
   position: relative;
-}
-
-.mi-detail-temp{
-  font-size: 36rpx;
-  color: #FF4578;
-}
-
-.mi-detail-title{
-  font-size: 28rpx;
-  color: #9D9D9D;
 }
 
 .mi-score-box {
@@ -36,7 +26,7 @@ page {
 
 .mi-score-title {
   color: #888;
-  font-size: 30rpx;
+  font-size: 24rpx;
   margin-bottom: 10rpx;
 }
 
@@ -52,21 +42,24 @@ page {
   margin-left: 20rpx;
 }
 
+.mi-box{
+  padding-bottom: 20rpx;
+}
+
 .mi-block {
-  margin-top: 60rpx;
+  margin-top: 100rpx;
   text-align: center;
-  align-items: center;
 }
 
 .mi-button {
   display: inline-block;
   color: #ff4578;
   border: 1px solid #ff4578;
-  width: 250rpx;
+  width: 308rpx;
   padding: 10rpx;
   text-align: center;
   font-size: 30rpx;
-  border-radius: 80rpx;
+  border-radius: 8rpx;
   background-color: #fff;
   line-height: 1.5;
 }
@@ -77,7 +70,6 @@ page {
 
 .mi-tem-box {
   background-color: #fff;
-  margin-top: 30rpx;
   padding: 30rpx 0;
 }
 
@@ -133,7 +125,6 @@ page {
 .mi-assess-content {
   box-sizing: border-box;
   width: 100%;
-  padding: 10rpx;
   font-size: 24rpx;
   color: #888;
   padding: 30rpx;

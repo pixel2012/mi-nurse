@@ -1,0 +1,53 @@
+<view class='mi-container'>
+  <!--头部信息&仪表盘  -->
+  <view class='mi-box'>
+    <view class='mi-meter'>
+      <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
+      <view class='mi-score-box'>
+        <view class='mi-score-title'>4月24日 11:23</view>
+        <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
+        <text class='mi-score-unit'>分</text>
+      </view>
+    </view>
+  </view>
+  <!--乳温  -->
+  <view class='mi-tem-box row'>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上外</view>
+      <view class='mi-lt-tep'>{{temp_lto?temp_lto:'未知'}}℃</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>左上内</view>
+      <view class='mi-lt-tep'>{{temp_lti?temp_lti:'未知'}}℃</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上内</view>
+      <view class='mi-lt-tep'>{{temp_rti?temp_rti:'未知'}}℃</view>
+    </view>
+    <view class='col-25 mi-tc'>
+      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <view class='mi-lt-pos mi-tc'>右上外</view>
+      <view class='mi-lt-tep'>{{temp_rto?temp_rto:'未知'}}℃</view>
+    </view>
+  </view>
+  <!--健康评估  -->
+  <view class='mi-assess-box'>
+    <view class='row mi-assess-wrap'>
+      <view class='col-50 mi-assess-title'>健康评估</view>
+      <view class='col-50 mi-assess-time'>4月13日 13:00</view>
+    </view>
+    <view class='mi-assess-box2'>
+      <view class="mi-assess-dt {{temp_avg_isNormal?'blue':'yellow'}}">{{temp_avg_title || '暂无'}}</view>
+      <view class='mi-assess-content'>{{temp_avg_detial || '暂无'}}</view>
+    </view>
+    <view class='mi-assess-box2'>
+      <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}
+        <text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text>
+      </view>
+      <view class='mi-assess-content'>{{temp_diff_detial || '暂无'}}</view>
+    </view>
+  </view>
+</view>

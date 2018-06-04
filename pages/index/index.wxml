@@ -27,9 +27,19 @@
         <text class='mi-score-unit'>分</text>
       </view>
     </view>
-    <view class='mi-block'>
-      <view class='mi-button' wx:if="{{isAuthorize}}">立即连接</view>
-      <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
+    <view class='mi-block row no-gutter'>
+      <view class='col-25'>
+        <view class='mi-detail-temp'>{{temp_avg}}℃</view>
+        <view class='mi-detail-title'>平均乳温</view>
+      </view>
+      <view class='col-50'>
+        <view class='mi-button'>立即连接</view>
+        <!-- <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button> -->
+      </view>
+      <view class='col-25'>
+        <view class='mi-detail-temp'>{{temp_diff_num}}℃</view>
+        <view class='mi-detail-title'>乳腺最大温差</view>
+      </view>
     </view>
   </view>
   <!--乳温  -->
@@ -96,17 +106,21 @@
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 87.6</text> 分
       </view>
-      <view class='col-50 mi-assess-time'>点击查看详情></view>
+      <view class='col-50 mi-assess-time'>
+        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+      </view>
     </view>
     <view class='mi-line'>
       <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
     </view>
 
-     <view class='mi-assess-box2 row'>
+    <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 87.6</text> 分
       </view>
-      <view class='col-50 mi-assess-time'>点击查看详情></view>
+      <view class='col-50 mi-assess-time'>
+        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+      </view>
     </view>
     <view class='mi-line'>
       <ec-canvas id="mychart-dom-line2" canvas-id="mychart-line2" ec="{{ ec2 }}"></ec-canvas>
@@ -116,11 +130,13 @@
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 87.6</text> 分
       </view>
-      <view class='col-50 mi-assess-time'>点击查看详情></view>
+      <view class='col-50 mi-assess-time'>
+        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+      </view>
     </view>
     <view class='mi-line'>
       <ec-canvas id="mychart-dom-line3" canvas-id="mychart-line3" ec="{{ ec3 }}"></ec-canvas>
-    </view> 
+    </view>
 
 
 

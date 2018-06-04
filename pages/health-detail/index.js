@@ -1,42 +1,5 @@
 let app = getApp();
-let echarts = require('../../common/components/ec-canvas/echarts.js');
-// let wxCharts = require('../../common/js/wxcharts.js');
 let mi = require('../../common/js/mi.js');
-const api = {
-  bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
-};
-
-let chart, chart2, chart3;
-function initChart(canvas, width, height) {
-  chart = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  });
-  canvas.setChart(chart);
-  console.log('1',chart);
-  return chart;
-}
-function initChart2(canvas, width, height) {
-  chart2 = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  });
-  canvas.setChart(chart2);
-  console.log('2', chart2);
-  return chart2;
-}
-function initChart3(canvas, width, height) {
-  chart3 = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  });
-  canvas.setChart(chart3);
-  console.log('3', chart3);
-  return chart3;
-}
-
-
-
 
 Page({
   data: {
@@ -54,20 +17,9 @@ Page({
     temp_diff_title: '',//最大温差诊断标题
     temp_diff_detial: '',//最大温差诊断内容
     temp_diff_num: '',//最大温差值
-    ec: {
-      onInit: initChart
-    },
-    ec2: {
-      onInit: initChart2
-    },
-    ec3: {
-      onInit: initChart3
-    }
 
   },
   onLoad() {
-    // this.lineInit();
-    this.getUserInfo();
     this.setData({
       temp_lto: 36.5,//左上外
       temp_lti: 37.4,//左上内
@@ -78,198 +30,9 @@ Page({
 
   },
   onReady() {
-    let _this=this;
-    let timer=null;
-    detch();
-    function detch(){
-      timer=setTimeout(()=>{
-        if (chart && chart2 && chart3){
-          _this.chartRender(chart, {
-            color: ["#FF4578"],
-          }, '分');
-          _this.chartRender(chart2, {
-            color: ["#4586FF"],
-          }, '℃');
-          _this.chartRender(chart3, {
-            color: ["#6DB35B", "#4586FF", "#FF4578","#AB45FF"],
-          }, '℃');
-        }else{
-          clearTimeout(timer);
-          detch();
-        }
-      },1000);
-    }
   },
   onShow() {
 
-  },
-  getUserInfo() {
-    let that = this;
-    //获取用户信息
-    mi.user.getSetting(function (status) {
-      if (status) {
-        that.setData({
-          isAuthorize: true
-        });
-        mi.user.getInfo(function (res) {
-
-        });
-      } else {
-        that.setData({
-          isAuthorize: false
-        });
-      }
-    });
-    // wx.getSetting({
-    //   success: function (res) {
-    //     if (res.authSetting['scope.userInfo']) {
-
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       wx.getUserInfo({
-    //         success: function (res) {
-    //           console.log(res.userInfo);
-    //           console.log(res);
-    //           let openId ='oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
-    //           // mi.ajax({
-    //           //   url: api.bindThirdAccount,
-    //           //   method:'post',
-    //           //   data:{
-
-    //           //   },
-    //           //   success:function(){
-
-    //           //   }
-    //           // });
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
-  },
-  chartRender(chart, opts, unit) {
-    let option = {
-      backgroundColor: '#FFF',
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        containLabel: true,
-        left: 15,
-        top: 40,
-        right: 20,
-        bottom: 15,
-      },
-      dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          top: 10,
-          height: 20,
-          start: 0,
-          end: 20,
-          minSpan: 10,
-          filterMode: 'none'
-        }
-      ],
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push('X' + i);
-          }
-          return arr;
-        })(),
-        axisPointer: {
-          label: {
-            formatter: function (params) {
-              console.log(params);
-              mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
-            }
-          }
-        },
-      },
-      yAxis: {
-        x: 'center',
-        type: 'value'
-      },
-      series: [{
-        name: 'A商品',
-        type: 'line',
-        smooth: true,
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push(parseInt(Math.random() * 100));
-          }
-          return arr;
-        })()
-      }]
-    };
-    option = mi.deepMerge(option, opts);
-    console.log(option);
-
-    chart.setOption(option);
-  },
-  bluetoothInit: function () {
-    //检测蓝牙是否打开
-    wx.openBluetoothAdapter({
-      success: function (res) {
-        console.log(res);
-        //检测蓝牙此时的状态
-        wx.getBluetoothAdapterState({
-          success: function (res) {
-            console.log(res);
-            //监听蓝牙适配器状态
-            wx.onBluetoothAdapterStateChange(function (res) {
-              console.log(`adapterState changed, now is`, res);
-            })
-            //如果蓝牙此时处于空闲，则可以
-            if (res.available && !res.discovering) {
-              //开启蓝牙搜索模式
-              wx.startBluetoothDevicesDiscovery({
-                services: [],
-                success: function (res) {
-                  console.log(res)
-
-                  // ArrayBuffer转16进度字符串示例
-                  function ab2hex(buffer) {
-                    let hexArr = Array.prototype.map.call(
-                      new Uint8Array(buffer),
-                      function (bit) {
-                        return ('00' + bit.toString(16)).slice(-2)
-                      }
-                    )
-                    return hexArr.join('');
-                  }
-
-                  wx.onBluetoothDeviceFound(function (devices) {
-                    console.log('new device list has founded')
-                    console.dir(devices)
-                    console.log(ab2hex(devices[0].advertisData))
-                  })
-                },
-                fail: function (res) {
-                  console.log(res);
-                }
-              })
-
-            }
-
-
-          },
-          fail: function (res) {
-            console.log(res);
-          }
-        });
-
-
-      },
-      fail: function (res) {
-        console.log('蓝牙未打开');
-      }
-    });
   },
   calcTemp() {
     //平均温度
@@ -500,7 +263,7 @@ Page({
         temp_diff_isNormal: true,
         temp_diff_title: '各测量部位未出现显著温差，要坚持测量乳房温度，防患于未然哦！',
         temp_diff_detial: '温馨提醒：测量乳房温度变化，对于及早发现乳腺增生、肿瘤有积极作用。因为乳腺增生、恶性肿瘤等部位血供丰富、代谢旺盛、产热增多，病灶处所产生的热传导至皮肤可使皮肤表面温度高于病灶周围其他区域的温度。',
-        temp_diff_num: tempMax.toFixed(1)
+        temp_diff_num: ''
       });
     }
   },//计算乳温差值诊断结果
