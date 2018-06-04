@@ -1,10 +1,43 @@
 let app = getApp();
-let wxCharts = require('../../common/js/wxcharts.js');
+let echarts = require('../../common/components/ec-canvas/echarts.js');
+// let wxCharts = require('../../common/js/wxcharts.js');
 let mi = require('../../common/js/mi.js');
-let lineChart = null;
 const api = {
   bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
 };
+
+let chart, chart2, chart3;
+function initChart(canvas, width, height) {
+  chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+  console.log('1',chart);
+  return chart;
+}
+function initChart2(canvas, width, height) {
+  chart2 = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart2);
+  console.log('2', chart2);
+  return chart2;
+}
+function initChart3(canvas, width, height) {
+  chart3 = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart3);
+  console.log('3', chart3);
+  return chart3;
+}
+
+
+
+
 Page({
   data: {
     isAuthorize: true,//是否授权
@@ -21,10 +54,19 @@ Page({
     temp_diff_title: '',//最大温差诊断标题
     temp_diff_detial: '',//最大温差诊断内容
     temp_diff_num: '',//最大温差值
+    ec: {
+      onInit: initChart
+    },
+    ec2: {
+      onInit: initChart2
+    },
+    ec3: {
+      onInit: initChart3
+    }
 
   },
   onLoad() {
-    this.lineInit();
+    // this.lineInit();
     this.getUserInfo();
     this.setData({
       temp_lto: 36.5,//左上外
@@ -33,6 +75,30 @@ Page({
       temp_rto: 37,//右上外
     });
     this.calcTemp();
+
+  },
+  onReady() {
+    let _this=this;
+    let timer=null;
+    detch();
+    function detch(){
+      timer=setTimeout(()=>{
+        if (chart && chart2 && chart3){
+          _this.chartRender(chart, {
+            color: ["#FF4578"],
+          }, '分');
+          _this.chartRender(chart2, {
+            color: ["#4586FF"],
+          }, '℃');
+          _this.chartRender(chart3, {
+            color: ["#6DB35B", "#4586FF", "#FF4578","#AB45FF"],
+          }, '℃');
+        }else{
+          clearTimeout(timer);
+          detch();
+        }
+      },1000);
+    }
   },
   onShow() {
 
@@ -79,6 +145,72 @@ Page({
     //     }
     //   }
     // });
+  },
+  chartRender(chart, opts, unit) {
+    let option = {
+      backgroundColor: '#FFF',
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        containLabel: true,
+        left: 15,
+        top: 40,
+        right: 20,
+        bottom: 15,
+      },
+      dataZoom: [
+        {
+          show: true,
+          realtime: true,
+          top: 10,
+          height: 20,
+          start: 0,
+          end: 20,
+          minSpan: 10,
+          filterMode: 'none'
+        }
+      ],
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: (function () {
+          let arr = [];
+          for (let i = 0; i < 100; i++) {
+            arr.push('X' + i);
+          }
+          return arr;
+        })(),
+        axisPointer: {
+          label: {
+            formatter: function (params) {
+              console.log(params);
+              mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
+            }
+          }
+        },
+      },
+      yAxis: {
+        x: 'center',
+        type: 'value'
+      },
+      series: [{
+        name: 'A商品',
+        type: 'line',
+        smooth: true,
+        data: (function () {
+          let arr = [];
+          for (let i = 0; i < 100; i++) {
+            arr.push(parseInt(Math.random() * 100));
+          }
+          return arr;
+        })()
+      }]
+    };
+    option = mi.deepMerge(option, opts);
+    console.log(option);
+
+    chart.setOption(option);
   },
   bluetoothInit: function () {
     //检测蓝牙是否打开
@@ -138,79 +270,6 @@ Page({
         console.log('蓝牙未打开');
       }
     });
-  },
-  lineInit: function () {
-    console.log(wxCharts);
-    let windowWidth = 320;
-    try {
-      let res = wx.getSystemInfoSync();
-      windowWidth = res.windowWidth - 20;
-    } catch (e) {
-      console.error('getSystemInfoSync failed!');
-    }
-
-    let simulationData = this.createSimulationData();
-    console.log(simulationData);
-    lineChart = new wxCharts({
-      canvasId: 'lineCanvas',
-      type: 'line',
-      categories: simulationData.categories,
-      animation: true,
-      // background: '#f5f5f5',
-      series: [{
-        name: '成交量1',
-        data: simulationData.data,
-        format: function (val, name) {
-          return val.toFixed(2) + '万';
-        }
-      }, {
-        name: '成交量2',
-        data: [2, 0, 0, 3, null, 4, 0, 0, 2, 0],
-        format: function (val, name) {
-          return val.toFixed(2) + '万';
-        }
-      }],
-      xAxis: {
-        disableGrid: true
-      },
-      yAxis: {
-        title: '成交金额 (万元)',
-        format: function (val) {
-          return val.toFixed(2);
-        },
-        min: 0
-      },
-      width: windowWidth,
-      height: 200,
-      dataLabel: false,
-      dataPointShape: true,
-      extra: {
-        lineStyle: 'curve'
-      }
-    });
-    console.log(lineChart);
-  },
-  touchHandler: function (e) {
-    console.log(lineChart.getCurrentDataIndex(e));
-    lineChart.showToolTip(e, {
-      // background: '#7cb5ec',
-      format: function (item, category) {
-        return category + ' ' + item.name + ':' + item.data
-      }
-    });
-  },
-  createSimulationData: function () {
-    let categories = [];
-    let data = [];
-    for (let i = 0; i < 10; i++) {
-      categories.push('2016-' + (i + 1));
-      data.push(Math.random() * (20 - 10) + 10);
-    }
-    // data[4] = null;
-    return {
-      categories: categories,
-      data: data
-    }
   },
   calcTemp() {
     //平均温度
