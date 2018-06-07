@@ -2,7 +2,7 @@
   <!--头部信息&仪表盘  -->
   <view class='mi-box'>
     <view class='mi-meter'>
-      <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
+      <image src="../index/img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
       <view class='mi-score-box'>
         <view class='mi-score-title'>4月24日 11:23</view>
         <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
@@ -13,22 +13,22 @@
   <!--乳温  -->
   <view class='mi-tem-box row'>
     <view class='col-25 mi-tc'>
-      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <image src='../index/img/lt.png' style='width:46rpx;height:46rpx;'></image>
       <view class='mi-lt-pos mi-tc'>左上外</view>
       <view class='mi-lt-tep'>{{temp_lto?temp_lto:'未知'}}℃</view>
     </view>
     <view class='col-25 mi-tc'>
-      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <image src='../index/img/rt.png' style='width:46rpx;height:46rpx;'></image>
       <view class='mi-lt-pos mi-tc'>左上内</view>
       <view class='mi-lt-tep'>{{temp_lti?temp_lti:'未知'}}℃</view>
     </view>
     <view class='col-25 mi-tc'>
-      <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+      <image src='../index/img/lt.png' style='width:46rpx;height:46rpx;'></image>
       <view class='mi-lt-pos mi-tc'>右上内</view>
       <view class='mi-lt-tep'>{{temp_rti?temp_rti:'未知'}}℃</view>
     </view>
     <view class='col-25 mi-tc'>
-      <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+      <image src='../index/img/rt.png' style='width:46rpx;height:46rpx;'></image>
       <view class='mi-lt-pos mi-tc'>右上外</view>
       <view class='mi-lt-tep'>{{temp_rto?temp_rto:'未知'}}℃</view>
     </view>

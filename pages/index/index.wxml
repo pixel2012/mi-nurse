@@ -4,18 +4,18 @@
     <view class='row'>
       <view class='col-50'>
         <view class='mi-status'>
-          <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
-          <text class='mi-text'>未连接</text>
+          <image src="../../common/img/{{isConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
+          <text class='mi-text'>{{isConnect?'已连接':'未连接'}}</text>
         </view>
         <view class='mi-status'>
-          <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>未同步</text>
+          <image src="../../common/img/{{isConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{isSync != ''?isSync:'未同步'}}</text>
         </view>
       </view>
       <view class='col-50 mi-r'>
         <view class='mi-status'>
-          <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>未知</text>
+          <image src="../../common/img/{{isConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{energy != ''?energy:'未知'}}</text>
         </view>
       </view>
     </view>
@@ -143,4 +143,14 @@
 
 
   </view>
+   <view class='mi-ble-list' wx:if="{{bleIsShowList}}">
+      <view class='mi-ble-content'>
+        <view class='mi-ble-title'>搜索中...</view>
+        <block wx:for="{{bleLists}}" wx:key="{{index}}">
+        <view class='mi-ble-item' data-id="{{item.deviceId}}" bindtap='connect'>
+          {{item.name}}:[{{item.deviceId}}]
+        </view>
+        </block>
+      </view>
+  </view> 
 </view>

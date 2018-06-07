@@ -13,7 +13,6 @@ function initChart(canvas, width, height) {
     height: height
   });
   canvas.setChart(chart);
-  console.log('1',chart);
   return chart;
 }
 function initChart2(canvas, width, height) {
@@ -22,7 +21,6 @@ function initChart2(canvas, width, height) {
     height: height
   });
   canvas.setChart(chart2);
-  console.log('2', chart2);
   return chart2;
 }
 function initChart3(canvas, width, height) {
@@ -31,7 +29,6 @@ function initChart3(canvas, width, height) {
     height: height
   });
   canvas.setChart(chart3);
-  console.log('3', chart3);
   return chart3;
 }
 
@@ -40,6 +37,13 @@ function initChart3(canvas, width, height) {
 
 Page({
   data: {
+    os:'',//操作平台
+    bleIsConnect:false,//是否连接蓝牙
+    bleIsSync:'',//是否蓝牙信息同步
+    bleEnergy:'',//电池电量
+    bleIsShowList:false,//是否显示已搜索到的蓝牙设备列表
+    bleLists:[],//搜索到蓝牙设备列表
+    bleDeviceId:'',//蓝牙设备的id号
     isAuthorize: true,//是否授权
     temp_score: '',
     temp_lto: '',//左上外
@@ -65,9 +69,98 @@ Page({
     }
 
   },
+  bluetoothInit: function () {
+    let _this=this;
+    // _this.setData({
+    //   bleIsConnect: true
+    // });
+    //检测蓝牙是否打开
+    wx.openBluetoothAdapter({
+      success: function (res) {
+        console.log('打开蓝牙适配器', res);
+        //检测蓝牙此时的状态
+        wx.getBluetoothAdapterState({
+          success: function (res) {
+            console.log('获取蓝牙适配器状态成功', res);
+            //监听蓝牙适配器状态
+            wx.onBluetoothAdapterStateChange(function (res) {
+              console.log(`adapterState changed, now is`, res);
+            });
+            //如果蓝牙此时处于空闲，则可以
+            if (res.available && !res.discovering) {
+              console.log('蓝牙处于空闲，开启蓝牙搜索...');
+              //开启蓝牙搜索模式
+              wx.startBluetoothDevicesDiscovery({
+                services: [],
+                success: function (res) {
+                  console.log('蓝牙搜索的结果列表', res)
+                  _this.setData({
+                    bleIsShowList:true
+                  });
+                  // ArrayBuffer转16进度字符串示例
+                  function ab2hex(buffer) {
+                    let hexArr = Array.prototype.map.call(
+                      new Uint8Array(buffer),
+                      function (bit) {
+                        return ('00' + bit.toString(16)).slice(-2)
+                      }
+                    )
+                    return hexArr.join('');
+                  }
+
+                  wx.onBluetoothDeviceFound(function (res) {
+                    console.log('new device list has founded');
+                    console.log(res);
+                    console.log(ab2hex(res.devices[0].advertisData));
+                    let bleDevice;
+                    if(_this.data.os=='android'){
+                      bleDevice = res.devices[0];
+                    } else if(_this.data.os == 'ios'){
+                      bleDevice = res.devices[0];
+                    }else{
+                      mi.toast('暂不支持您的设备');
+                    }
+                    _this.data.bleLists.push(bleDevice);
+                    _this.setData({
+                      bleLists: _this.data.bleLists
+                    });
+                  })
+                },
+                fail: function (res) {
+                  console.log(res);
+                }
+              })
+
+            } else {
+              console.log('蓝牙正忙');
+            }
+
+
+          },
+          fail: function (res) {
+            console.log('获取蓝牙适配器状态失败', res);
+          }
+        });
+
+
+      },
+      fail: function (res) {
+        console.log('蓝牙未打开');
+      }
+    });
+  },
   onLoad() {
+    let _this=this;
     // this.lineInit();
     this.getUserInfo();
+    wx.getSystemInfo({
+      success: function (res) {
+        console.log(res);
+        _this.setData({
+          os:res.platform
+        });
+      }
+    });
     this.setData({
       temp_lto: 36.5,//左上外
       temp_lti: 37.4,//左上内
@@ -75,6 +168,7 @@ Page({
       temp_rto: 37,//右上外
     });
     this.calcTemp();
+    this.bluetoothInit();
 
   },
   onReady() {
@@ -86,6 +180,12 @@ Page({
         if (chart && chart2 && chart3){
           _this.chartRender(chart, {
             color: ["#FF4578"],
+            dataZoom: [{
+              fillerColor:'rgba(254,216,227,.5)',
+              handleStyle: {
+                color: 'rgba(254,216,227,1)'
+              }
+            }]
           }, '分');
           _this.chartRender(chart2, {
             color: ["#4586FF"],
@@ -102,6 +202,61 @@ Page({
   },
   onShow() {
 
+  },
+  connect(e){
+    let _this=this;
+    wx.stopBluetoothDevicesDiscovery({
+      success:function(res){
+        console.log('关闭蓝牙搜索',res);
+        _this.setData({
+          bleIsShowList: false
+        });
+      }
+    });
+    wx.getBluetoothDevices({
+      success:function(res){
+        console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
+      }
+    });
+    console.log(e.currentTarget.dataset.id);
+    let deviceId = e.currentTarget.dataset.id;
+    this.setData({
+      bleDeviceId: deviceId
+    });
+    wx.onBLEConnectionStateChange(function(res){
+      console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
+      mi.toast(res.connected?'连接成功':'连接失败');
+    });
+    console.log('创建蓝牙连接');
+    wx.createBLEConnection({
+      deviceId: deviceId,
+      success: function (res) {
+        console.log('设备连接成功',res);
+        wx.getBLEDeviceServices({
+          deviceId: deviceId,
+          success:function(res){
+            console.log('获取蓝牙设备所有服务',res);
+            res.services.forEach(v=>{
+              wx.getBLEDeviceCharacteristics({
+                deviceId: deviceId,
+                serviceId:v.uuid,
+                success:function(res){
+                  console.log('读取蓝牙服务特征值', res);
+                  // wx.readBLECharacteristicValue({
+                  //   deviceId: deviceId,
+                  //   serviceId: v.uuid,
+                  //   characteristicId:res.uuid
+                  // });
+                }
+              });
+            });
+          }
+        });
+      },
+      fail:function(){
+        console.log('设备连接失败');
+      }
+    });
   },
   getUserInfo() {
     let that = this;
@@ -168,7 +323,16 @@ Page({
           start: 0,
           end: 20,
           minSpan: 10,
-          filterMode: 'none'
+          filterMode: 'none',
+          backgroundColor: '#fff',
+          dataBackground: {
+            lineStyle: {
+              color: '#d6d6d6'
+            },
+            areaStyle: {
+              color: '#fafbfd'
+            }
+          }
         }
       ],
       xAxis: {
@@ -184,7 +348,7 @@ Page({
         axisPointer: {
           label: {
             formatter: function (params) {
-              console.log(params);
+              // console.log(params);
               mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
             }
           }
@@ -208,68 +372,9 @@ Page({
       }]
     };
     option = mi.deepMerge(option, opts);
-    console.log(option);
+    // console.log(option);
 
     chart.setOption(option);
-  },
-  bluetoothInit: function () {
-    //检测蓝牙是否打开
-    wx.openBluetoothAdapter({
-      success: function (res) {
-        console.log(res);
-        //检测蓝牙此时的状态
-        wx.getBluetoothAdapterState({
-          success: function (res) {
-            console.log(res);
-            //监听蓝牙适配器状态
-            wx.onBluetoothAdapterStateChange(function (res) {
-              console.log(`adapterState changed, now is`, res);
-            })
-            //如果蓝牙此时处于空闲，则可以
-            if (res.available && !res.discovering) {
-              //开启蓝牙搜索模式
-              wx.startBluetoothDevicesDiscovery({
-                services: [],
-                success: function (res) {
-                  console.log(res)
-
-                  // ArrayBuffer转16进度字符串示例
-                  function ab2hex(buffer) {
-                    let hexArr = Array.prototype.map.call(
-                      new Uint8Array(buffer),
-                      function (bit) {
-                        return ('00' + bit.toString(16)).slice(-2)
-                      }
-                    )
-                    return hexArr.join('');
-                  }
-
-                  wx.onBluetoothDeviceFound(function (devices) {
-                    console.log('new device list has founded')
-                    console.dir(devices)
-                    console.log(ab2hex(devices[0].advertisData))
-                  })
-                },
-                fail: function (res) {
-                  console.log(res);
-                }
-              })
-
-            }
-
-
-          },
-          fail: function (res) {
-            console.log(res);
-          }
-        });
-
-
-      },
-      fail: function (res) {
-        console.log('蓝牙未打开');
-      }
-    });
   },
   calcTemp() {
     //平均温度
