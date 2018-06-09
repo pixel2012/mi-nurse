@@ -4,7 +4,7 @@ const mi = {
   version: '0.0.1',
   ip: 'http://api.51mito.com/api/',
   ajax: function (param) {
-    var that = this;
+    let that = this;
     //默认请求方式为get
     if (!params.hasOwnProperty('method') || !params.method) {
       params.method = 'GET';
@@ -51,7 +51,7 @@ const mi = {
         });
       }
       //判断参数是写到url里面还是body里面
-      var Pos = 0; //0是不写任何参数，1是写到url里，2是写道body里
+      let Pos = 0; //0是不写任何参数，1是写到url里，2是写道body里
       if (params.hasOwnProperty('data')) {
         if (params.method == 'GET' || !params.hasOwnProperty('dataPos') || (params.hasOwnProperty('dataPos') && params.dataPos)) {
           Pos = 1; //params中方法是get的或者没有dataPos或者dataPos为true时，参数写道url里面
@@ -59,13 +59,13 @@ const mi = {
           Pos = 2; //参数写道body里面
         }
       }
-      var urlData = params.url + '?'; //url地址
+      let urlData = params.url + '?'; //url地址
       if (Pos == 1) {
-        for (var item in params.data) {
+        for (let item in params.data) {
           urlData += item + '=' + params.data[item] + '&';
         }
       }
-      var sendData = ''; //定义将要上传服务器的数据
+      let sendData = ''; //定义将要上传服务器的数据
       /*当含有加密参数开启*/
       if (params.hasOwnProperty('encrypt') && params.encrypt) {
         sendData = that.crypto.encode(JSON.stringify(params.data));
@@ -130,9 +130,9 @@ const mi = {
       }
     },
     get: function (key) {
-      var value = '';//获取的值
-      var content = wx.getStorageSync(key);
-      var expires = wx.getStorageSync(key + '_expires');
+      let value = '';//获取的值
+      let content = wx.getStorageSync(key);
+      let expires = wx.getStorageSync(key + '_expires');
       if (expires) {
         //如果有过期时间
         if (expires - new Date().getTime() > 0) {
@@ -159,7 +159,7 @@ const mi = {
       let key = crypto.enc.Utf8.parse(aesKey);
       let result = crypto.enc.Utf8.parse(word);
       let encrypted = crypto.AES.encrypt(result, key, { mode: crypto.mode.ECB, padding: crypto.pad.Pkcs7 });
-      // var encryptedStr = encrypted.ciphertext.toString();
+      // let encryptedStr = encrypted.ciphertext.toString();
       return encrypted.toString();
     },
     decode: function (word) {
@@ -204,9 +204,9 @@ const mi = {
     }
   },
   getArryMax(arr) {
-    var max = arr[0];
-    var len = arr.length;
-    for (var i = 1; i < len; i++) {
+    let max = arr[0];
+    let len = arr.length;
+    for (let i = 1; i < len; i++) {
       if (arr[i] > max) {
         max = arr[i];
       }
@@ -222,13 +222,51 @@ const mi = {
     }
   },
   deepMerge(obj1, obj2) {
-    var key;
+    let key;
     for (key in obj2) {
       // 如果target(也就是obj1[key])存在，且是对象的话再去调用deepMerge，否则就是obj1[key]里面没这个对象，需要与obj2[key]合并
       obj1[key] = obj1[key] && obj1[key].toString() === "[object Object]" ?
         this.deepMerge(obj1[key], obj2[key]) : obj1[key] = obj2[key];
     }
     return obj1;
+  },
+  buf2hex(buffer) {
+    let hexArr = Array.prototype.map.call(
+      new Uint8Array(buffer),
+      function (bit) {
+        return ('00' + bit.toString(16)).slice(-2)
+      }
+    )
+    return hexArr.join('');
+  },//二进制转16进制
+  hex2buf(hex) {
+    let typedArray = new Uint8Array(hex.match(/[\da-f]{2}/gi).map(function (h) {
+      return parseInt(h, 16);
+    }));
+    return typedArray.buffer;
+  },
+  buf2str(buffer) {
+    let arr = Array.prototype.map.call(new Uint8Array(buffer), x => x)
+    let str = ''
+    for (let i = 0; i < arr.length; i++) {
+      str += String.fromCharCode(arr[i])
+    }
+    return str
+  },//二进制转字符串
+  hex2str(hex) {
+    let trimedStr = hex.trim();
+    let rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
+    let len = rawStr.length;
+    if (len % 2 !== 0) {
+      return "";
+    }
+    let curCharCode;
+    let resultStr = [];
+    for (let i = 0; i < len; i = i + 2) {
+      curCharCode = parseInt(rawStr.substr(i, 2), 16); // ASCII Code Value
+      resultStr.push(String.fromCharCode(curCharCode));
+    }
+    return resultStr.join("");
   }
 };
 module.exports = mi;

@@ -37,13 +37,16 @@ function initChart3(canvas, width, height) {
 
 Page({
   data: {
-    os:'',//操作平台
-    bleIsConnect:false,//是否连接蓝牙
-    bleIsSync:'',//是否蓝牙信息同步
-    bleEnergy:'',//电池电量
-    bleIsShowList:false,//是否显示已搜索到的蓝牙设备列表
-    bleLists:[],//搜索到蓝牙设备列表
-    bleDeviceId:'',//蓝牙设备的id号
+    os: '',//操作平台
+    bleIsConnect: false,//是否连接蓝牙
+    bleIsSync: '',//是否蓝牙信息同步
+    bleEnergy: '',//电池电量
+    bleIsShowList: false,//是否显示已搜索到的蓝牙设备列表
+    bleLists: [],//搜索到蓝牙设备列表
+    bleDeviceId: '',//蓝牙设备的id号
+    bleServerId: '',//蓝牙设备的服务id号
+    bleCharWriteId: '',//蓝牙设备的服务写入特征值id号
+    bleCharNotifyId: '',//蓝牙设备的服务接收通知特征值id号
     isAuthorize: true,//是否授权
     temp_score: '',
     temp_lto: '',//左上外
@@ -70,7 +73,7 @@ Page({
 
   },
   bluetoothInit: function () {
-    let _this=this;
+    let _this = this;
     // _this.setData({
     //   bleIsConnect: true
     // });
@@ -94,36 +97,31 @@ Page({
                 services: [],
                 success: function (res) {
                   console.log('蓝牙搜索的结果列表', res)
-                  _this.setData({
-                    bleIsShowList:true
-                  });
-                  // ArrayBuffer转16进度字符串示例
-                  function ab2hex(buffer) {
-                    let hexArr = Array.prototype.map.call(
-                      new Uint8Array(buffer),
-                      function (bit) {
-                        return ('00' + bit.toString(16)).slice(-2)
-                      }
-                    )
-                    return hexArr.join('');
-                  }
+                  // _this.setData({
+                  //   bleIsShowList:true
+                  // });
 
                   wx.onBluetoothDeviceFound(function (res) {
                     console.log('new device list has founded');
                     console.log(res);
-                    console.log(ab2hex(res.devices[0].advertisData));
-                    let bleDevice;
-                    if(_this.data.os=='android'){
-                      bleDevice = res.devices[0];
-                    } else if(_this.data.os == 'ios'){
-                      bleDevice = res.devices[0];
-                    }else{
-                      mi.toast('暂不支持您的设备');
+                    console.log('2to16', mi.buf2hex(res.devices[0].advertisData));
+                    console.log('2toSTR', mi.buf2str(res.devices[0].advertisData));
+                    if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
+                      //发现蜜桃设备直接连接
+                      _this.connect(res.devices[0].deviceId);
                     }
-                    _this.data.bleLists.push(bleDevice);
-                    _this.setData({
-                      bleLists: _this.data.bleLists
-                    });
+                    // let bleDevice;
+                    // if(_this.data.os=='android'){
+                    //   bleDevice = res.devices[0];
+                    // } else if(_this.data.os == 'ios'){
+                    //   bleDevice = res.devices[0];
+                    // }else{
+                    //   mi.toast('暂不支持您的设备');
+                    // }
+                    // _this.data.bleLists.push(bleDevice);
+                    // _this.setData({
+                    //   bleLists: _this.data.bleLists
+                    // });
                   })
                 },
                 fail: function (res) {
@@ -149,15 +147,172 @@ Page({
       }
     });
   },
+  connect(id) {
+    let _this = this;
+    wx.stopBluetoothDevicesDiscovery({
+      success: function (res) {
+        console.log('关闭蓝牙搜索', res);
+        _this.setData({
+          bleIsShowList: false
+        });
+      }
+    });
+    wx.getBluetoothDevices({
+      success: function (res) {
+        console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
+      }
+    });
+    console.log('deviceId', id);
+    let deviceId = id;
+    this.setData({
+      bleDeviceId: deviceId
+    });
+    wx.onBLEConnectionStateChange(function (res) {
+      console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
+      mi.toast(res.connected ? '连接成功' : '连接失败');
+    });
+    console.log('创建蓝牙连接');
+    wx.createBLEConnection({
+      deviceId: deviceId,
+      success: function (res) {
+        console.log('设备连接成功', res);
+        wx.getBLEDeviceServices({
+          deviceId: deviceId,
+          success: function (res) {
+            console.log('获取蓝牙设备所有服务', res);
+            for (let i = 0; i < res.services.length; i++) {
+              if (res.services[i].uuid.indexOf('0000FF92') > -1) {//查找自定义服务
+                _this.setData({
+                  bleServerId: res.services[i].uuid
+                });
+                break;//终止循环
+              }
+            }
+            wx.getBLEDeviceCharacteristics({
+              deviceId: deviceId,
+              serviceId: _this.data.bleServerId,
+              success: function (res) {
+                console.log('读取蓝牙服务特征值', _this.data.bleServerId, res);
+                let writeId, notifyId;
+                for (let j = 0; j < res.characteristics.length; j++) {
+                  if (res.characteristics[j].uuid.indexOf('9600') > -1) {
+                    writeId = res.characteristics[j].uuid;
+                  }
+                  if (res.characteristics[j].uuid.indexOf('9601')) {
+                    notifyId = res.characteristics[j].uuid;
+                  }
+                  console.log('writeId', writeId);
+                  console.log('notifyId', notifyId);
+                  _this.setData({
+                    bleCharWriteId: writeId,
+                    bleCharNotifyId: notifyId,
+                  });
+                }
+                //至此拿到所有需要的值，开启特征值检测，检测一下
+                wx.notifyBLECharacteristicValueChange({
+                  deviceId: deviceId,
+                  serviceId: _this.data.bleServerId,
+                  characteristicId: _this.data.bleCharNotifyId,
+                  state: true,
+                  success: function (res) {
+                    console.log('特征值订阅开启成功', res);
+                    wx.onBLECharacteristicValueChange(function (res) {
+                      console.log('检测到特征值发生变化', res);
+                      let hex = mi.buf2hex(res.value);
+                      console.log('特征值二进制转十六进制后结果', hex);
+                      _this.deal(hex);
+                    });
+                    setTimeout(function () {
+                      _this.command('FBFA000500C1C4');//查询模块版本号
+                    }, 1000);
+                  },
+                  fail: function (res) {
+                    console.log('特征值订阅开启失败', res);
+                  }
+                });
+              }
+            });
+          }
+        });
+      },
+      fail: function () {
+        console.log('设备连接失败');
+      }
+    });
+  },
+  command(obj) {
+    const command = {
+      c1: 'FBFA000500C1C4',
+      c2: 'FBFA000500C2C7',
+      c3: '',
+      c4: 'FBFA000500C4C1',
+      c5: '',
+      c6: 'FBFA000500C6C3',
+      c7: '',
+      c8: '',
+      C9: '',
+      ca: '',
+      cb: 'FBFA000500CBCE',
+      cc: 'FBFA000500CCC9'
+    };
+    let tempObj = {};
+    if (typeof obj == 'string') {
+      tempObj.hex = obj;
+    } else {
+      tempObj = obj;
+    }
+    wx.writeBLECharacteristicValue({
+      deviceId: this.data.bleDeviceId,
+      serviceId: this.data.bleServerId,
+      characteristicId: this.data.bleCharWriteId,
+      value: mi.hex2buf(tempObj.hex),
+      success: function (res) {
+        console.log('特征值写入成功', res);
+        if (tempObj.success) {
+          tempObj.success(res);
+        }
+      },
+      fail: function (res) {
+        console.log('特征值写入失败', res);
+        if (tempObj.fail) {
+          tempObj.fail(res);
+        }
+      }
+    });
+  },
+  deal(hex) {
+    //查询模块版本号命令（0xC1）
+    if (hex.indexOf('01c1') > -1) {
+      let cache = hex.split('01c1')[1];
+      let pkg = '0x' + cache.substring(0, cache.length - 2);
+      let result = mi.hex2str(pkg);
+      console.log('结果', result);
+      return result;
+    }
+    //查询电池电量命令（0xC2）
+    if (hex.indexOf('01c2') > -1) {
+      let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
+      let result = parseInt(pkg, 16);
+      console.log('结果', result);
+      return result;
+    }
+    //查询温度命令（0xC3）
+    if (hex.indexOf('01c3') > -1) {
+      let pkg = '0x' + hex.split('01c3')[1].substr(0, 2);
+      let result = parseInt(pkg, 16);
+      console.log('结果', result);
+      return result;
+    }
+  },
   onLoad() {
-    let _this=this;
+    let _this = this;
     // this.lineInit();
     this.getUserInfo();
     wx.getSystemInfo({
       success: function (res) {
         console.log(res);
         _this.setData({
-          os:res.platform
+          os: res.platform
         });
       }
     });
@@ -172,16 +327,16 @@ Page({
 
   },
   onReady() {
-    let _this=this;
-    let timer=null;
+    let _this = this;
+    let timer = null;
     detch();
-    function detch(){
-      timer=setTimeout(()=>{
-        if (chart && chart2 && chart3){
+    function detch() {
+      timer = setTimeout(() => {
+        if (chart && chart2 && chart3) {
           _this.chartRender(chart, {
             color: ["#FF4578"],
             dataZoom: [{
-              fillerColor:'rgba(254,216,227,.5)',
+              fillerColor: 'rgba(254,216,227,.5)',
               handleStyle: {
                 color: 'rgba(254,216,227,1)'
               }
@@ -191,73 +346,19 @@ Page({
             color: ["#4586FF"],
           }, '℃');
           _this.chartRender(chart3, {
-            color: ["#6DB35B", "#4586FF", "#FF4578","#AB45FF"],
+            color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
           }, '℃');
-        }else{
+        } else {
           clearTimeout(timer);
           detch();
         }
-      },1000);
+      }, 1000);
     }
   },
   onShow() {
 
   },
-  connect(e){
-    let _this=this;
-    wx.stopBluetoothDevicesDiscovery({
-      success:function(res){
-        console.log('关闭蓝牙搜索',res);
-        _this.setData({
-          bleIsShowList: false
-        });
-      }
-    });
-    wx.getBluetoothDevices({
-      success:function(res){
-        console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
-      }
-    });
-    console.log(e.currentTarget.dataset.id);
-    let deviceId = e.currentTarget.dataset.id;
-    this.setData({
-      bleDeviceId: deviceId
-    });
-    wx.onBLEConnectionStateChange(function(res){
-      console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
-      mi.toast(res.connected?'连接成功':'连接失败');
-    });
-    console.log('创建蓝牙连接');
-    wx.createBLEConnection({
-      deviceId: deviceId,
-      success: function (res) {
-        console.log('设备连接成功',res);
-        wx.getBLEDeviceServices({
-          deviceId: deviceId,
-          success:function(res){
-            console.log('获取蓝牙设备所有服务',res);
-            res.services.forEach(v=>{
-              wx.getBLEDeviceCharacteristics({
-                deviceId: deviceId,
-                serviceId:v.uuid,
-                success:function(res){
-                  console.log('读取蓝牙服务特征值', res);
-                  // wx.readBLECharacteristicValue({
-                  //   deviceId: deviceId,
-                  //   serviceId: v.uuid,
-                  //   characteristicId:res.uuid
-                  // });
-                }
-              });
-            });
-          }
-        });
-      },
-      fail:function(){
-        console.log('设备连接失败');
-      }
-    });
-  },
+
   getUserInfo() {
     let that = this;
     //获取用户信息
