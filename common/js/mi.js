@@ -267,7 +267,51 @@ const mi = {
       resultStr.push(String.fromCharCode(curCharCode));
     }
     return resultStr.join("");
-  }
-};
+  },
+  check(para) {
+    let dateArr = [];
+    for (let i = 0; i < para.length / 2; i++) {
+      dateArr.push(para[2 * i] + para[2 * i + 1]);
+    }
+    let code = "";
+    for (let i = 0; i < dateArr.length - 1; i++) {
+      if (i == 0) {
+        code = this.xor(dateArr[i], dateArr[i + 1]);
+      } else {
+        code = this.xor(code, dateArr[i + 1]);
+      }
+    }
+    return code;
+  },//计算校验码
+  xor(strHex_X, strHex_Y) {
+    //将x、y转成二进制形式   
+    let anotherBinary = parseInt(strHex_X, 16).toString(2);
+    let thisBinary = parseInt(strHex_Y, 16).toString(2);
+
+    let result = "";
+    //判断是否为8位二进制，否则左补零
+    if (anotherBinary.length != 8) {
+      for (let i = anotherBinary.length; i < 8; i++) {
+        anotherBinary = "0" + anotherBinary;
+      }
+    }
+    if (thisBinary.length != 8) {
+      for (let i = thisBinary.length; i < 8; i++) {
+        thisBinary = "0" + thisBinary;
+      }
+    }
+    //异或运算   
+    for (let i = 0; i < anotherBinary.length; i++) {
+      //如果相同位置数相同，则补0，否则补1 
+      if (thisBinary.charAt(i) == anotherBinary.charAt(i))
+        result += "0";
+      else {
+        result += "1";
+      }
+    }
+    let resultHex = parseInt(result, 2).toString(16);
+    return resultHex[1] ? resultHex : '0' + resultHex;
+  }//异或比较
+}
 module.exports = mi;
 

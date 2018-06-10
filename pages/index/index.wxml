@@ -3,19 +3,19 @@
   <view class='mi-box'>
     <view class='row'>
       <view class='col-50'>
-        <view class='mi-status'>
-          <image src="../../common/img/{{isConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
-          <text class='mi-text'>{{isConnect?'已连接':'未连接'}}</text>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
+          <text class='mi-text'>{{bleIsConnect?'已连接':'未连接'}}</text>
         </view>
-        <view class='mi-status'>
-          <image src="../../common/img/{{isConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{isSync != ''?isSync:'未同步'}}</text>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleIsSync != ''?isSync:'未同步'}}</text>
         </view>
       </view>
       <view class='col-50 mi-r'>
-        <view class='mi-status'>
-          <image src="../../common/img/{{isConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{energy != ''?energy:'未知'}}</text>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleEnergy != ''?energy:'未知'}}</text>
         </view>
       </view>
     </view>

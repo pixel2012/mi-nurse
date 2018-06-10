@@ -8,7 +8,9 @@ page {
   height: 100%;
   background-color: #faf4f6;
 }
-
+.mi-status.active{
+  color: #FF4578;
+}
 .mi-meter {
   display: block;
   text-align: center;

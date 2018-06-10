@@ -1,7 +1,7 @@
 let app = getApp();
-let echarts = require('../../common/components/ec-canvas/echarts.js');
+const echarts = require('../../common/components/ec-canvas/echarts.js');
 // let wxCharts = require('../../common/js/wxcharts.js');
-let mi = require('../../common/js/mi.js');
+const mi = require('../../common/js/mi.js');
 const api = {
   bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
 };
@@ -37,7 +37,6 @@ function initChart3(canvas, width, height) {
 
 Page({
   data: {
-    os: '',//操作平台
     bleIsConnect: false,//是否连接蓝牙
     bleIsSync: '',//是否蓝牙信息同步
     bleEnergy: '',//电池电量
@@ -74,9 +73,6 @@ Page({
   },
   bluetoothInit: function () {
     let _this = this;
-    // _this.setData({
-    //   bleIsConnect: true
-    // });
     //检测蓝牙是否打开
     wx.openBluetoothAdapter({
       success: function (res) {
@@ -104,8 +100,6 @@ Page({
                   wx.onBluetoothDeviceFound(function (res) {
                     console.log('new device list has founded');
                     console.log(res);
-                    console.log('2to16', mi.buf2hex(res.devices[0].advertisData));
-                    console.log('2toSTR', mi.buf2str(res.devices[0].advertisData));
                     if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
                       //发现蜜桃设备直接连接
                       _this.connect(res.devices[0].deviceId);
@@ -170,6 +164,9 @@ Page({
     wx.onBLEConnectionStateChange(function (res) {
       console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
       mi.toast(res.connected ? '连接成功' : '连接失败');
+      _this.setData({
+        bleIsConnect: res.connected
+      });
     });
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
@@ -223,7 +220,10 @@ Page({
                       _this.deal(hex);
                     });
                     setTimeout(function () {
-                      _this.command('FBFA000500C1C4');//查询模块版本号
+                      _this.command({
+                        command: 'c6',
+                        param: ['02']
+                      });//查询模块版本号
                     }, 1000);
                   },
                   fail: function (res) {
@@ -240,27 +240,31 @@ Page({
       }
     });
   },
-  command(obj) {
+  command(obj, hexStr) {
     const command = {
-      c1: 'FBFA000500C1C4',
-      c2: 'FBFA000500C2C7',
-      c3: '',
-      c4: 'FBFA000500C4C1',
+      c1: '000500C1C4',
+      c2: '000500C2C7',
+      c3: '000600C3',//后面需追加两位机位和两位校验码
+      c4: '000500C4C1',
       c5: '',
-      c6: 'FBFA000500C6C3',
+      c6: '000500C6C3',
       c7: '',
       c8: '',
       C9: '',
       ca: '',
-      cb: 'FBFA000500CBCE',
-      cc: 'FBFA000500CCC9'
+      cb: '000500CBCE',
+      cc: '000500CCC9'
     };
-    let tempObj = {};
-    if (typeof obj == 'string') {
-      tempObj.hex = obj;
-    } else {
-      tempObj = obj;
+    let tempObj = mi.deepMerge({}, obj);
+    tempObj.hex = command[obj.command];
+    if (obj.command == 'c3') {
+      obj.param.forEach(v => {
+        tempObj.hex += v;//追加上参数
+      });
+      tempObj.hex += mi.check(tempObj.hex);//追加校验码
     }
+    //追加包头，开始写入特征值
+    tempObj.hex = 'FBFA' + tempObj.hex;
     wx.writeBLECharacteristicValue({
       deviceId: this.data.bleDeviceId,
       serviceId: this.data.bleServerId,
@@ -281,26 +285,52 @@ Page({
     });
   },
   deal(hex) {
+    //先校验数据是否完整
+    let data = hex.replace('fbfa', '').slice(0, -2);
+    let check = hex.replace('fbfa' + data, '');
+    if (mi.check(data) != check) {
+      return console.log('数据传输不完整，校验不通过', data, check, mi.check(data));
+    }
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
-      let cache = hex.split('01c1')[1];
-      let pkg = '0x' + cache.substring(0, cache.length - 2);
+      let pkg = hex.split('01c1')[1].slice(0, -2);
+      console.log(pkg);
       let result = mi.hex2str(pkg);
-      console.log('结果', result);
+      console.log('结果c1', result);
       return result;
     }
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
-      console.log('结果', result);
+      console.log('结果c2', result);
       return result;
     }
     //查询温度命令（0xC3）
     if (hex.indexOf('01c3') > -1) {
-      let pkg = '0x' + hex.split('01c3')[1].substr(0, 2);
-      let result = parseInt(pkg, 16);
-      console.log('结果', result);
+      let pkg = hex.split('01c3')[1].slice(0, -2);
+      console.log(pkg);
+      let result = {
+        slot: pkg.slice(0, 2),
+        temp1: parseInt(pkg.slice(2, 6), 16) / 100,
+        temp2: parseInt(pkg.slice(6), 16) / 100,
+      }; //parseInt(pkg, 16);
+      console.log('结果c3', result);
+      return result;
+    }
+    //查询工作模式（0xC4）
+    if (hex.indexOf('01c4') > -1) {
+      let pkg = hex.split('01c4')[1].slice(0, -2);
+      console.log(pkg);
+      let result = pkg; //parseInt(pkg, 16);
+      console.log('结果c4', result);
+      return result;
+    }
+    //查询工作模式（0xC6）
+    if (hex.indexOf('01c6') > -1) {
+      let pkg = hex.split('01c6')[1].slice(0, -2);
+      let result = pkg; //parseInt(pkg, 16);
+      console.log('结果c6', result);
       return result;
     }
   },
