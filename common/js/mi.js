@@ -276,13 +276,18 @@ const mi = {
     let code = "";
     for (let i = 0; i < dateArr.length - 1; i++) {
       if (i == 0) {
-        code = this.xor(dateArr[i], dateArr[i + 1]);
+        code = this.xr(dateArr[i], dateArr[i + 1]);
       } else {
-        code = this.xor(code, dateArr[i + 1]);
+        code = this.xr(code, dateArr[i + 1]);
       }
     }
     return code;
   },//计算校验码
+  xr(x1,x2){
+    let xi1=parseInt(x1,16);
+    let xi2 = parseInt(x2, 16);
+    return (xi1 ^ xi2).toString(16);
+  },
   xor(strHex_X, strHex_Y) {
     //将x、y转成二进制形式   
     let anotherBinary = parseInt(strHex_X, 16).toString(2);
