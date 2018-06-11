@@ -316,7 +316,19 @@ const mi = {
     }
     let resultHex = parseInt(result, 2).toString(16);
     return resultHex[1] ? resultHex : '0' + resultHex;
-  }//异或比较
+  },//异或比较
+  isRight(hex){
+    //先校验数据是否完整
+    let data = hex.replace('fbfa', '').slice(0, -2);
+    let check = hex.replace('fbfa' + data, '');
+    if (mi.check(data) == check) {
+      console.log('数据传输完整，校验通过', data, check, mi.check(data));
+      return true;
+    }else{
+      console.log('数据传输不完整，校验不通过', data, check, mi.check(data));
+      return false;
+    }
+  }
 }
 module.exports = mi;
 

@@ -285,14 +285,11 @@ Page({
     });
   },
   deal(hex) {
-    //先校验数据是否完整
-    let data = hex.replace('fbfa', '').slice(0, -2);
-    let check = hex.replace('fbfa' + data, '');
-    if (mi.check(data) != check) {
-      return console.log('数据传输不完整，校验不通过', data, check, mi.check(data));
-    }
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
+      if(!mi.isRight(hex)){
+        return mi.toast('返回数据不完整');
+      }
       let pkg = hex.split('01c1')[1].slice(0, -2);
       console.log(pkg);
       let result = mi.hex2str(pkg);
@@ -301,6 +298,9 @@ Page({
     }
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
+      if (!mi.isRight(hex)) {
+        return mi.toast('返回数据不完整');
+      }
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
       console.log('结果c2', result);
@@ -308,6 +308,9 @@ Page({
     }
     //查询温度命令（0xC3）
     if (hex.indexOf('01c3') > -1) {
+      if (!mi.isRight(hex)) {
+        return mi.toast('返回数据不完整');
+      }
       let pkg = hex.split('01c3')[1].slice(0, -2);
       console.log(pkg);
       let result = {
@@ -326,7 +329,7 @@ Page({
       console.log('结果c4', result);
       return result;
     }
-    //查询工作模式（0xC6）
+    //查询震动模式（0xC6）
     if (hex.indexOf('01c6') > -1) {
       let pkg = hex.split('01c6')[1].slice(0, -2);
       let result = pkg; //parseInt(pkg, 16);
@@ -334,6 +337,7 @@ Page({
       return result;
     }
   },
+  
   onLoad() {
     let _this = this;
     // this.lineInit();
