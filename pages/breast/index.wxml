@@ -5,23 +5,23 @@
 <!--主框架  -->
 <view class='mi-box' style='padding-bottom:10rpx;'>
   <view class='row'>
-    <view class='col-50'>
-      <view class='mi-status'>
-        <image src='../../common/img/bluetoot.png' style="width:14rpx;height:22rpx;"></image>
-        <text class='mi-text'>未连接</text>
+      <view class='col-50'>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
+          <text class='mi-text'>{{bleIsConnect?'已连接':'未连接'}}</text>
+        </view>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
+        </view>
       </view>
-      <view class='mi-status'>
-        <image src='../../common/img/status.png' style="width:18rpx;height:18rpx;"></image>
-        <text class='mi-text'>未同步</text>
+      <view class='col-50 mi-r'>
+        <view class="mi-status {{bleIsConnect?'active':''}}">
+          <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
+        </view>
       </view>
     </view>
-    <view class='col-50 mi-r'>
-      <view class='mi-status'>
-        <image src='../../common/img/cell.png' style="width:26rpx;height:18rpx;"></image>
-        <text class='mi-text'>未知</text>
-      </view>
-    </view>
-  </view>
 </view>
 <view class='mi-tab-box row no-gutter'>
   <view class="col-50 mi-tab {{tabIndex==0?'active':''}}" data-index='0' bindtap='bindTab'>

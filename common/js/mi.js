@@ -120,10 +120,11 @@ const mi = {
     }
   },
   store: {
-    set: function (key, data, expire) {
+    set: function (key, data, expires) {
       wx.setStorageSync(key, data);
       //如果传入了过期时间，则追加一个参数存储过期时间
       if (expires) {
+        console.log(!!expires);
         setTimeout(function () {
           wx.setStorageSync(key + '_expires', new Date().getTime() + expires);//单位毫秒
         }, 0);
@@ -283,8 +284,8 @@ const mi = {
     }
     return code;
   },//计算校验码
-  xr(x1,x2){
-    let xi1=parseInt(x1,16);
+  xr(x1, x2) {
+    let xi1 = parseInt(x1, 16);
     let xi2 = parseInt(x2, 16);
     return (xi1 ^ xi2).toString(16);
   },
@@ -317,17 +318,54 @@ const mi = {
     let resultHex = parseInt(result, 2).toString(16);
     return resultHex[1] ? resultHex : '0' + resultHex;
   },//异或比较
-  isRight(hex){
+  isRight(hex) {
     //先校验数据是否完整
     let data = hex.replace('fbfa', '').slice(0, -2);
     let check = hex.replace('fbfa' + data, '');
     if (mi.check(data) == check) {
       console.log('数据传输完整，校验通过', data, check, mi.check(data));
       return true;
-    }else{
+    } else {
       console.log('数据传输不完整，校验不通过', data, check, mi.check(data));
       return false;
     }
+  },
+  format(format) {
+    /*
+     * eg:format="yyyy-MM-dd hh:mm:ss";
+     */
+    let date = new Date();
+    let o = {
+      "M+": date.getMonth() + 1, // month  
+      "d+": date.getDate(), // day  
+      "h+": date.getHours(), // hour  
+      "m+": date.getMinutes(), // minute  
+      "s+": date.getSeconds(), // second  
+      "q+": Math.floor((date.getMonth() + 3) / 3), // quarter  
+      "S": date.getMilliseconds()
+      // millisecond  
+    }
+    if (/(y+)/.test(format)) {
+      format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4
+        - RegExp.$1.length));
+    }
+    for (let k in o) {
+      if (new RegExp("(" + k + ")").test(format)) {
+        format = format.replace(RegExp.$1, RegExp.$1.length == 1
+          ? o[k]
+          : ("00" + o[k]).substr(("" + o[k]).length));
+      }
+    }
+    return format;
+  },
+  showLoading(str){
+    wx.showLoading({
+      title: str || '加载中',
+      mask: true
+    });
+  },
+  hideLoading(){
+    wx.hideLoading();
   }
 }
 module.exports = mi;

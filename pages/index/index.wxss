@@ -43,9 +43,12 @@ page {
 }
 
 .mi-score {
-  color: #45A658;
+  color: #888;
   font-size: 60rpx;
   vertical-align: bottom;
+}
+.mi-score.active{
+  color: #45A658;
 }
 
 .mi-score-unit {

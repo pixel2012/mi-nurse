@@ -33,12 +33,11 @@ function initChart3(canvas, width, height) {
 }
 
 
-
-
 Page({
   data: {
     bleIsConnect: false,//是否连接蓝牙
     bleIsSync: '',//是否蓝牙信息同步
+    bleSyncInfo: '',//是否蓝牙信息同步
     bleEnergy: '',//电池电量
     bleIsShowList: false,//是否显示已搜索到的蓝牙设备列表
     bleLists: [],//搜索到蓝牙设备列表
@@ -53,13 +52,14 @@ Page({
     temp_rti: '',//右上内
     temp_rto: '',//右上外
     temp_avg: '',//平均乳温
+    temp_diff_num: '',//最大温差值
     temp_avg_isNormal: true,//平均温是否处于正常范围
     temp_avg_title: '',//平均温诊断标题
     temp_avg_detial: '',//平均温诊断内容
     temp_diff_isNormal: true, //最大温差是否处于正常范围
     temp_diff_title: '',//最大温差诊断标题
     temp_diff_detial: '',//最大温差诊断内容
-    temp_diff_num: '',//最大温差值
+    temp_cache: [],//测温临时缓存
     ec: {
       onInit: initChart
     },
@@ -76,6 +76,7 @@ Page({
     //检测蓝牙是否打开
     wx.openBluetoothAdapter({
       success: function (res) {
+        mi.showLoading('蓝牙已打开');
         console.log('打开蓝牙适配器', res);
         //检测蓝牙此时的状态
         wx.getBluetoothAdapterState({
@@ -87,12 +88,13 @@ Page({
             });
             //如果蓝牙此时处于空闲，则可以
             if (res.available && !res.discovering) {
+              mi.showLoading('蓝牙搜索中');
               console.log('蓝牙处于空闲，开启蓝牙搜索...');
               //开启蓝牙搜索模式
               wx.startBluetoothDevicesDiscovery({
                 services: [],
                 success: function (res) {
-                  console.log('蓝牙搜索的结果列表', res)
+                  console.log('蓝牙搜索的结果列表', res);
                   // _this.setData({
                   //   bleIsShowList:true
                   // });
@@ -125,12 +127,16 @@ Page({
 
             } else {
               console.log('蓝牙正忙');
+              mi.toast('蓝牙正忙');
+              mi.hideLoading();
             }
 
 
           },
           fail: function (res) {
             console.log('获取蓝牙适配器状态失败', res);
+            mi.toast('获取蓝牙适配器状态失败');
+            mi.hideLoading();
           }
         });
 
@@ -138,6 +144,8 @@ Page({
       },
       fail: function (res) {
         console.log('蓝牙未打开');
+        mi.toast('蓝牙未打开');
+        mi.hideLoading();
       }
     });
   },
@@ -161,17 +169,26 @@ Page({
     this.setData({
       bleDeviceId: deviceId
     });
+    app.bleDeviceId = this.data.bleDeviceId;
+    mi.store.set('bleDeviceId', this.data.bleDeviceId);
     wx.onBLEConnectionStateChange(function (res) {
       console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
       mi.toast(res.connected ? '连接成功' : '连接失败');
       _this.setData({
         bleIsConnect: res.connected
       });
+      app.bleIsConnect = res.connected;
+      if (!res.connected){
+          //如果蓝牙断开，自动重连
+          mi.showLoading('蓝牙重连中');
+          _this.connect(id);
+      }
     });
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
       deviceId: deviceId,
       success: function (res) {
+        mi.hideLoading();
         console.log('设备连接成功', res);
         wx.getBLEDeviceServices({
           deviceId: deviceId,
@@ -182,6 +199,8 @@ Page({
                 _this.setData({
                   bleServerId: res.services[i].uuid
                 });
+                app.bleServerId =  _this.data.bleServerId;
+                mi.store.set('bleServerId', _this.data.bleServerId);
                 break;//终止循环
               }
             }
@@ -204,6 +223,10 @@ Page({
                     bleCharWriteId: writeId,
                     bleCharNotifyId: notifyId,
                   });
+                  app.bleCharWriteId = _this.data.bleCharWriteId;
+                  app.bleCharNotifyId = _this.data.bleCharNotifyId;
+                  mi.store.set('bleCharWriteId', _this.data.bleCharWriteId);
+                  mi.store.set('bleCharNotifyId', _this.data.bleCharNotifyId);
                 }
                 //至此拿到所有需要的值，开启特征值检测，检测一下
                 wx.notifyBLECharacteristicValueChange({
@@ -221,10 +244,9 @@ Page({
                     });
                     setTimeout(function () {
                       _this.command({
-                        command: 'c6',
-                        param: ['02']
-                      });//查询模块版本号
-                    }, 1000);
+                        command: 'c2'
+                      });//查询电量
+                    }, 500);
                   },
                   fail: function (res) {
                     console.log('特征值订阅开启失败', res);
@@ -261,7 +283,12 @@ Page({
       obj.param.forEach(v => {
         tempObj.hex += v;//追加上参数
       });
-      tempObj.hex += mi.check(tempObj.hex);//追加校验码
+      if (tempObj.check){
+        tempObj.hex += mi.check(tempObj.hex);//追加运算校验码
+      }else{
+        tempObj.hex += '00';//追加00校验码
+      }
+      
     }
     //追加包头，开始写入特征值
     tempObj.hex = 'FBFA' + tempObj.hex;
@@ -285,9 +312,10 @@ Page({
     });
   },
   deal(hex) {
+    let _this = this;
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
-      if(!mi.isRight(hex)){
+      if (!mi.isRight(hex)) {
         return mi.toast('返回数据不完整');
       }
       let pkg = hex.split('01c1')[1].slice(0, -2);
@@ -304,6 +332,10 @@ Page({
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
       console.log('结果c2', result);
+      _this.setData({
+        bleEnergy: result
+      });
+      app.bleEnergy = _this.data.bleEnergy;
       return result;
     }
     //查询温度命令（0xC3）
@@ -319,6 +351,54 @@ Page({
         temp2: parseInt(pkg.slice(6), 16) / 100,
       }; //parseInt(pkg, 16);
       console.log('结果c3', result);
+      //验证温度在正常范围区间
+      mi.hideLoading();
+      _this.data.temp_cache
+      if (result.slot == '01') {
+        _this.data.temp_cache[0] = result.temp1;
+        _this.data.temp_cache[1] = result.temp2;
+      }
+      if (result.slot == '02') {
+        _this.data.temp_cache[2] = result.temp1;
+        _this.data.temp_cache[3] = result.temp2;
+        _this.setData({
+          temp_cache: _this.data.temp_cache
+        });
+        for (let i = 0; i < _this.data.temp_cache.length; I++) {
+          if (_this.data.temp_cache[i] <= 32 || _this.data.temp_cache[i] >= 41) {
+            return wx.showModal({
+              title: '数据不准确',
+              content: '请确保温度传感器紧贴胸部皮肤，并保持皮肤表面干爽',
+              cancelText: '取消',
+              confirmText: '再试一次',
+              success: function (res) {
+                if (res.confirm) {
+                  _this.getTem();//重新获取温度
+                  _this.setData({
+                    temp_lto: '',//左上外
+                    temp_lti: '',//左上内
+                    temp_rti: '',//右上内
+                    temp_rto: ''//右上外
+                  });
+                }
+              }
+            });
+            break;
+          } else {
+            //校验通过
+            _this.setData({
+              bleIsSync: mi.format('hh:mm'),
+              bleSyncInfo: mi.format('MM月dd日 hh:mm'),
+              temp_lto: _this.data.temp_cache[0],//左上外
+              temp_lti: _this.data.temp_cache[1],//左上内
+              temp_rti: _this.data.temp_cache[2],//右上内
+              temp_rto: _this.data.temp_cache[3]//右上外
+            });
+            app.bleIsSync = _this.data.bleIsSync;
+            _this.calcTemp();
+          }
+        }
+      }
       return result;
     }
     //查询工作模式（0xC4）
@@ -337,7 +417,24 @@ Page({
       return result;
     }
   },
-  
+  getTem() {
+    mi.showLoading('测温中');
+    let _this = this;
+    setTimeout(function () {
+      _this.command({
+        command: 'c3',
+        param: ['01'],
+        check: true
+      });//左胸
+    }, 500);
+    setTimeout(function () {
+      _this.command({
+        command: 'c3',
+        param: ['02'],
+        check: true
+      });//右胸
+    }, 1000);
+  },
   onLoad() {
     let _this = this;
     // this.lineInit();
@@ -350,14 +447,13 @@ Page({
         });
       }
     });
-    this.setData({
-      temp_lto: 36.5,//左上外
-      temp_lti: 37.4,//左上内
-      temp_rti: 37.8,//右上内
-      temp_rto: 37,//右上外
-    });
-    this.calcTemp();
-    this.bluetoothInit();
+    // this.setData({
+    //   temp_lto: 36.5,//左上外
+    //   temp_lti: 37.4,//左上内
+    //   temp_rti: 37.8,//右上内
+    //   temp_rto: 37,//右上外
+    // });
+    // this.bluetoothInit();
 
   },
   onReady() {
@@ -532,11 +628,14 @@ Page({
 
     //计算健康分数
     let temp_score = this.calcScore(temp_avg, temp_group1_max, temp_group2_max, temp_group3_max);
+    this.setData({
+      temp_score: temp_score,//健康值
+      temp_avg: temp_avg,//平均乳温
 
+    });
     //计算诊断结果
     let avg_last = mi.store.get('temp_avg_last') || -1;
     this.calcAvgDiagnose(temp_avg, avg_last);
-
     this.calcDiffDiagnose([
       temp_lto_lti,
       temp_rto_rti,
@@ -548,10 +647,7 @@ Page({
       temp_rti_lti
     ]);
     //根据蓝牙数据得到温度值
-    this.setData({
-      temp_score: temp_score,
-      temp_avg: temp_avg,//平均乳温
-    });
+
   },//计算温度，蓝牙得到温度后触发
   calcScore(avg, g1, g2, g3) {
     let score = '';//所得分数
@@ -562,6 +658,9 @@ Page({
     //对三组最大温差值进行比较，得出最大的温差赋予temp
     let group_arr = [gmax1, gmax2, gmax3];
     let temp_max = mi.getArryMax(group_arr);
+    this.setData({
+      temp_diff_num: temp_max.toFixed(1)
+    });
     let group_max = '';//最大温差的那个组合序号
     for (let i = 0; i < group_arr.length; i++) {
       if (temp_max == group_arr[i]) {

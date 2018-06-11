@@ -9,13 +9,13 @@
         </view>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleIsSync != ''?isSync:'未同步'}}</text>
+          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
         </view>
       </view>
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleEnergy != ''?energy:'未知'}}</text>
+          <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
         </view>
       </view>
     </view>
@@ -23,20 +23,21 @@
       <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
       <view class='mi-score-box'>
         <view class='mi-score-title'>健康指数</view>
-        <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
+        <text class="mi-score {{temp_score?'active':''}}">{{temp_score ? temp_score:'00.0'}}</text>
         <text class='mi-score-unit'>分</text>
       </view>
     </view>
     <view class='mi-block row no-gutter'>
-      <view class='col-25'>
+      <view class='col-25' wx:if='{{temp_avg}}'>
         <view class='mi-detail-temp'>{{temp_avg}}℃</view>
         <view class='mi-detail-title'>平均乳温</view>
       </view>
-      <view class='col-50'>
-        <view class='mi-button'>立即连接</view>
+      <view class="{{(temp_avg && temp_diff_num)?'col-50':'col-100'}}">
+        <view class='mi-button' wx:if="{{bleIsConnect}}" bindtap='getTem'>立即测温</view>
+        <view class='mi-button' wx:else bindtap='bluetoothInit'>立即连接</view>
         <!-- <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button> -->
       </view>
-      <view class='col-25'>
+      <view class='col-25' wx:if='{{temp_diff_num}}'>
         <view class='mi-detail-temp'>{{temp_diff_num}}℃</view>
         <view class='mi-detail-title'>乳腺最大温差</view>
       </view>
@@ -69,7 +70,7 @@
   <view class='mi-assess-box'>
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康评估</view>
-      <view class='col-50 mi-assess-time'>4月13日 13:00</view>
+      <view class='col-50 mi-assess-time'>{{bleSyncInfo}}</view>
     </view>
     <view class='mi-assess-box2'>
       <view class="mi-assess-dt {{temp_avg_isNormal?'blue':'yellow'}}">{{temp_avg_title || '暂无'}}</view>
@@ -143,14 +144,14 @@
 
 
   </view>
-   <view class='mi-ble-list' wx:if="{{bleIsShowList}}">
-      <view class='mi-ble-content'>
-        <view class='mi-ble-title'>搜索中...</view>
-        <block wx:for="{{bleLists}}" wx:key="{{index}}">
+  <view class='mi-ble-list' wx:if="{{bleIsShowList}}">
+    <view class='mi-ble-content'>
+      <view class='mi-ble-title'>搜索中...</view>
+      <block wx:for="{{bleLists}}" wx:key="{{index}}">
         <view class='mi-ble-item' data-id="{{item.deviceId}}" bindtap='connect'>
           {{item.name}}:[{{item.deviceId}}]
         </view>
-        </block>
-      </view>
-  </view> 
+      </block>
+    </view>
+  </view>
 </view>
