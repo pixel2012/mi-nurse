@@ -330,6 +330,11 @@ const mi = {
       return false;
     }
   },
+  hexMerge(h1, h2) {
+    let hex1 = Number('0x' + h1);
+    let hex2 = Number('0x' + h2);
+    return (hex1 + hex2).toString(16);
+  },
   format(format) {
     /*
      * eg:format="yyyy-MM-dd hh:mm:ss";
@@ -358,13 +363,13 @@ const mi = {
     }
     return format;
   },
-  showLoading(str){
+  showLoading(str) {
     wx.showLoading({
       title: str || '加载中',
       mask: true
     });
   },
-  hideLoading(){
+  hideLoading() {
     wx.hideLoading();
   }
 }

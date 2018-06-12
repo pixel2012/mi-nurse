@@ -37,7 +37,7 @@
     <image src='img/menu.png' class='menu' wx:if="{{!isMenu}}" catchtap='showMenu'></image>
     <view class='mi-tab-menu {{isMenu?"active":""}}'>
       <block wx:for='{{menuList}}' wx:key='item'>
-        <view class='mi-tab-menu-item {{menuIndex==item.id?"active":""}}' data-index='{{item.id}}' data-title='{{item.title}}' bindtap='showMenuItem'>
+        <view class='mi-tab-menu-item {{menuIndex==item.id?"active":""}}' data-index='{{item.id}}' data-title='{{item.title}}' data-mode='{{item.mode}}' bindtap='showMenuItem'>
           <text>{{filterMenu(item.title)}}</text>
         </view>
       </block>

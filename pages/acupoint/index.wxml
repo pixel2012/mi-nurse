@@ -40,13 +40,13 @@
       <view class='col-80'>
         <radio-group class="radio-group" color="#FF4578" bindchange="radioChange">
           <label>
-            <radio value='1'>乳中+膺窗</radio>
+            <radio value='1'>左右胸同步</radio>
           </label>
           <label>
-            <radio value='1'>天溪</radio>
+            <radio value='1'>仅左胸</radio>
           </label>
           <label>
-            <radio value='1'>乳根</radio>
+            <radio value='1'>仅右胸</radio>
           </label>
         </radio-group>
       </view>

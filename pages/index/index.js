@@ -71,7 +71,76 @@ Page({
     }
 
   },
-  bluetoothInit: function () {
+  onLoad() {
+    let _this = this;
+    // this.lineInit();
+    this.getUserInfo();
+    // wx.getSystemInfo({
+    //   success: function (res) {
+    //     console.log(res);
+    //     _this.setData({
+    //       os: res.platform
+    //     });
+    //   }
+    // });
+    // this.setData({
+    //   temp_lto: 36.5,//左上外
+    //   temp_lti: 37.4,//左上内
+    //   temp_rti: 37.8,//右上内
+    //   temp_rto: 37,//右上外
+    // });
+    // this.bluetoothInit();
+
+  },
+  onReady() {
+    let _this = this;
+    let timer = null;
+    _this.updateStore(function(){
+      if (_this.data.bleDeviceId){
+        _this.bluetoothInit(_this.data.bleDeviceId);
+      }
+    });
+    detch();//初始化曲线图
+    function detch() {
+      timer = setTimeout(() => {
+        if (chart && chart2 && chart3) {
+          _this.chartRender(chart, {
+            color: ["#FF4578"],
+            dataZoom: [{
+              fillerColor: 'rgba(254,216,227,.5)',
+              handleStyle: {
+                color: 'rgba(254,216,227,1)'
+              }
+            }]
+          }, '分');
+          _this.chartRender(chart2, {
+            color: ["#4586FF"],
+          }, '℃');
+          _this.chartRender(chart3, {
+            color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
+          }, '℃');
+        } else {
+          clearTimeout(timer);
+          detch();
+        }
+      }, 1000);
+    }
+  },
+  onShow() {
+
+  },
+  updateStore(callback) {
+    this.setData({
+      bleDeviceId: app.bleDeviceId,//蓝牙设备的id号
+      bleServerId: app.bleServerId,//蓝牙设备的服务id号
+      bleCharWriteId: app.bleCharWriteId,//蓝牙设备的服务写入特征值id号
+      bleCharNotifyId: app.bleCharNotifyId,//蓝牙设备的服务接收通知特征值id号
+    });
+    if(callback){
+      callback();
+    }
+  },
+  bluetoothInit: function (oldId) {
     let _this = this;
     //检测蓝牙是否打开
     wx.openBluetoothAdapter({
@@ -90,41 +159,44 @@ Page({
             if (res.available && !res.discovering) {
               mi.showLoading('蓝牙搜索中');
               console.log('蓝牙处于空闲，开启蓝牙搜索...');
-              //开启蓝牙搜索模式
-              wx.startBluetoothDevicesDiscovery({
-                services: [],
-                success: function (res) {
-                  console.log('蓝牙搜索的结果列表', res);
-                  // _this.setData({
-                  //   bleIsShowList:true
-                  // });
-
-                  wx.onBluetoothDeviceFound(function (res) {
-                    console.log('new device list has founded');
-                    console.log(res);
-                    if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
-                      //发现蜜桃设备直接连接
-                      _this.connect(res.devices[0].deviceId);
-                    }
-                    // let bleDevice;
-                    // if(_this.data.os=='android'){
-                    //   bleDevice = res.devices[0];
-                    // } else if(_this.data.os == 'ios'){
-                    //   bleDevice = res.devices[0];
-                    // }else{
-                    //   mi.toast('暂不支持您的设备');
-                    // }
-                    // _this.data.bleLists.push(bleDevice);
+              if (oldId){
+                _this.connect(oldId);
+              }else{
+                //开启蓝牙搜索模式
+                wx.startBluetoothDevicesDiscovery({
+                  services: [],
+                  success: function (res) {
+                    console.log('蓝牙搜索的结果列表', res);
                     // _this.setData({
-                    //   bleLists: _this.data.bleLists
+                    //   bleIsShowList:true
                     // });
-                  })
-                },
-                fail: function (res) {
-                  console.log(res);
-                }
-              })
 
+                    wx.onBluetoothDeviceFound(function (res) {
+                      console.log('new device list has founded');
+                      console.log(res);
+                      if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
+                        //发现蜜桃设备直接连接
+                        _this.connect(res.devices[0].deviceId);
+                      }
+                      // let bleDevice;
+                      // if(_this.data.os=='android'){
+                      //   bleDevice = res.devices[0];
+                      // } else if(_this.data.os == 'ios'){
+                      //   bleDevice = res.devices[0];
+                      // }else{
+                      //   mi.toast('暂不支持您的设备');
+                      // }
+                      // _this.data.bleLists.push(bleDevice);
+                      // _this.setData({
+                      //   bleLists: _this.data.bleLists
+                      // });
+                    })
+                  },
+                  fail: function (res) {
+                    console.log(res);
+                  }
+                });
+              }
             } else {
               console.log('蓝牙正忙');
               mi.toast('蓝牙正忙');
@@ -316,7 +388,7 @@ Page({
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
       if (!mi.isRight(hex)) {
-        return mi.toast('返回数据不完整');
+        return console.log('返回数据不完整');
       }
       let pkg = hex.split('01c1')[1].slice(0, -2);
       console.log(pkg);
@@ -327,7 +399,7 @@ Page({
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
       if (!mi.isRight(hex)) {
-        return mi.toast('返回数据不完整');
+        return console.log('返回数据不完整');
       }
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
@@ -341,7 +413,7 @@ Page({
     //查询温度命令（0xC3）
     if (hex.indexOf('01c3') > -1) {
       if (!mi.isRight(hex)) {
-        return mi.toast('返回数据不完整');
+        return console.log('返回数据不完整');
       }
       let pkg = hex.split('01c3')[1].slice(0, -2);
       console.log(pkg);
@@ -435,60 +507,6 @@ Page({
       });//右胸
     }, 1000);
   },
-  onLoad() {
-    let _this = this;
-    // this.lineInit();
-    this.getUserInfo();
-    wx.getSystemInfo({
-      success: function (res) {
-        console.log(res);
-        _this.setData({
-          os: res.platform
-        });
-      }
-    });
-    // this.setData({
-    //   temp_lto: 36.5,//左上外
-    //   temp_lti: 37.4,//左上内
-    //   temp_rti: 37.8,//右上内
-    //   temp_rto: 37,//右上外
-    // });
-    // this.bluetoothInit();
-
-  },
-  onReady() {
-    let _this = this;
-    let timer = null;
-    detch();
-    function detch() {
-      timer = setTimeout(() => {
-        if (chart && chart2 && chart3) {
-          _this.chartRender(chart, {
-            color: ["#FF4578"],
-            dataZoom: [{
-              fillerColor: 'rgba(254,216,227,.5)',
-              handleStyle: {
-                color: 'rgba(254,216,227,1)'
-              }
-            }]
-          }, '分');
-          _this.chartRender(chart2, {
-            color: ["#4586FF"],
-          }, '℃');
-          _this.chartRender(chart3, {
-            color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
-          }, '℃');
-        } else {
-          clearTimeout(timer);
-          detch();
-        }
-      }, 1000);
-    }
-  },
-  onShow() {
-
-  },
-
   getUserInfo() {
     let that = this;
     //获取用户信息
