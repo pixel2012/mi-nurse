@@ -171,8 +171,9 @@
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
-  background-color: #FBFAF7;
-  padding: 30rpx;
+  /* background-color: #FBFAF7; */
+   background-color: #FFF;
+  padding:15rpx 30rpx;
   text-align: center;
 }
 .my-breast-slider-type .my-breast-text{
@@ -219,4 +220,8 @@
 }
 .my-breast-ok-button.active{
   color: #FF4578;
+}
+
+swiper {
+  height: 200px;
 }
