@@ -1,8 +1,10 @@
 {
   "pages": [
-    "pages/mine/index",
     "pages/index/index",
     "pages/breast/index",
+    "pages/mine/index",
+    
+    
     "pages/acupoint/index",
     "pages/massage/index",
     

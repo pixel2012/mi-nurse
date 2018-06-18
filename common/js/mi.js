@@ -363,6 +363,9 @@ const mi = {
     }
     return format;
   },
+  getRadom(min, max) {
+    return parseInt(Math.random() * max) + min;
+  },
   showLoading(str) {
     wx.showLoading({
       title: str || '加载中',

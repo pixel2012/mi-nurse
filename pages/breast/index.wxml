@@ -5,23 +5,23 @@
 <!--主框架  -->
 <view class='mi-box' style='padding-bottom:10rpx;'>
   <view class='row'>
-      <view class='col-50'>
-        <view class="mi-status {{bleIsConnect?'active':''}}">
-          <image src="../../common/img/{{bleIsConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
-          <text class='mi-text'>{{bleIsConnect?'已连接':'未连接'}}</text>
-        </view>
-        <view class="mi-status {{bleIsConnect?'active':''}}">
-          <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
-        </view>
+    <view class='col-50'>
+      <view class="mi-status {{bleIsConnect?'active':''}}">
+        <image src="../../common/img/{{bleIsConnect?'bluetoot-active.png':'bluetoot.png'}}" style="width:14rpx;height:22rpx;"></image>
+        <text class='mi-text'>{{bleIsConnect?'已连接':'未连接'}}</text>
       </view>
-      <view class='col-50 mi-r'>
-        <view class="mi-status {{bleIsConnect?'active':''}}">
-          <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
-        </view>
+      <view class="mi-status {{bleIsConnect?'active':''}}">
+        <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
+        <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
       </view>
     </view>
+    <view class='col-50 mi-r'>
+      <view class="mi-status {{bleIsConnect?'active':''}}">
+        <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
+        <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
+      </view>
+    </view>
+  </view>
 </view>
 <view class='mi-tab-box row no-gutter'>
   <view class="col-50 mi-tab {{tabIndex==0?'active':''}}" data-index='0' bindtap='bindTab'>
@@ -50,7 +50,7 @@
             <view class='mi-step'>
               <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
               当前正处于第
-              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>1</text> 步中</view>
             <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
             <view class='mi-step row no-gutter'>
@@ -106,7 +106,7 @@
             <view class='mi-step'>
               <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
               当前正处于第
-              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>2</text> 步中</view>
             <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
             <view class='mi-step row no-gutter'>
@@ -162,7 +162,7 @@
             <view class='mi-step'>
               <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
               当前正处于第
-              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>3</text> 步中</view>
             <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
             <view class='mi-step row no-gutter'>
@@ -218,7 +218,7 @@
             <view class='mi-step'>
               <image src='img/dot.png' style='width:10rpx;height:10rpx;margin:0 25rpx;'></image>
               当前正处于第
-              <text class='mi-main-color'>1</text> 个循环的第
+              <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>4</text> 步中</view>
             <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
             <view class='mi-step row no-gutter'>
@@ -272,11 +272,11 @@
         <view class='mi-player-row row'>
           <view class='col-20 mi-player-control'>
             <view class='circle-box circle' bindtap='bindPlay'>
-               <view class='circle-a circle'></view> 
-               <view class='circle-b circle' style=' transform:rotate({{playProgress}}deg);background-color: {{playBgc}};'></view>
-                <view class='circle-front'>
-                  <image src='img/{{play?"pause":"play"}}.png' style='width:40rpx;height:40rpx;'></image> 
-                </view>   
+              <view class='circle-a circle'></view>
+              <view class='circle-b circle' style=' transform:rotate({{playProgress}}deg);background-color: {{playBgc}};'></view>
+              <view class='circle-front'>
+                <image src='img/{{play?"pause":"play"}}.png' style='width:40rpx;height:40rpx;'></image>
+              </view>
             </view>
           </view>
           <view class='col-80 mi-player-process'>
@@ -358,7 +358,7 @@
         <view class='ble-button-box'>
           <navigator url="/pages/massage/index">
             <view class='ble-button'>添加按摩组合</view>
-            </navigator>
+          </navigator>
         </view>
       </view>
     </view>
