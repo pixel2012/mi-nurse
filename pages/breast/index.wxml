@@ -305,17 +305,17 @@
       <view class='col-50 massage-box-left'>
         <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
         <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
-        <view class='l-01'></view>
-        <view class='l-02'></view>
-        <view class='l-03'></view>
-        <view class='l-04'></view>
+        <view class='l-01' bind:touchstart='longShock' data-code='2' bind:touchend='closeShock'></view>
+        <view class='l-02' bind:touchstart='longShock' data-code='3' bind:touchend='closeShock'></view>
+        <view class='l-03' bind:touchstart='longShock' data-code='2' bind:touchend='closeShock'></view>
+        <view class='l-04' bind:touchstart='longShock' data-code='1' bind:touchend='closeShock'></view>
       </view>
       <view class='col-50 massage-box-right'>
         <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
-        <view class='r-01'></view>
-        <view class='r-02'></view>
-        <view class='r-03'></view>
-        <view class='r-04'></view>
+        <view class='r-01' bind:touchstart='longShock' data-code='5' bind:touchend='closeShock'></view>
+        <view class='r-02' bind:touchstart='longShock' data-code='6' bind:touchend='closeShock'></view>
+        <view class='r-03' bind:touchstart='longShock' data-code='5' bind:touchend='closeShock'></view>
+        <view class='r-04' bind:touchstart='longShock' data-code='4' bind:touchend='closeShock'></view>
       </view>
     </view>
     <view class='massage-box'>
@@ -323,27 +323,13 @@
         <view class='mi-assess-dt blue'>高阶玩法：我的按摩组合</view>
         <view class='mi-bottom-line'></view>
         <view class='massage-list'>
-          <view class='massage-li row'>
-            <view class='col-25 massage-item'>组合1</view>
+        
+          <view class='massage-li row' wx:if="{{diy.length>0}}" wx:for="{{diy}}" wx:key="{{index}}">
+            <view class='col-25 massage-item'>{{item.title}}</view>
             <view class='col-25 massage-item'>
-              <view>00:08:35</view>
+              <view>{{item.timeUsed}}</view>
               <view class='massage-progress'>
-                <view class='massage-bar' style='width:30%;'></view>
-              </view>
-            </view>
-            <view class='col-25 massage-item'>
-              <image src='img/play.png' style='width:48rpx;height:48rpx;'></image>
-            </view>
-            <view class='col-25 massage-item'>
-              <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
-            </view>
-          </view>
-          <view class='massage-li row'>
-            <view class='col-25 massage-item'>组合1</view>
-            <view class='col-25 massage-item'>
-              <view>00:08:35</view>
-              <view class='massage-progress'>
-                <view class='massage-bar' style='width:50%;'></view>
+                <view class='massage-bar' style='width:{{timeUsed/timeTotal*100}}%;'></view>
               </view>
             </view>
             <view class='col-25 massage-item'>

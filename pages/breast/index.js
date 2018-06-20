@@ -271,6 +271,23 @@ Page({
     playProgress: 0,//0~360,
     playPoints: [],//当前播放的节点
     playBgc: '#F7F7F7',//播放进度条背景色
+    diy:[
+      {
+        title:'组合1',
+        timeUsed:0,
+        timeTotal:120,
+        play:false,
+        shockArr:[
+          {
+            acupoint:'乳根穴',//穴位
+            position:'左胸',
+            mode:'盛夏如花',
+            command: ['00', '00', '11', '08', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳中8秒
+            time: 8
+          }
+        ]//执行的动画序列
+      }
+    ],//diy按摩组合
   },
   onLoad() {
     // this.updateStatus();
@@ -586,5 +603,50 @@ Page({
         playBgc: '#12C8C8',//播放进度条背景色
       });
     }
+  },
+  // diy按摩代码
+  longShock(e) {
+    console.log(666);
+    if (this.data.play) {
+      this.stop();
+    }
+    console.log('e', e);
+    let code = e.currentTarget.dataset.code;
+    let ms = mi.hexMerge('10', '01');
+    console.log('ms', ms);
+    let shock = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
+    if(code==1){
+      shock = [ms, 'F0', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
+    }
+    if (code == 2) {
+      shock = ['00', '00', ms, 'F0', '00', '00', '00', '00', '00', '00', '00', '00'];
+    }
+    if (code == 3) {
+      shock = ['00', '00', '00', '00', ms, 'F0', '00', '00', '00', '00', '00', '00'];
+    }
+    if (code == 4) {
+      shock = ['00', '00', '00', '00', '00', '00', ms, 'F0', '00', '00', '00', '00'];
+    }
+    if (code == 5) {
+      shock = ['00', '00', '00', '00', '00', '00', '00', '00', ms, 'F0', '00', '00'];
+    }
+    if (code == 6) {
+      shock = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, 'F0'];
+    }
+    console.log('code', code);
+    console.log('shock', shock);
+    this.command({
+      command: 'c5',
+      param: shock,
+      check: false
+    });
+  },
+  closeShock() {
+    console.log(777);
+    this.command({
+      command: 'c5',
+      param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
+      check: false
+    });
   }
 });

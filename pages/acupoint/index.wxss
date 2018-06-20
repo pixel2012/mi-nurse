@@ -3,7 +3,7 @@
 }
 
 .massage-box {
-  padding: 20rpx 30rpx;
+  padding: 20rpx 10rpx 20rpx 30rpx;
   background-color: #fff;
   margin-bottom: 10rpx;
 }
@@ -80,7 +80,7 @@
 
 .acupoint-title, .radio-group {
   color: #5e5e5e;
-  font-size: 28rpx;
+  font-size: 24rpx;
 }
 
 .acupoint-title {

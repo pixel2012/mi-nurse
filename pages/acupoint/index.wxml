@@ -3,17 +3,17 @@
     <view class='col-50 massage-box-left'>
       <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
       <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
-      <view class='l-01'></view>
-      <view class='l-02'></view>
-      <view class='l-03'></view>
-      <view class='l-04'></view>
+      <view class='l-01 {{acupoint==2?"active":""}}'></view>
+      <view class='l-02 {{acupoint==3?"active":""}}'></view>
+      <view class='l-03 {{acupoint==2?"active":""}}'></view>
+      <view class='l-04 {{acupoint==1?"active":""}}'></view>
     </view>
     <view class='col-50 massage-box-right'>
       <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
-      <view class='r-01'></view>
-      <view class='r-02'></view>
-      <view class='r-03'></view>
-      <view class='r-04'></view>
+      <view class='r-01 {{acupoint==2?"active":""}}'></view>
+      <view class='r-02 {{acupoint==3?"active":""}}'></view>
+      <view class='r-03 {{acupoint==2?"active":""}}'></view>
+      <view class='r-04 {{acupoint==1?"active":""}}'></view>
     </view>
   </view>
   <view class='massage-box'>
