@@ -1,34 +1,37 @@
+<!--引入过滤器模块  -->
+<wxs module="filterTime" src="../../common/wxs/filter-time.wxs"></wxs>
+
 <view class='acupoint-container'>
   <view class='row mi-c massage-box'>
     <view class='col-50 massage-box-left'>
       <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
       <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
-      <view class='l-01 {{acupoint==2?"active":""}}'></view>
-      <view class='l-02 {{acupoint==3?"active":""}}'></view>
-      <view class='l-03 {{acupoint==2?"active":""}}'></view>
-      <view class='l-04 {{acupoint==1?"active":""}}'></view>
+      <view class='l-01 {{acupoint==2 && (position==1 || position==2)?"active":""}}'></view>
+      <view class='l-02 {{acupoint==3 && (position==1 || position==2)?"active":""}}'></view>
+      <view class='l-03 {{acupoint==2 && (position==1 || position==2)?"active":""}}'></view>
+      <view class='l-04 {{acupoint==1 && (position==1 || position==2)?"active":""}}'></view>
     </view>
     <view class='col-50 massage-box-right'>
       <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
-      <view class='r-01 {{acupoint==2?"active":""}}'></view>
-      <view class='r-02 {{acupoint==3?"active":""}}'></view>
-      <view class='r-03 {{acupoint==2?"active":""}}'></view>
-      <view class='r-04 {{acupoint==1?"active":""}}'></view>
+      <view class='r-01 {{acupoint==2 && (position==1 || position==3)?"active":""}}'></view>
+      <view class='r-02 {{acupoint==3 && (position==1 || position==3)?"active":""}}'></view>
+      <view class='r-03 {{acupoint==2 && (position==1 || position==3)?"active":""}}'></view>
+      <view class='r-04 {{acupoint==1 && (position==1 || position==3)?"active":""}}'></view>
     </view>
   </view>
   <view class='massage-box'>
     <view class='acupoint-block row no-gutter'>
       <view class='col-20 acupoint-title'>选择穴位</view>
       <view class='col-80'>
-        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange">
+        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange1">
           <label>
-            <radio value='1'>乳中+膺窗</radio>
+            <radio value='2' checked='{{acupoint == 2}}'>乳中+膺窗</radio>
           </label>
           <label>
-            <radio value='1'>天溪</radio>
+            <radio value='3' checked='{{acupoint == 3}}'>天溪</radio>
           </label>
           <label>
-            <radio value='1'>乳根</radio>
+            <radio value='1' checked='{{acupoint == 1}}'>乳根</radio>
           </label>
         </radio-group>
       </view>
@@ -38,15 +41,15 @@
     <view class='acupoint-block row no-gutter'>
       <view class='col-20 acupoint-title'>穴位设置</view>
       <view class='col-80'>
-        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange">
+        <radio-group class="radio-group" color="#FF4578" bindchange="radioChange2">
           <label>
-            <radio value='1'>左右胸同步</radio>
+            <radio value='1' checked='{{position == 1}}'>左右胸同步</radio>
           </label>
           <label>
-            <radio value='1'>仅左胸</radio>
+            <radio value='2' checked='{{position == 2}}'>仅左胸</radio>
           </label>
           <label>
-            <radio value='1'>仅右胸</radio>
+            <radio value='3' checked='{{position == 3}}'>仅右胸</radio>
           </label>
         </radio-group>
       </view>
@@ -57,13 +60,13 @@
       <view class='acupoint-shake-title'>震动模块</view>
       <scroll-view scroll-x='true'>
         <view class='acupoint-shake-content'>
-          <text>盛夏如花</text>
-          <text>高山流水</text>
-          <text>阵阵酥麻</text>
-          <text>小鹿乱撞</text>
-          <text>浪花迭起</text>
-          <text>盛夏如花</text>
-          <text>盛夏如花</text>
+          <text class="{{mode==0?'mi-main-color':''}}" data-mode='0' data-name='盛夏如花' bindtap='modeChange'>盛夏如花</text>
+          <text class="{{mode==1?'mi-main-color':''}}" data-mode='1' data-name='高山流水' bindtap='modeChange'>高山流水</text>
+          <text class="{{mode==2?'mi-main-color':''}}" data-mode='2' data-name='阵阵酥麻' bindtap='modeChange'>阵阵酥麻</text>
+          <text class="{{mode==3?'mi-main-color':''}}" data-mode='3' data-name='小鹿乱撞' bindtap='modeChange'>小鹿乱撞</text>
+          <text class="{{mode==4?'mi-main-color':''}}" data-mode='4' data-name='浪花迭起' bindtap='modeChange'>浪花迭起</text>
+          <text class="{{mode==5?'mi-main-color':''}}" data-mode='5' data-name='琴瑟长鸣' bindtap='modeChange'>琴瑟长鸣</text>
+          <!-- <text>盛夏如花</text> -->
         </view>
       </scroll-view>
     </view>
@@ -76,15 +79,18 @@
       <view class='col-80'>
         <view class='how-long-title'>
           按摩时长
-          <text class='how-long-time'>3分</text>
+           <text class='how-long-time'> 
+           {{time}}秒
+            <!-- {{ filterTime(time) }}   -->
+           </text> 
           <view class='hong-long-box'>
-            <slider bindchange="slider3change" show-value/>
+            <slider bindchange="sliderChange" min="1" max="180" show-value/>
           </view>
         </view>
       </view>
     </view>
     <view class='ble-button-box'>
-      <view class='ble-button'>确认保存</view>
+      <view class='ble-button' bindtap='save'>确认保存</view>
     </view>
   </view>
 </view>
