@@ -15,6 +15,8 @@ App({
     this.bleServerId = mi.store.get('bleServerId') || '';
     this.bleCharWriteId = mi.store.get('bleCharWriteId') || '';
     this.bleCharNotifyId = mi.store.get('bleCharNotifyId') || '';
-  }
-
+  },
+  param:'',//穴位组合跳转添加穴位传的参数写入全局
+  result:'',//创建或者修改穴位后的结果
+  idx: '',//创建或者修改穴位后的索引值
 })

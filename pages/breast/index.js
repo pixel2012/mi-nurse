@@ -199,6 +199,7 @@ class Shake {
 }
 let shaker = null;//本地震动对象
 let timer = null;//本地震动定时器
+let timer2 = null;//diy震动定时器
 Page({
   data: {
     bleIsConnect: false,//是否连接蓝牙
@@ -271,23 +272,8 @@ Page({
     playProgress: 0,//0~360,
     playPoints: [],//当前播放的节点
     playBgc: '#F7F7F7',//播放进度条背景色
-    diy:[
-      {
-        title:'组合1',
-        timeUsed:0,
-        timeTotal:120,
-        play:false,
-        shockArr:[
-          {
-            acupoint:'乳根穴',//穴位
-            position:'左胸',
-            mode:'盛夏如花',
-            command: ['00', '00', '11', '08', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳中8秒
-            time: 8
-          }
-        ]//执行的动画序列
-      }
-    ],//diy按摩组合
+    diyIndex: -1,//当前diy震动的是第几个
+    diyArr: [],//diy按摩组合
   },
   onLoad() {
     // this.updateStatus();
@@ -301,6 +287,25 @@ Page({
     //   }
     //   that.setPlay(num);
     // }, 1000);
+    // let test = [{
+    //   title: '组合1',
+    //   timeUsed: 0,
+    //   timeTotal: 120,
+    //   play: false,
+    //   shockArr: [
+    //     {
+    //       acupointName: '乳根穴',
+    //       acupoint: 1,
+    //       positionName: '左右胸同步',
+    //       position: 1,
+    //       modeName: '生如夏花',
+    //       mode: 0,
+    //       time: 8,
+    //       command: ['00', '00', '11', '08', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳中8秒
+    //     }
+    //   ]//执行的动画序列
+    // }];
+    // mi.store.set('diyArr',test);
   },
   onShow() {
     this.updateStatus();
@@ -314,7 +319,9 @@ Page({
       bleServerId: app.bleServerId,//蓝牙设备的服务id号
       bleCharWriteId: app.bleCharWriteId,//蓝牙设备的服务写入特征值id号
       bleCharNotifyId: app.bleCharNotifyId,//蓝牙设备的服务接收通知特征值id号
+      diyArr: mi.store.get('diyArr') ? mi.store.get('diyArr') : []
     });
+
   },
   test() {
     this.command({
@@ -377,6 +384,14 @@ Page({
   },
   bindPlay() {
     if (!this.data.play) {
+      if (timer2) {
+        this.diyStop();
+        let diyArr = this.data.diyArr;
+        diyArr[this.data.diyIndex].play = false;
+        this.setData({
+          diyArr: diyArr
+        });
+      }
       this.run();
     } else {
       this.stop();
@@ -474,11 +489,13 @@ Page({
           index: _this.data.index + 1,
           nowTime: _this.data.nowTime + stepObj.step[_this.data.index].time
         });
-        _this.setPlay(Math.ceil(_this.data.nowTime * 360 / _this.data.allTime));
+        console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
+        _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
         _this.do(callback);
-      }, 1000 * stepObj.step[_this.data.index].time);
+      }, 1000 * stepObj.step[_this.data.index].time + 500);
     } else {
       _this.setData({
+        index: 0,
         stepLoop: _this.data.stepLoop + 1
       });
       //判断这一轮完了没有
@@ -490,6 +507,7 @@ Page({
       } else {
         _this.setData({
           stepLoop: 0,
+          index: 0,
           stepIndex: _this.data.stepIndex + 1
         });
         if (_this.data.stepIndex < stepArr.length) {
@@ -607,15 +625,18 @@ Page({
   // diy按摩代码
   longShock(e) {
     console.log(666);
-    if (this.data.play) {
+    if (timer) {
       this.stop();
+    }
+    if (timer2) {
+      this.diyStop();
     }
     console.log('e', e);
     let code = e.currentTarget.dataset.code;
     let ms = mi.hexMerge('10', '01');
     console.log('ms', ms);
     let shock = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
-    if(code==1){
+    if (code == 1) {
       shock = [ms, 'F0', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
     }
     if (code == 2) {
@@ -648,5 +669,101 @@ Page({
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false
     });
-  }
+  },
+  diyRun(e) {
+    //关闭所有正在执行的震动模式
+    if (timer) {
+      this.stop();
+    }
+    if (timer2) {
+      this.diyStop();
+    }
+    //其他操作
+    let diyArr = this.data.diyArr;
+    for (let i = 0; i < diyArr.length; i++) {
+      if (e.currentTarget.dataset.index != i) {
+        diyArr[i].play = false;
+      }
+    }
+    let cur = diyArr[e.currentTarget.dataset.index];
+    if (cur.play) {
+      cur.play = false;
+      diyArr[e.currentTarget.dataset.index] = cur;
+      this.setData({
+        diyIndex: -1,
+        diyArr: diyArr
+      });
+      this.diyStop();
+    } else {
+      console.log('cur', cur);
+      cur.play = true;
+      diyArr[e.currentTarget.dataset.index] = cur;
+      this.setData({
+        diyIndex: e.currentTarget.dataset.index,
+        diyArr: diyArr
+      });
+      this.diyPlay(cur);
+    }
+  },//执行
+  diyPlay(cur) {
+    //开始执行diy震动
+    this.diyCore(cur, function () {
+      wx.showModal({
+        title: '恭喜您',
+        content: cur.title + '按摩组合执行完毕',
+        showCancel:false
+      })
+    });
+  },//diy播放
+  diyCore(cur, callback) {
+    let _this = this;
+    console.log('cur666', cur);
+    _this.command({
+      command: 'c5',
+      param: cur.shockArr[cur.playStep].command,
+      check: false,
+      success: function () {
+        timer2 = setTimeout(function () {
+          cur.timeUsed += cur.shockArr[cur.playStep].time;
+          cur.playStep++;
+          let diyArr = _this.data.diyArr;
+          diyArr[_this.data.diyIndex].timeUsed = cur.timeUsed;
+          diyArr[_this.data.diyIndex].playStep = cur.playStep;
+          _this.setData({
+            diyArr: diyArr
+          });
+          if (cur.playStep < cur.shockArr.length) {
+            _this.diyCore(cur, callback);
+          } else {
+            let diyArr = _this.data.diyArr;
+            diyArr[_this.data.diyIndex].timeUsed = 0;
+            diyArr[_this.data.diyIndex].play = false;
+            diyArr[_this.data.diyIndex].playStep = 0;
+            _this.setData({
+              diyArr: diyArr
+            });
+            clearTimeout(timer2);
+            timer2 = null;
+            //已经震动到最后,执行成功回调
+            if (callback) {
+              callback();
+            }
+          }
+        }, 1000 * cur.shockArr[cur.playStep].time + 500);
+      }
+    });
+  },//diy执行核心代码
+  diyStop() {
+    let _this = this;
+    _this.command({
+      command: 'c5',
+      param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
+      check: false,
+      success: function () {
+        clearTimeout(timer2);
+        timer2 = null;
+      }
+    });
+
+  }//diy暂停
 });

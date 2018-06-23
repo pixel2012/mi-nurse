@@ -90,13 +90,10 @@ Page({
     //   temp_rto: 37,//右上外
     // });
     // this.bluetoothInit();
-
-  },
-  onReady() {
-    let _this = this;
     let timer = null;
-    _this.updateStore(function(){
-      if (_this.data.bleDeviceId){
+    _this.updateStore(function () {
+      console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
+      if (_this.data.bleDeviceId) {
         _this.bluetoothInit(_this.data.bleDeviceId);
       }
     });
@@ -125,11 +122,13 @@ Page({
         }
       }, 1000);
     }
+
   },
   onShow() {
 
   },
   updateStore(callback) {
+    console.log('app',app);
     this.setData({
       bleDeviceId: app.bleDeviceId,//蓝牙设备的id号
       bleServerId: app.bleServerId,//蓝牙设备的服务id号
@@ -159,7 +158,8 @@ Page({
             if (res.available && !res.discovering) {
               mi.showLoading('蓝牙搜索中');
               console.log('蓝牙处于空闲，开启蓝牙搜索...');
-              if (oldId){
+              if (oldId && typeof oldId == 'string'){
+                console.log('oldId', oldId);
                 _this.connect(oldId);
               }else{
                 //开启蓝牙搜索模式

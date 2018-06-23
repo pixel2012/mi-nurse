@@ -84,7 +84,7 @@
             <!-- {{ filterTime(time) }}   -->
            </text> 
           <view class='hong-long-box'>
-            <slider bindchange="sliderChange" min="1" max="180" show-value/>
+            <slider bindchange="sliderChange" min="1" max="180" value="{{time}}" show-value/>
           </view>
         </view>
       </view>

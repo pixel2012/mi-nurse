@@ -323,20 +323,22 @@
         <view class='mi-assess-dt blue'>高阶玩法：我的按摩组合</view>
         <view class='mi-bottom-line'></view>
         <view class='massage-list'>
-        
-          <view class='massage-li row' wx:if="{{diy.length>0}}" wx:for="{{diy}}" wx:key="{{index}}">
+
+          <view class='massage-li row' wx:if="{{diyArr.length>0}}" wx:for="{{diyArr}}" wx:key="{{index}}">
             <view class='col-25 massage-item'>{{item.title}}</view>
             <view class='col-25 massage-item'>
-              <view>{{item.timeUsed}}</view>
+              <view>{{item.timeUsed}}-{{item.timeTotal}}</view>
               <view class='massage-progress'>
-                <view class='massage-bar' style='width:{{timeUsed/timeTotal*100}}%;'></view>
+                <view class='massage-bar' style='width:{{item.timeUsed/item.timeTotal*100}}%;'></view>
               </view>
             </view>
-            <view class='col-25 massage-item'>
-              <image src='img/play.png' style='width:48rpx;height:48rpx;'></image>
+            <view class='col-25 massage-item' data-index='{{index}}' bindtap='diyRun'>
+              <image src="img/{{item.play?'pause.png':'play.png'}}" style='width:48rpx;height:48rpx;'></image>
             </view>
             <view class='col-25 massage-item'>
-              <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+              <navigator url="{{'/pages/massage/index?index='+index}}">
+                <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+              </navigator>
             </view>
           </view>
         </view>

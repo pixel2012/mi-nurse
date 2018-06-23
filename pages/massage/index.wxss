@@ -45,24 +45,11 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 .ble-button-box{
   display: block;
   width: 100%;
   text-align: center;
-  margin-top: 80rpx;
+  margin-top: 40rpx;
 }
 .ble-button{
   display: inline-block;
@@ -73,3 +60,9 @@
   font-size: 30rpx;
   color: #FF4578;
 }
+.massag-item1{
+  text-align: left;
+}
+/* .massag-item5{
+  background-color: #ccc;
+} */

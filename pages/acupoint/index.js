@@ -1,18 +1,39 @@
 var app = getApp();
 const mi = require('../../common/js/mi.js');
-let diyArr = mi.store.get('diyArr') ? mi.store.get('diyArr') : [];
 Page({
   data: {
-    acupoint: 1,//穴位
+    index: -1,
+    idx: -1,
+    acupointName: '乳根穴',
+    acupoint: 1,
+    positionName: '左右胸同步',
     position: 1,
+    modeName: '生如夏花',
     mode: 0,
     time: 8
   },
-  onLoad() {
-
-  },
-  onShow() {
-
+  onLoad(options) {
+    console.log('acupoint-onLoad', options);
+    if ('edit' in options) {
+      let param = app.param;
+      app.param = '';//读完后删除之
+      this.setData({
+        index: options.index,
+        idx: options.idx,
+        acupointName: param.acupointName,
+        acupoint: param.acupoint,
+        positionName: param.positionName,
+        position: param.position,
+        modeName: param.modeName,
+        mode: param.mode,
+        time: param.time
+      });
+    } else {
+      this.setData({
+        index: options.index,
+        idx: options.idx,
+      });
+    }
   },
   radioChange1(e) {
     let name = '';
@@ -58,27 +79,71 @@ Page({
     });
   },
   save() {
-    diyArr.push({
-      acupointName: '乳根穴',
-      acupoint: 1,
-      positionName: '左胸',
-      position: 2,
-      modeName: '盛夏如花',
-      mode: 0,
+    let param = {
+      acupointName: this.data.acupointName,
+      acupoint: this.data.acupoint,
+      positionName: this.data.positionName,
+      position: this.data.position,
+      modeName: this.data.modeName,
+      mode: this.data.mode,
       command: this.getCommand(),//左乳中8秒
-      time: 8
-    });
-    mi.store.set('diyArr', diyArr);
+      time: this.data.time
+    };
+    app.result = param;
+    app.idx = this.data.idx;
+    console.log('app.result', app.result);
+    console.log('app.idx', app.idx);
+    wx.navigateBack();//返回上一级
   },
   getCommand() {
-
-
-
-
-
-
-    
-    return ['00', '00', '11', '08', '00', '00', '00', '00', '00', '00', '00', '00']
+    let left = ['00', '00', '00', '00', '00', '00'];
+    let right = ['00', '00', '00', '00', '00', '00'];
+    let ms = this.getMode(this.data.mode);
+    let ts = parseInt(this.data.time).toString(16);
+    ts = ts > 10 ? ts : '0' + ts;
+    console.log('ts', ts);
+    if (this.data.acupoint == 1 && (this.data.position == 1 || this.data.position == 2)) {
+      left = [ms, ts, '00', '00', '00', '00'];
+    }
+    if (this.data.acupoint == 2 && (this.data.position == 1 || this.data.position == 2)) {
+      left = ['00', '00', ms, ts, '00', '00'];
+    }
+    if (this.data.acupoint == 3 && (this.data.position == 1 || this.data.position == 2)) {
+      left = ['00', '00', '00', '00', ms, ts];
+    }
+    if (this.data.acupoint == 1 && (this.data.position == 1 || this.data.position == 3)) {
+      right = [ms, ts, '00', '00', '00', '00'];
+    }
+    if (this.data.acupoint == 2 && (this.data.position == 1 || this.data.position == 3)) {
+      right = ['00', '00', ms, ts, '00', '00'];
+    }
+    if (this.data.acupoint == 3 && (this.data.position == 1 || this.data.position == 3)) {
+      right = ['00', '00', '00', '00', ms, ts];
+    }
+    console.log('left.concat(right)', left.concat(right));
+    return left.concat(right);
+  },
+  getMode(num) {
+    let result = '';
+    if (num == 0) {
+      result = '11';
+    }
+    if (num == 1) {
+      result = '21';
+    }
+    if (num == 2) {
+      result = '31';
+    }
+    if (num == 3) {
+      result = '41';
+    }
+    if (num == 4) {
+      result = '51';
+    }
+    if (num == 5) {
+      result = '61';
+    }
+    return result;
   }
 
 });

@@ -1,50 +1,46 @@
 <view class='massage-box'>
   <view class='massage-block massage-title row'>
     <view class='col-50 massage-title-key'>组合名称</view>
-    <view class='col-50 massage-title-value'>组合1</view>
+    <view class='col-50 massage-title-value'>
+      <input placeholder="请输入按摩组合名称" style="text-align:right;" value='{{title}}' bindinput='inputChange' />
+    </view>
   </view>
   <view class='massage-block massage-add row'>
     <view class='col-50 massage-title-key'>穴位设置</view>
     <view class='col-50 massage-title-value'>
-      <navigator url="/pages/acupoint/index">
+      <navigator url="{{'/pages/acupoint/index?index='+index+'&idx=-1'}}">
         添加穴位
         <image src='img/r.png' style='width:23rpx;height:40rpx;vertical-align: middle;margin-left:10rpx;'></image>
       </navigator>
     </view>
   </view>
   <view class='massage-block'>
-    <view class='massage-block massage-list row'>
-      <view class='col-25 massag-item1'>
-        <view class='order'>1</view>乳根穴
-      </view>
-      <view class='col-25 massag-item2'>
-        左胸
-      </view>
-      <view class='col-25 massag-item3'>
-        盛夏如花
-      </view>
-      <view class='col-25 massag-item4'>
-        03:10
-      </view>
-    </view>
-    <view class='massage-block massage-list row'>
-      <view class='col-25 massag-item1'>
-        <view class='order'>1</view>乳根穴
-      </view>
-      <view class='col-25 massag-item2'>
-        左胸
-      </view>
-      <view class='col-25 massag-item3'>
-        盛夏如花
-      </view>
-      <view class='col-25 massag-item4'>
-        03:10
-      </view>
-    </view>
+    <block wx:if='{{shockArr.length>0}}' wx:for='{{shockArr}}' wx:for-index="idx" wx:key='{{idx}}'>
+        <view class='massage-block massage-list row' data-idx='{{idx}}' bindtap='edit'>
+          <view class='col-25 massag-item1'>
+            <view class='order'>{{idx+1}}</view>{{item.acupointName}}
+          </view>
+          <view class='col-25 massag-item2'>
+            {{item.positionName}}
+          </view>
+          <view class='col-20 massag-item3'>
+            {{item.modeName}}
+          </view>
+          <view class='col-20 massag-item4'>
+            {{item.time}}
+          </view>
+          <view class='col-10 massag-item5' data-idx='{{idx}}' catchtap='remove'>
+            X
+          </view>
+        </view>
+    </block>
   </view>
 
-  <view class='ble-button-box'>
-    <view class='ble-button'>保存组合</view>
+  <view class='ble-button-box' wx:if='{{shockArr.length>0}}'>
+    <view class='ble-button' bindtap='save'>保存组合</view>
+  </view>
+  <view class='ble-button-box' wx:if='{{shockArr.length>0}}'>
+    <view class='ble-button' bindtap='delete'>删除组合</view>
   </view>
 
 
