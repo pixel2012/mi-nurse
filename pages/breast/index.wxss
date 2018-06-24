@@ -277,8 +277,8 @@ swiper-item {
 
 .l-01, .l-02, .l-03, .l-04, .r-01, .r-02, .r-03, .r-04 {
   position: absolute;
-  width: 30rpx;
-  height: 30rpx;
+  width: 40rpx;
+  height: 40rpx;
   border-radius: 100%;
   z-index: 10;
   background-color: rgba(255,69,120, 0);

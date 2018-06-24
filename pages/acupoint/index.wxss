@@ -110,7 +110,7 @@
   position: relative;
 }
 
-.acupoint-shake-content:after {
+ /* .acupoint-shake-content:after {
   content: '';
   position: absolute;
   right: 0;
@@ -118,7 +118,7 @@
   width: 64rpx;
   height: 115rpx;
   background: linear-gradient(-90deg, rgba(255, 255, 255, 1), rgba(251, 251, 251, 0.86), rgba(247, 247, 247, 0.43));
-}
+}  */
 
 .acupoint-shake-content text {
   margin-right: 20rpx;

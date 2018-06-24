@@ -115,11 +115,11 @@
         </block>
       </swiper>
       <view class='my-breast-slider-box'>
-        <slider bindchange="bindsliderChange1" min="70" max="135" block-size="20" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <slider bindchange="bindsliderChange1" min="70" max="135" block-size="16" block-color="#FF4578" activeColor="#FF4578" show-value/>
         <text class='my-breast-text'>上胸围（cm）</text>
       </view>
       <view class='my-breast-slider-box'>
-        <slider bindchange="bindsliderChange2" min="63" max="112" block-size="20" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <slider bindchange="bindsliderChange2" min="63" max="112" block-size="16" block-color="#FF4578" activeColor="#FF4578" show-value/>
         <text class='my-breast-text'>下胸围（cm）</text>
       </view>
       <view class='my-breast-slider-box'>

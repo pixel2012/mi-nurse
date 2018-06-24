@@ -1,5 +1,42 @@
-module.exports = function (time) {
-  let minute = parseInt(time / 60) == 0 ? '' : parseInt(time / 60) + '分';
-  let second = time % 60 == 0 ? '' : time % 60 + '秒';
-  return minute + second;
-}
+module.exports = {
+  dot: function (s) {
+    var t;
+    if (s > -1) {
+      var hour = Math.floor(s / 3600);
+      var min = Math.floor(s / 60) % 60;
+      var sec = s % 60;
+      if (hour < 10) {
+        t = '0' + hour + ":";
+      } else {
+        t = hour + ":";
+      }
+
+      if (min < 10) { t += "0"; }
+      t += min + ":";
+      if (sec < 10) { t += "0"; }
+      t += sec.toFixed(0);
+    }
+    return t;
+  },
+  zh: function (value){
+    var theTime = parseInt(value);// 秒 
+    var theTime1 = 0;// 分 
+    var theTime2 = 0;// 小时 
+    if (theTime > 60) {
+      theTime1 = parseInt(theTime / 60);
+      theTime = parseInt(theTime % 60);
+      if (theTime1 > 60) {
+        theTime2 = parseInt(theTime1 / 60);
+        theTime1 = parseInt(theTime1 % 60);
+      }
+    }
+    var result = "" + parseInt(theTime) + "秒";
+    if (theTime1 > 0) {
+      result = "" + parseInt(theTime1) + "分" + result;
+    }
+    if (theTime2 > 0) {
+      result = "" + parseInt(theTime2) + "小时" + result;
+    }
+    return result; 
+  }
+};

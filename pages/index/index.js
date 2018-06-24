@@ -128,7 +128,6 @@ Page({
 
   },
   updateStore(callback) {
-    console.log('app',app);
     this.setData({
       bleDeviceId: app.bleDeviceId,//蓝牙设备的id号
       bleServerId: app.bleServerId,//蓝牙设备的服务id号

@@ -1,3 +1,4 @@
+<wxs module="filterTime" src="../../common/wxs/filter-time.wxs"></wxs>
 <view class='massage-box'>
   <view class='massage-block massage-title row'>
     <view class='col-50 massage-title-key'>组合名称</view>
@@ -27,7 +28,7 @@
             {{item.modeName}}
           </view>
           <view class='col-20 massag-item4'>
-            {{item.time}}
+            {{filterTime.zh(item.time)}}
           </view>
           <view class='col-10 massag-item5' data-idx='{{idx}}' catchtap='remove'>
             X

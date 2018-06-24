@@ -90,11 +90,13 @@ Page({
     wx.showModal({
       title: '提示',
       content: '确定要删除吗',
-      success: function () {
-        let diyArr = mi.store.get('diyArr') ? mi.store.get('diyArr') : [];
-        diyArr.splice(_this.data.index, 1);
-        mi.store.set('diyArr', diyArr);
-        wx.navigateBack();
+      success: function (res) {
+        if (res.confirm) {
+          let diyArr = mi.store.get('diyArr') ? mi.store.get('diyArr') : [];
+          diyArr.splice(_this.data.index, 1);
+          mi.store.set('diyArr', diyArr);
+          wx.navigateBack();
+        }
       }
     });
   },//删除组合

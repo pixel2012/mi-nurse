@@ -166,3 +166,13 @@
 .mi-main-background-color{
   background-color: #ff4578;
 }
+.status-fixed{
+  position:fixed;
+  top:0;
+  background-color:#fff;
+  left:0;
+  right:0;
+  width:100%;
+  padding:0 15rpx;
+  box-sizing:border-box;
+}

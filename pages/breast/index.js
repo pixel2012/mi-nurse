@@ -405,9 +405,17 @@ Page({
         allTime: this.setAllTime(shaker)
       });
     }
-    this.allLoop();
+    this.allLoop(function () {
+      wx.vibrateLong();
+      wx.showModal({
+        title: '恭喜',
+        content: '你已完成一次完整的按摩理疗，记得每天坚持哦！',
+        confirmText:'我会加油',
+        showCancel: false
+      });
+    });
   },//执行
-  allLoop() {
+  allLoop(callback) {
     let _this = this;
     _this.loop(function () {
       console.log('大动画执行' + _this.data.allLoop + '完毕');
@@ -426,6 +434,9 @@ Page({
         _this.setPlay(0);
         shaker = null;
         timer = null;
+        if (callback) {
+          callback();
+        }
       }
 
     });
@@ -484,15 +495,35 @@ Page({
           });
         }
       });
-      timer = setTimeout(function () {
-        _this.setData({
-          index: _this.data.index + 1,
-          nowTime: _this.data.nowTime + stepObj.step[_this.data.index].time
-        });
-        console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
-        _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
-        _this.do(callback);
-      }, 1000 * stepObj.step[_this.data.index].time + 500);
+      let roundTimes = stepObj.step[_this.data.index].time;
+      circleTimes(roundTimes);
+      function circleTimes(roundTimes) {
+        if (roundTimes == 0) {
+          _this.setData({
+            index: _this.data.index + 1
+          });
+          _this.do(callback);
+        } else {
+          roundTimes--;
+          timer = setTimeout(function () {
+            _this.setData({
+              nowTime: _this.data.nowTime + 1
+            });
+            console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
+            _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
+            circleTimes(roundTimes);
+          }, 1000);
+        }
+      }
+      // timer = setTimeout(function () {
+      //   _this.setData({
+      //     index: _this.data.index + 1,
+      //     nowTime: _this.data.nowTime + stepObj.step[_this.data.index].time
+      //   });
+      //   console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
+      //   _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
+      //   _this.do(callback);
+      // }, 1000 * stepObj.step[_this.data.index].time + 500);
     } else {
       _this.setData({
         index: 0,
@@ -708,11 +739,12 @@ Page({
   diyPlay(cur) {
     //开始执行diy震动
     this.diyCore(cur, function () {
+      wx.vibrateLong();
       wx.showModal({
         title: '恭喜您',
         content: cur.title + '按摩组合执行完毕',
-        showCancel:false
-      })
+        showCancel: false
+      });
     });
   },//diy播放
   diyCore(cur, callback) {
@@ -723,33 +755,43 @@ Page({
       param: cur.shockArr[cur.playStep].command,
       check: false,
       success: function () {
-        timer2 = setTimeout(function () {
-          cur.timeUsed += cur.shockArr[cur.playStep].time;
-          cur.playStep++;
-          let diyArr = _this.data.diyArr;
-          diyArr[_this.data.diyIndex].timeUsed = cur.timeUsed;
-          diyArr[_this.data.diyIndex].playStep = cur.playStep;
-          _this.setData({
-            diyArr: diyArr
-          });
-          if (cur.playStep < cur.shockArr.length) {
-            _this.diyCore(cur, callback);
-          } else {
-            let diyArr = _this.data.diyArr;
-            diyArr[_this.data.diyIndex].timeUsed = 0;
-            diyArr[_this.data.diyIndex].play = false;
-            diyArr[_this.data.diyIndex].playStep = 0;
+        let roundTimes = cur.shockArr[cur.playStep].time;
+        circleTime(roundTimes);
+        function circleTime(roundTimes) {
+          if (roundTimes == 0) {
+            cur.playStep++;
+            _this.data.diyArr[_this.data.diyIndex].playStep++;
             _this.setData({
-              diyArr: diyArr
+              diyArr: _this.data.diyArr
             });
-            clearTimeout(timer2);
-            timer2 = null;
-            //已经震动到最后,执行成功回调
-            if (callback) {
-              callback();
+            if (cur.playStep < cur.shockArr.length) {
+              _this.diyCore(cur, callback);
+            } else {
+              //震动的结束，重置
+              _this.data.diyArr[_this.data.diyIndex].timeUsed = 0;
+              _this.data.diyArr[_this.data.diyIndex].play = false;
+              _this.data.diyArr[_this.data.diyIndex].playStep = 0;
+              _this.setData({
+                diyArr: _this.data.diyArr
+              });
+              clearTimeout(timer2);
+              timer2 = null;
+              //已经震动到最后,执行成功回调
+              if (callback) {
+                callback();
+              }
             }
+          } else {
+            timer2 = setTimeout(function () {
+              roundTimes--;
+              _this.data.diyArr[_this.data.diyIndex].timeUsed++;
+              _this.setData({
+                diyArr: _this.data.diyArr
+              });
+              circleTime(roundTimes);
+            }, 1000);
           }
-        }, 1000 * cur.shockArr[cur.playStep].time + 500);
+        }
       }
     });
   },//diy执行核心代码

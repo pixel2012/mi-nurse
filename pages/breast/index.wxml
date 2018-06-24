@@ -1,5 +1,6 @@
 <!--引入过滤器模块  -->
 <wxs module="filterMenu" src="../../common/wxs/filter-menu.wxs"></wxs>
+<wxs module="filterTime" src="../../common/wxs/filter-time.wxs"></wxs>
 
 
 <!--主框架  -->
@@ -327,7 +328,7 @@
           <view class='massage-li row' wx:if="{{diyArr.length>0}}" wx:for="{{diyArr}}" wx:key="{{index}}">
             <view class='col-25 massage-item'>{{item.title}}</view>
             <view class='col-25 massage-item'>
-              <view>{{item.timeUsed}}-{{item.timeTotal}}</view>
+              <view>{{filterTime.dot(item.timeTotal-item.timeUsed)}}</view>
               <view class='massage-progress'>
                 <view class='massage-bar' style='width:{{item.timeUsed/item.timeTotal*100}}%;'></view>
               </view>
