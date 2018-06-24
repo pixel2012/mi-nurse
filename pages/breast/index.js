@@ -204,7 +204,7 @@ Page({
   data: {
     bleIsConnect: false,//是否连接蓝牙
     bleIsSync: '',//是否蓝牙信息同步
-    bleEnergy: '',//电池电量
+    bleEnergy: 0,//电池电量
     imgUrls: [
       'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',

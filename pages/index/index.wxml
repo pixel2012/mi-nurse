@@ -1,3 +1,5 @@
+<wxs module="filterCell" src="../../common/wxs/filter-cell.wxs"></wxs>
+
 <view class='mi-container'>
   <!--头部信息&仪表盘  -->
   <view class='mi-box'>
@@ -9,13 +11,13 @@
         </view>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
+          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text> 
         </view>
       </view>
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
-          <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
+          <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{available?'可用':'不可用'}}，{{discovering?'搜索':'未搜索'}}{{bleEnergy? bleEnergy :'未知'}}</text>
         </view>
       </view>
     </view>
@@ -35,7 +37,6 @@
       <view class="{{(temp_avg && temp_diff_num)?'col-50':'col-100'}}">
         <view class='mi-button' wx:if="{{bleIsConnect}}" bindtap='getTem'>立即测温</view>
         <view class='mi-button' wx:else bindtap='bluetoothInit'>立即连接</view>
-        <!-- <button wx:else class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button> -->
       </view>
       <view class='col-25' wx:if='{{temp_diff_num}}'>
         <view class='mi-detail-temp'>{{temp_diff_num}}℃</view>
@@ -87,7 +88,14 @@
   <view class='mi-assess-box'>
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康记录</view>
-      <view class='col-50 mi-assess-time'></view>
+      <view class='col-50 mi-assess-time'>
+        <picker bindchange="bindPickerChange" value="{{yearIndex}}" mode="date" fields="year" start="{{yearStart}}" end="{{yearEnd}}">
+          <view class="picker">
+            {{yearIndex}}
+            <image src='img/arrow-down.png' style='width:20rpx;height:10rpx;'></image>
+          </view>
+        </picker>
+      </view>
     </view>
     <scroll-view class="scroll-view_H" scroll-x='true' style="width: 100%">
       <view class="scroll-view-item_H">1月</view>
@@ -105,7 +113,8 @@
     </scroll-view>
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
-        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+        <text style='color:#ff4578;'>健康指数 </text>
+        <text wx:if="{{echart0 != 0}}"> {{echart0}} 分</text>
       </view>
       <view class='col-50 mi-assess-time'>
         <navigator url="/pages/health-detail/index">点击查看详情></navigator>
@@ -117,7 +126,8 @@
 
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
-        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+        <text style='color:#ff4578;'>乳温差</text>
+        <text wx:if="{{echart1 != 0}}"> {{echart1}} ℃</text>
       </view>
       <view class='col-50 mi-assess-time'>
         <navigator url="/pages/health-detail/index">点击查看详情></navigator>
@@ -129,7 +139,7 @@
 
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
-        <text style='color:#ff4578;'>健康指数 87.6</text> 分
+        <text style='color:#ff4578;'>乳温 {{echart2}}</text>
       </view>
       <view class='col-50 mi-assess-time'>
         <navigator url="/pages/health-detail/index">点击查看详情></navigator>
@@ -139,19 +149,43 @@
       <ec-canvas id="mychart-dom-line3" canvas-id="mychart-line3" ec="{{ ec3 }}"></ec-canvas>
     </view>
 
+    <view class="mi-temp-show-box">
+      <view class='mi-temp-show-box-shadow'>
+      <view class='mi-temp-show-box-title'>温度信息</view>
+      <view class='mi-tem-box row' style='margin-top:0;'>
+        <view class='col-25 mi-tc'>
+          <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+          <view class='mi-lt-pos mi-tc'>左上外</view>
+          <view class='mi-lt-tep'>{{echart2[0]?echart2[0]:'未知'}}℃</view>
+        </view>
+        <view class='col-25 mi-tc'>
+          <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+          <view class='mi-lt-pos mi-tc'>左上内</view>
+          <view class='mi-lt-tep'>{{echart2[1]?echart2[1]:'未知'}}℃</view>
+        </view>
+        <view class='col-25 mi-tc'>
+          <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+          <view class='mi-lt-pos mi-tc'>右上内</view>
+          <view class='mi-lt-tep'>{{echart2[2]?echart2[2]:'未知'}}℃</view>
+        </view>
+        <view class='col-25 mi-tc'>
+          <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+          <view class='mi-lt-pos mi-tc'>右上外</view>
+          <view class='mi-lt-tep'>{{echart2[3]?echart2[3]:'未知'}}℃</view>
+        </view>
+      </view>
+      </view>
+    </view>
+
 
 
 
 
   </view>
-  <view class='mi-ble-list' wx:if="{{bleIsShowList}}">
+  <view class='mi-ble-list' wx:if="{{!isAuthorize}}">
     <view class='mi-ble-content'>
-      <view class='mi-ble-title'>搜索中...</view>
-      <block wx:for="{{bleLists}}" wx:key="{{index}}">
-        <view class='mi-ble-item' data-id="{{item.deviceId}}" bindtap='connect'>
-          {{item.name}}:[{{item.deviceId}}]
-        </view>
-      </block>
+      <view class='mi-ble-title'>咪小护需要取得您的授权</view>
+       <button class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">立即授权</button> 
     </view>
   </view>
 </view>

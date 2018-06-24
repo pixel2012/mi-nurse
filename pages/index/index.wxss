@@ -8,9 +8,11 @@ page {
   height: 100%;
   background-color: #faf4f6;
 }
-.mi-status.active{
-  color: #FF4578;
+
+.mi-status.active {
+  color: #ff4578;
 }
+
 .mi-meter {
   display: block;
   text-align: center;
@@ -18,14 +20,14 @@ page {
   position: relative;
 }
 
-.mi-detail-temp{
+.mi-detail-temp {
   font-size: 36rpx;
-  color: #FF4578;
+  color: #ff4578;
 }
 
-.mi-detail-title{
+.mi-detail-title {
   font-size: 28rpx;
-  color: #9D9D9D;
+  color: #9d9d9d;
 }
 
 .mi-score-box {
@@ -47,8 +49,9 @@ page {
   font-size: 60rpx;
   vertical-align: bottom;
 }
-.mi-score.active{
-  color: #45A658;
+
+.mi-score.active {
+  color: #45a658;
 }
 
 .mi-score-unit {
@@ -186,37 +189,60 @@ canvas {
   width: 100%;
   height: 100%;
 }
+
 ec-canvas {
   width: 100%;
   height: 100%;
 }
-.mi-ble-list{
+
+.mi-ble-list {
   position: fixed;
-  left:0;
-  top:0;
-  right:0;
-  bottom:0;
-  background-color: rgba(0,0,0,.1);
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-.mi-ble-content{
+
+.mi-ble-content {
   position: absolute;
-  width:90%;
+  width: 80%;
   height: auto;
-  left:50%;
-  top:50%;
+  left: 50%;
+  top: 50%;
   background-color: #fff;
-  transform:translate(-50%,-50%);
-  padding:30rpx;
+  transform: translate(-50%, -50%);
+  padding: 80rpx;
   border-radius: 8rpx;
   box-sizing: border-box;
+  text-align: center;
 }
-.mi-ble-title{
+
+.mi-ble-title {
   font-size: 30rpx;
   text-align: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 80rpx;
 }
-.mi-ble-item{
+
+.mi-ble-item {
   font-size: 28rpx;
-  color: #12C8C8;
+  color: #12c8c8;
   margin-bottom: 10rpx;
+}
+
+.mi-temp-show-box {
+  padding: 30rpx;
+}
+
+.mi-temp-show-box-shadow {
+  box-shadow: 0 -10rpx 15rpx 0 rgba(217, 217, 217, 1);
+  border-radius: 10rpx;
+  border: 1rpx solid rgba(250, 244, 246, 1);
+}
+
+.mi-temp-show-box-title {
+  color: #6db35b;
+  font-size: 28rpx;
+  padding-left: 30rpx;
+  padding-top: 15rpx;
 }

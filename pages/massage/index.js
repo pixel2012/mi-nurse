@@ -11,6 +11,7 @@ Page({
     shockArr: []//执行的动画序列
   },
   onLoad(options) {
+    mi.showLoading('加载数据中');
     console.log('massage-onLoad', options);
     let currentIndex = -1;
     if ('index' in options) {
@@ -20,13 +21,15 @@ Page({
       index: currentIndex
     });
     //更新本地数据
-    this.updata();
+    this.updata(function(){
+      mi.hideLoading();
+    });
   },
   onShow() {
     //更新本地数据
     this.upParam();
   },
-  updata() {
+  updata(callback) {
     let diyArr = mi.store.get('diyArr') ? mi.store.get('diyArr') : [];
     if (this.data.index != -1) {
       //url中传的有参数，说明是修改
@@ -47,6 +50,9 @@ Page({
         play: false,
         shockArr: []
       });
+    }
+    if (callback){
+      callback();
     }
 
   },

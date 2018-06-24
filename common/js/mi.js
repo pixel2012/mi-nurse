@@ -374,7 +374,7 @@ const mi = {
   },
   hideLoading() {
     wx.hideLoading();
-  }
+  },
 }
 module.exports = mi;
 

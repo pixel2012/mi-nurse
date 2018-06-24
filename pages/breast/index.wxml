@@ -1,6 +1,7 @@
 <!--引入过滤器模块  -->
 <wxs module="filterMenu" src="../../common/wxs/filter-menu.wxs"></wxs>
 <wxs module="filterTime" src="../../common/wxs/filter-time.wxs"></wxs>
+<wxs module="filterCell" src="../../common/wxs/filter-cell.wxs"></wxs>
 
 
 <!--主框架  -->
@@ -18,8 +19,8 @@
     </view>
     <view class='col-50 mi-r'>
       <view class="mi-status {{bleIsConnect?'active':''}}">
-        <image src="../../common/img/{{bleIsConnect?'cell-active.png':'cell.png'}}" style="width:26rpx;height:18rpx;"></image>
-        <text class='mi-text'>{{bleEnergy != ''? bleEnergy :'未知'}}</text>
+        <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleEnergy? bleEnergy :'未知'}}</text>
       </view>
     </view>
   </view>

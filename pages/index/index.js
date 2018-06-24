@@ -38,7 +38,7 @@ Page({
     bleIsConnect: false,//是否连接蓝牙
     bleIsSync: '',//是否蓝牙信息同步
     bleSyncInfo: '',//是否蓝牙信息同步
-    bleEnergy: '',//电池电量
+    bleEnergy: 0,//电池电量
     bleIsShowList: false,//是否显示已搜索到的蓝牙设备列表
     bleLists: [],//搜索到蓝牙设备列表
     bleDeviceId: '',//蓝牙设备的id号
@@ -46,6 +46,8 @@ Page({
     bleCharWriteId: '',//蓝牙设备的服务写入特征值id号
     bleCharNotifyId: '',//蓝牙设备的服务接收通知特征值id号
     isAuthorize: true,//是否授权
+    available: false,//蓝牙是否可用
+    discovering: false,//蓝牙是否处于搜索
     temp_score: '',
     temp_lto: '',//左上外
     temp_lti: '',//左上内
@@ -68,28 +70,19 @@ Page({
     },
     ec3: {
       onInit: initChart3
-    }
+    },
+    yearIndex: new Date().getFullYear(),
+    yearStart: '2018',
+    yearEnd: new Date().getFullYear(),
+    echart0: 0,
+    echart1: 0,
+    echart2: [0, 0, 0, 0]
 
   },
   onLoad() {
     let _this = this;
     // this.lineInit();
     this.getUserInfo();
-    // wx.getSystemInfo({
-    //   success: function (res) {
-    //     console.log(res);
-    //     _this.setData({
-    //       os: res.platform
-    //     });
-    //   }
-    // });
-    // this.setData({
-    //   temp_lto: 36.5,//左上外
-    //   temp_lti: 37.4,//左上内
-    //   temp_rti: 37.8,//右上内
-    //   temp_rto: 37,//右上外
-    // });
-    // this.bluetoothInit();
     let timer = null;
     _this.updateStore(function () {
       console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
@@ -102,6 +95,7 @@ Page({
       timer = setTimeout(() => {
         if (chart && chart2 && chart3) {
           _this.chartRender(chart, {
+            target: 'echart0',
             color: ["#FF4578"],
             dataZoom: [{
               fillerColor: 'rgba(254,216,227,.5)',
@@ -111,9 +105,11 @@ Page({
             }]
           }, '分');
           _this.chartRender(chart2, {
+            target: 'echart1',
             color: ["#4586FF"],
           }, '℃');
           _this.chartRender(chart3, {
+            target: 'echart2',
             color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
           }, '℃');
         } else {
@@ -134,9 +130,137 @@ Page({
       bleCharWriteId: app.bleCharWriteId,//蓝牙设备的服务写入特征值id号
       bleCharNotifyId: app.bleCharNotifyId,//蓝牙设备的服务接收通知特征值id号
     });
-    if(callback){
+    if (callback) {
       callback();
     }
+  },
+  getUserInfo() {
+    let that = this;
+    //获取用户信息
+    mi.user.getSetting(function (status) {
+      if (status) {
+        that.setData({
+          isAuthorize: true
+        });
+        mi.user.getInfo(function (res) {
+
+        });
+      } else {
+        that.setData({
+          isAuthorize: false
+        });
+      }
+    });
+    // wx.getSetting({
+    //   success: function (res) {
+    //     if (res.authSetting['scope.userInfo']) {
+
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+    //       wx.getUserInfo({
+    //         success: function (res) {
+    //           console.log(res.userInfo);
+    //           console.log(res);
+    //           let openId ='oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
+    //           // mi.ajax({
+    //           //   url: api.bindThirdAccount,
+    //           //   method:'post',
+    //           //   data:{
+
+    //           //   },
+    //           //   success:function(){
+
+    //           //   }
+    //           // });
+    //         }
+    //       })
+    //     }
+    //   }
+    // });
+  },
+  chartRender(chart, opts, unit) {
+    let _this = this;
+    let option = {
+      backgroundColor: '#FFF',
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        containLabel: true,
+        left: 15,
+        top: 40,
+        right: 20,
+        bottom: 15,
+      },
+      dataZoom: [
+        {
+          show: true,
+          realtime: true,
+          top: 10,
+          height: 20,
+          start: 0,
+          end: 20,
+          minSpan: 10,
+          filterMode: 'none',
+          backgroundColor: '#fff',
+          dataBackground: {
+            lineStyle: {
+              color: '#d6d6d6'
+            },
+            areaStyle: {
+              color: '#fafbfd'
+            }
+          }
+        }
+      ],
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: (function () {
+          let arr = [];
+          for (let i = 0; i < 100; i++) {
+            arr.push('X' + i);
+          }
+          return arr;
+        })(),
+        axisPointer: {
+          label: {
+            formatter: function (params) {
+              // console.log(params);
+              // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
+              if (opts.target == 'echart2') {
+                console.log(params.seriesData);
+                _this.setData({
+                  [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value]
+                });
+              } else {
+                _this.setData({
+                  [opts.target]: params.seriesData[0].value
+                });
+              }
+            }
+          }
+        },
+      },
+      yAxis: {
+        x: 'center',
+        type: 'value'
+      },
+      series: [{
+        name: 'A商品',
+        type: 'line',
+        data: (function () {
+          let arr = [];
+          for (let i = 0; i < 100; i++) {
+            arr.push(parseInt(Math.random() * 100));
+          }
+          return arr;
+        })()
+      }]
+    };
+    option = mi.deepMerge(option, opts);
+    // console.log(option);
+
+    chart.setOption(option);
   },
   bluetoothInit: function (oldId) {
     let _this = this;
@@ -152,15 +276,19 @@ Page({
             //监听蓝牙适配器状态
             wx.onBluetoothAdapterStateChange(function (res) {
               console.log(`adapterState changed, now is`, res);
+              _this.setData({
+                available: res.available,//蓝牙是否可用
+                discovering: res.discovering,//蓝牙是否处于搜索
+              });
             });
             //如果蓝牙此时处于空闲，则可以
             if (res.available && !res.discovering) {
               mi.showLoading('蓝牙搜索中');
               console.log('蓝牙处于空闲，开启蓝牙搜索...');
-              if (oldId && typeof oldId == 'string'){
+              if (oldId && typeof oldId == 'string') {
                 console.log('oldId', oldId);
                 _this.connect(oldId);
-              }else{
+              } else {
                 //开启蓝牙搜索模式
                 wx.startBluetoothDevicesDiscovery({
                   services: [],
@@ -177,18 +305,6 @@ Page({
                         //发现蜜桃设备直接连接
                         _this.connect(res.devices[0].deviceId);
                       }
-                      // let bleDevice;
-                      // if(_this.data.os=='android'){
-                      //   bleDevice = res.devices[0];
-                      // } else if(_this.data.os == 'ios'){
-                      //   bleDevice = res.devices[0];
-                      // }else{
-                      //   mi.toast('暂不支持您的设备');
-                      // }
-                      // _this.data.bleLists.push(bleDevice);
-                      // _this.setData({
-                      //   bleLists: _this.data.bleLists
-                      // });
                     })
                   },
                   fail: function (res) {
@@ -249,10 +365,10 @@ Page({
         bleIsConnect: res.connected
       });
       app.bleIsConnect = res.connected;
-      if (!res.connected){
-          //如果蓝牙断开，自动重连
-          mi.showLoading('蓝牙重连中');
-          _this.connect(id);
+      if (!res.connected) {
+        //如果蓝牙断开，自动重连
+        mi.showLoading('蓝牙重连中');
+        _this.connect(id);
       }
     });
     console.log('创建蓝牙连接');
@@ -270,7 +386,7 @@ Page({
                 _this.setData({
                   bleServerId: res.services[i].uuid
                 });
-                app.bleServerId =  _this.data.bleServerId;
+                app.bleServerId = _this.data.bleServerId;
                 mi.store.set('bleServerId', _this.data.bleServerId);
                 break;//终止循环
               }
@@ -354,12 +470,12 @@ Page({
       obj.param.forEach(v => {
         tempObj.hex += v;//追加上参数
       });
-      if (tempObj.check){
+      if (tempObj.check) {
         tempObj.hex += mi.check(tempObj.hex);//追加运算校验码
-      }else{
+      } else {
         tempObj.hex += '00';//追加00校验码
       }
-      
+
     }
     //追加包头，开始写入特征值
     tempObj.hex = 'FBFA' + tempObj.hex;
@@ -505,124 +621,6 @@ Page({
         check: true
       });//右胸
     }, 1000);
-  },
-  getUserInfo() {
-    let that = this;
-    //获取用户信息
-    mi.user.getSetting(function (status) {
-      if (status) {
-        that.setData({
-          isAuthorize: true
-        });
-        mi.user.getInfo(function (res) {
-
-        });
-      } else {
-        that.setData({
-          isAuthorize: false
-        });
-      }
-    });
-    // wx.getSetting({
-    //   success: function (res) {
-    //     if (res.authSetting['scope.userInfo']) {
-
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       wx.getUserInfo({
-    //         success: function (res) {
-    //           console.log(res.userInfo);
-    //           console.log(res);
-    //           let openId ='oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
-    //           // mi.ajax({
-    //           //   url: api.bindThirdAccount,
-    //           //   method:'post',
-    //           //   data:{
-
-    //           //   },
-    //           //   success:function(){
-
-    //           //   }
-    //           // });
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
-  },
-  chartRender(chart, opts, unit) {
-    let option = {
-      backgroundColor: '#FFF',
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        containLabel: true,
-        left: 15,
-        top: 40,
-        right: 20,
-        bottom: 15,
-      },
-      dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          top: 10,
-          height: 20,
-          start: 0,
-          end: 20,
-          minSpan: 10,
-          filterMode: 'none',
-          backgroundColor: '#fff',
-          dataBackground: {
-            lineStyle: {
-              color: '#d6d6d6'
-            },
-            areaStyle: {
-              color: '#fafbfd'
-            }
-          }
-        }
-      ],
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push('X' + i);
-          }
-          return arr;
-        })(),
-        axisPointer: {
-          label: {
-            formatter: function (params) {
-              // console.log(params);
-              mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
-            }
-          }
-        },
-      },
-      yAxis: {
-        x: 'center',
-        type: 'value'
-      },
-      series: [{
-        name: 'A商品',
-        type: 'line',
-        smooth: true,
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push(parseInt(Math.random() * 100));
-          }
-          return arr;
-        })()
-      }]
-    };
-    option = mi.deepMerge(option, opts);
-    // console.log(option);
-
-    chart.setOption(option);
   },
   calcTemp() {
     //平均温度
@@ -860,5 +858,9 @@ Page({
       });
     }
   },//计算乳温差值诊断结果
-
+  bindPickerChange(e) {
+    this.setData({
+      yearIndex: e.detail.value
+    });
+  }
 });
