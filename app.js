@@ -10,13 +10,25 @@ App({
   bleServerId: '',//蓝牙设备的服务id号
   bleCharWriteId: '',//蓝牙设备的服务写入特征值id号
   bleCharNotifyId: '',//蓝牙设备的服务接收通知特征值id号
+  wxCode: '',//wxCode
+  systemInfo: '',
   onLaunch() {
+    let _this = this;
     this.bleDeviceId = mi.store.get('bleDeviceId') || '';
     this.bleServerId = mi.store.get('bleServerId') || '';
     this.bleCharWriteId = mi.store.get('bleCharWriteId') || '';
     this.bleCharNotifyId = mi.store.get('bleCharNotifyId') || '';
+    mi.user.login(function (code) {
+      if (code) {
+        console.log('code', code);
+        _this.wxCode = code;
+      }
+    });
+    this.systemInfo = wx.getSystemInfoSync();
+    mi.store.set('systemInfo', this.systemInfo);
+    console.log(this.systemInfo);
   },
-  param:'',//穴位组合跳转添加穴位传的参数写入全局
-  result:'',//创建或者修改穴位后的结果
+  param: '',//穴位组合跳转添加穴位传的参数写入全局
+  result: '',//创建或者修改穴位后的结果
   idx: '',//创建或者修改穴位后的索引值
 })

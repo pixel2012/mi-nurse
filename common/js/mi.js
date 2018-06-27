@@ -2,35 +2,36 @@ let crypto = require('./crypto-js.min');
 const aesKey = 'u.!4pb.pLzh^sN)u';
 const mi = {
   version: '0.0.1',
-  ip: 'http://api.51mito.com/api/',
-  ajax: function (param) {
-    let that = this;
+  ip: 'https://api.51mito.com/api/',
+  ajax: function (params) {
+    let _this = this;
     //默认请求方式为get
     if (!params.hasOwnProperty('method') || !params.method) {
       params.method = 'GET';
     }
-    let myToken = store.get('myToken');
-    let myRefreshToken = store.get('myRefreshToken');
-    let userinfo = store.get('userinfo');
+    let myId = _this.store.get('myId') || '';
+    let myToken = _this.store.get('myToken') || '';
+    let myRefreshToken = _this.store.get('myRefreshToken') || '';
+    let userinfo = _this.store.get('userInfo');
+    let systemInfo = _this.store.get('systemInfo');
 
-    if (!access_token && params.login) {
+    if (!myToken && params.login) {
       request({
         url: this.ip + '/user/refreshToken',
         method: 'post',
         data: {
-          myId: "18",
-          myRefreshToken: "b4db6ce6-d6ae-1394-9139-73403063f7a4",
-          pushChannelId: "42739732949249670",
-          os: "android/ios"
+          myId: myId,
+          myRefreshToken: myRefreshToken,
+          os: systemInfo.system.indexOf('ios') > -1 ? 'ios' : 'android'
         },
         success: function (data) {
           if (data) {
             //1，存储到本地
             data.forEach(v => {
-              that.store.set(v, data[v]);
+              _this.store.set(v, data[v]);
             });
             //2，请求接口
-            request(params, data.myToken);
+            request(params, myToken);
           }
         },
         fail: function () {
@@ -41,7 +42,7 @@ const mi = {
         }
       });
     } else {
-      request(params, data.myToken || '');
+      request(params, myToken || '');
     }
 
     function request(params, token) {
@@ -68,7 +69,7 @@ const mi = {
       let sendData = ''; //定义将要上传服务器的数据
       /*当含有加密参数开启*/
       if (params.hasOwnProperty('encrypt') && params.encrypt) {
-        sendData = that.crypto.encode(JSON.stringify(params.data));
+        sendData = _this.crypto.encode(JSON.stringify(params.data));
       } else {
         sendData = params.data;
       }
@@ -76,8 +77,8 @@ const mi = {
         url: urlData.slice(0, urlData.length - 1),
         method: params.method,
         header: {
-          uid: store.get('uid'),
-          token: token
+          uid: myId,
+          token: myToken
         },
         data: sendData,
         success: function (res) {
@@ -181,11 +182,23 @@ const mi = {
         }
       });
     },//获取用户授权状态
+    login: function (callback) {
+      wx.login({
+        success: function (res) {
+          if (callback) {
+            callback(res.code);
+          }
+        }
+      });
+    },
     getInfo: function (callback) {
       wx.getUserInfo({
         success: function (res) {
           console.log(res);
-          res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
+          mi.store.set('openId', res.openId);
+          mi.store.set('signature', res.signature);
+          mi.store.set('userInfo', res.userInfo);
+          // res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
           callback(res);
           // mi.ajax({
           //   url: api.bindThirdAccount,

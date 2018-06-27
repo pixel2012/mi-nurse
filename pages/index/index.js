@@ -4,6 +4,8 @@ const echarts = require('../../common/components/ec-canvas/echarts.js');
 const mi = require('../../common/js/mi.js');
 const api = {
   bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
+  login: mi.ip + 'user/login',//登录
+
 };
 
 let chart, chart2, chart3;
@@ -135,18 +137,37 @@ Page({
     }
   },
   getUserInfo() {
-    let that = this;
+    let _this = this;
     //获取用户信息
     mi.user.getSetting(function (status) {
       if (status) {
-        that.setData({
+        _this.setData({
           isAuthorize: true
         });
         mi.user.getInfo(function (res) {
+          mi.ajax({
+            url: api.login,
+            method: 'post',
+            login:false,
+            data: {
+              "loginType": 4,
+              "os": app.systemInfo.system.indexOf('iOS') > -1 ? 'ios' : 'android',
+              "nickName": res.userInfo.nickName,
+              "avatar": res.userInfo.avatarUrl,
+              "signature": res.signature,
+              "province": res.userInfo.province,
+              "city": res.userInfo.city,
+              "wxxcxCode": app.wxCode
+            },
+            dataPos: false,
+            callback: function (data) {
+              console.log(data);
+            }
 
+          });
         });
       } else {
-        that.setData({
+        _this.setData({
           isAuthorize: false
         });
       }
