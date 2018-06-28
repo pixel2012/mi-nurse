@@ -149,7 +149,7 @@ Page({
             url: api.login,
             method: 'post',
             login:false,
-            data: {
+            data: mi.crypto.encode(JSON.stringify({
               "loginType": 4,
               "os": app.systemInfo.system.indexOf('iOS') > -1 ? 'ios' : 'android',
               "nickName": res.userInfo.nickName,
@@ -158,10 +158,10 @@ Page({
               "province": res.userInfo.province,
               "city": res.userInfo.city,
               "wxxcxCode": app.wxCode
-            },
+            })),
             dataPos: false,
             callback: function (data) {
-              console.log(data);
+              console.log('data',mi.crypto.decode(data));
             }
 
           });

@@ -82,10 +82,11 @@ const mi = {
         },
         data: sendData,
         success: function (res) {
-          if (res.status) {
+          console.log(res);
+          if (res.statusCode==200) {
             //成功回调
             if (params.callback) {
-              params.callback(res.data.data);
+              params.callback(res.data);
             }
           } else {
             if (!params.hasOwnProperty('failTip') || params.failTip) {
