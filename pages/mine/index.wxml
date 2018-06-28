@@ -1,15 +1,15 @@
 <view class='my-container'>
   <view class='my-header-box'>
     <view class='my-user-header-box'>
-      <image class="my-user-header-img" src='img/chest-form.png'></image>
+      <image class="my-user-header-img" src="{{headerUrl?headerUrl:'img/chest-form.png'}}"></image>
     </view>
     <view class='my-nickname-box'>
-      <text class='my-nickname-text'>咪小护</text>
+      <text class='my-nickname-text'>{{nickName?nickName:'未知'}}</text>
     </view>
   </view>
   <view class='my-params-box'>
     <view class='my-params-item'>
-      <picker mode="date" value="{{currentDate}}" fields="month" start="{{dateStart}}" end="{{dataEnd}}" bindchange="bindDateChange">
+      <picker mode="date" value="{{currentDate}}" start="{{dateStart}}" end="{{dataEnd}}" bindchange="bindDateChange">
         <view class='my-params-item-img-box'>
           <image class='my-params-item-img' src='img/age.png'></image>
         </view>
@@ -86,15 +86,15 @@
   <view class='my-alert-box' wx:if="{{isFigure}}" bindtap="hideAll">
     <view class='my-figure-box row no-gutter' catchtap="preventBubble">
       <view class='col-40'>
-        <input placeholder="身高" class="my-figure-input" auto-focus/>
+        <input placeholder="身高" type="number" class="my-figure-input" value="{{height}}" bindinput="inputHeight" auto-focus/>
         <text class='my-figure-unit'>cm</text>
       </view>
       <view class='col-40'>
-        <input placeholder="体重" class="my-figure-input" />
+        <input placeholder="体重" type="number" class="my-figure-input" value="{{weight}}" bindinput="inputWeight" />
         <text class='my-figure-unit'>kg</text>
       </view>
       <view class='col-20'>
-        <button class='my-figure-save'>保存</button>
+        <button class='my-figure-save' bindtap='bindSave'>保存</button>
       </view>
     </view>
   </view>

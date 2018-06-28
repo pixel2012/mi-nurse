@@ -12,7 +12,7 @@ const mi = {
     let myId = _this.store.get('myId') || '';
     let myToken = _this.store.get('myToken') || '';
     let myRefreshToken = _this.store.get('myRefreshToken') || '';
-    let userinfo = _this.store.get('userInfo');
+    let userInfo = _this.store.get('userInfo');
     let systemInfo = _this.store.get('systemInfo');
 
     if (!myToken && params.login) {
@@ -83,7 +83,7 @@ const mi = {
         data: sendData,
         success: function (res) {
           console.log(res);
-          if (res.statusCode==200) {
+          if (res.statusCode == 200) {
             //成功回调
             if (params.callback) {
               params.callback(res.data);

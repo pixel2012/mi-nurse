@@ -4,8 +4,7 @@ const echarts = require('../../common/components/ec-canvas/echarts.js');
 const mi = require('../../common/js/mi.js');
 const api = {
   bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
-  login: mi.ip + 'user/login',//登录
-
+  login: mi.ip + 'user/login'//登录
 };
 
 let chart, chart2, chart3;
@@ -84,7 +83,9 @@ Page({
   onLoad() {
     let _this = this;
     // this.lineInit();
-    this.getUserInfo();
+    if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
+      this.getUserInfo();
+    }
     let timer = null;
     _this.updateStore(function () {
       console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
@@ -148,8 +149,8 @@ Page({
           mi.ajax({
             url: api.login,
             method: 'post',
-            login:false,
-            data: mi.crypto.encode(JSON.stringify({
+            login: false,
+            data: {
               "loginType": 4,
               "os": app.systemInfo.system.indexOf('iOS') > -1 ? 'ios' : 'android',
               "nickName": res.userInfo.nickName,
@@ -158,10 +159,17 @@ Page({
               "province": res.userInfo.province,
               "city": res.userInfo.city,
               "wxxcxCode": app.wxCode
-            })),
+            },
+            encrypt: true,
             dataPos: false,
             callback: function (data) {
-              console.log('data',mi.crypto.decode(data));
+              let res = JSON.parse(mi.crypto.decode(data));
+              console.log('res', res);
+              //将信息存储到本地缓存中
+              mi.store.set('myId', res.data.myId, res.data.myId);
+              mi.store.set('myToken', res.data.myToken, 24 * 55 * 60);
+              mi.store.set('myRefreshToken', res.data.myRefreshToken, 30 * 24 * 55 * 60);
+              mi.store.set('userInfo', res.data);
             }
 
           });
