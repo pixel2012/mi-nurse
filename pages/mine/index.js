@@ -3,7 +3,8 @@ const mi = require('../../common/js/mi.js');
 const api = {
   wh: mi.ip + 'user/updateHeightWeight',//身高
   chest: mi.ip + 'user/updateChest',//胸围
-  birthday: mi.ip + 'user/updateBirthday'//生日
+  birthday: mi.ip + 'user/updateBirthday',//生日
+  version: mi.ip + 'open/getNewVersion',//获取最新版本
 };
 Page({
   data: {
@@ -91,8 +92,8 @@ Page({
   },
   save() {
     console.log(this.data.result);
-    if (this.data.result == '请选择正确的尺寸') {
-      return mi.toast('请选择正确的尺寸');
+    if (this.data.result == '') {
+      return mi.toast('请输入合理的范围');
     }
     let _this = this;
     mi.ajax({
@@ -201,7 +202,7 @@ Page({
     let diff = up - down;
     let val = '';
     if (diff <= 0 || diff > 23) {
-      return callback('请选择正确的尺寸');
+      return callback('');
     }
     // 63~67
     if (down >= 63 && down <= 67) {
@@ -233,7 +234,7 @@ Page({
                     val = '65F';
                   }
                   else {
-                    callback('请输入正确的胸围尺寸');
+                    callback('');
                   }
     }
     else
@@ -267,7 +268,7 @@ Page({
                       val = '70F';
                     }
                     else {
-                      callback('请输入正确的胸围尺寸');
+                      callback('');
                     }
       }
       else
@@ -301,7 +302,7 @@ Page({
                         val = '75F';
                       }
                       else {
-                        callback('请输入正确的胸围尺寸');
+                        callback('');
                       }
         }
         else
@@ -335,7 +336,7 @@ Page({
                           val = '80F';
                         }
                         else {
-                          callback('请输入正确的胸围尺寸');
+                          callback('');
                         }
           }
           else
@@ -369,7 +370,7 @@ Page({
                             val = '85F';
                           }
                           else {
-                            callback('请输入正确的胸围尺寸');
+                            callback('');
                           }
             }
             else
@@ -403,7 +404,7 @@ Page({
                               val = '90F';
                             }
                             else {
-                              callback('请输入正确的胸围尺寸');
+                              callback('');
                             }
               }
               else
@@ -437,7 +438,7 @@ Page({
                                 val = '95F';
                               }
                               else {
-                                callback('请输入正确的胸围尺寸');
+                                callback('');
                               }
                 }
                 else
@@ -471,7 +472,7 @@ Page({
                                   val = '100F';
                                 }
                                 else {
-                                  callback('请输入正确的胸围尺寸');
+                                  callback('');
                                 }
                   }
                   else
@@ -505,7 +506,7 @@ Page({
                                     val = '105F';
                                   }
                                   else {
-                                    callback('请输入正确的胸围尺寸');
+                                    callback('');
                                   }
                     }
                     else
@@ -539,12 +540,25 @@ Page({
                                       val = '110F';
                                     }
                                     else {
-                                      callback('请输入正确的胸围尺寸');
+                                      callback('');
                                     }
                       }
                       else {
-                        callback('请输入正确的胸围尺寸');
+                        callback('');
                       }
     callback(val);
-  }
+  },
+  searchVer(){
+    mi.ajax({
+      url: api.version,
+      login: true,
+      data: {
+        "v": '0.1',
+        "type": '3'
+      },
+      callback: function (data) {
+        console.log('版本',data);
+      }
+    });
+  }//查看版本
 });

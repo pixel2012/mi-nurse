@@ -2,164 +2,145 @@ let app = getApp();
 const mi = require('../../common/js/mi.js');
 class Shake {
   constructor(mode, strength) {
-    this.mode = mode || '10';//震动模式
-    this.strength = strength || '01';//震动强度
-    this.loop = 0;//循环次数
+    this.mode = mode || '10'; //震动模式
+    this.strength = strength || '01'; //震动强度
+    this.loop = 0; //循环次数
   }
   getStep0() {
     var ms = mi.hexMerge(this.mode, this.strength);
-    var step = [
-      {
+    var step = [{
         index: 0,
-        command: ['00', '00', ms, '08', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳中8秒
+        command: ['00', '00', ms, '08', '00', '00', '00', '00', '00', '00', '00', '00'], //左乳中8秒
         time: 8
       },
       {
         index: 1,
-        command: ['00', '00', '00', '00', '00', '00', '00', '00', ms, '08', '00', '00'],//右乳中8秒
+        command: ['00', '00', '00', '00', '00', '00', '00', '00', ms, '08', '00', '00'], //右乳中8秒
         time: 8
       },
       {
         index: 2,
-        command: ['00', '00', ms, '08', '00', '00', '00', '00', ms, '08', '00', '00'],//左右乳中8秒
+        command: ['00', '00', ms, '08', '00', '00', '00', '00', ms, '08', '00', '00'], //左右乳中8秒
         time: 8
       }
     ];
-    return [
-      {
-        step: step,
-        loop: 1
-      }
-    ];
+    return [{
+      step: step,
+      loop: 1
+    }];
   }
   getStep1() {
     var ms = mi.hexMerge(this.mode, this.strength);
-    var step = [
-      {
+    var step = [{
         index: 0,
-        command: [ms, '08', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳根8秒
+        command: [ms, '08', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'], //左乳根8秒
         time: 8
       },
       {
         index: 1,
-        command: ['00', '00', '00', '00', '00', '00', ms, '08', '00', '00', '00', '00'],//右乳根8秒
+        command: ['00', '00', '00', '00', '00', '00', ms, '08', '00', '00', '00', '00'], //右乳根8秒
         time: 8
       },
       {
         index: 2,
-        command: [ms, '08', '00', '00', '00', '00', ms, '08', '00', '00', '00', '00'],//左右乳根8秒
+        command: [ms, '08', '00', '00', '00', '00', ms, '08', '00', '00', '00', '00'], //左右乳根8秒
         time: 8
       }
     ];
-    return [
-      {
-        step: step,
-        loop: 1
-      }
-    ];
+    return [{
+      step: step,
+      loop: 1
+    }];
   }
   getStep2() {
     var ms = mi.hexMerge(this.mode, this.strength);
-    var step = [
-      {
+    var step = [{
         index: 0,
-        command: ['00', '00', '00', '00', ms, '08', '00', '00', '00', '00', '00', '00'],//左天溪8秒
+        command: ['00', '00', '00', '00', ms, '08', '00', '00', '00', '00', '00', '00'], //左天溪8秒
         time: 8
       },
       {
         index: 1,
-        command: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, '08'],//右天溪8秒
+        command: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, '08'], //右天溪8秒
         time: 8
       },
       {
         index: 2,
-        command: ['00', '00', '00', '00', ms, '08', '00', '00', '00', '00', ms, '08'],//左右天溪8秒
+        command: ['00', '00', '00', '00', ms, '08', '00', '00', '00', '00', ms, '08'], //左右天溪8秒
         time: 8
       }
     ];
-    return [
-      {
-        step: step,
-        loop: 1
-      }
-    ];
+    return [{
+      step: step,
+      loop: 1
+    }];
   }
   getStep3() {
     var ms = mi.hexMerge(this.mode, this.strength);
-    var stepA = [
-      {
+    var stepA = [{
         index: 0,
-        command: ['00', '00', ms, '02', '00', '00', '00', '00', '00', '00', '00', '00'],//左天溪8秒
+        command: ['00', '00', ms, '02', '00', '00', '00', '00', '00', '00', '00', '00'], //左天溪8秒
         time: 2
       },
       {
         index: 1,
-        command: [ms, '02', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],//右天溪8秒
+        command: [ms, '02', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'], //右天溪8秒
         time: 2
       },
       {
         index: 2,
-        command: ['00', '00', '00', '00', ms, '02', '00', '00', '00', '00', '00', '00'],//左右天溪8秒
+        command: ['00', '00', '00', '00', ms, '02', '00', '00', '00', '00', '00', '00'], //左右天溪8秒
         time: 2
       }
     ];
-    var stepB = [
-      {
+    var stepB = [{
         index: 0,
-        command: ['00', '00', '00', '00', '00', '00', '00', '00', ms, '02', '00', '00'],//左天溪8秒
+        command: ['00', '00', '00', '00', '00', '00', '00', '00', ms, '02', '00', '00'], //左天溪8秒
         time: 2
       },
       {
         index: 1,
-        command: ['00', '00', '00', '00', '00', '00', ms, '02', '00', '00', '00', '00'],//右天溪8秒
+        command: ['00', '00', '00', '00', '00', '00', ms, '02', '00', '00', '00', '00'], //右天溪8秒
         time: 2
       },
       {
         index: 2,
-        command: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, '02'],//左右天溪8秒
+        command: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, '02'], //左右天溪8秒
         time: 2
       }
     ];
-    var stepC = [
-      {
+    var stepC = [{
         index: 0,
-        command: ['00', '00', ms, '02', '00', '00', '00', '00', ms, '02', '00', '00'],//左天溪8秒
+        command: ['00', '00', ms, '02', '00', '00', '00', '00', ms, '02', '00', '00'], //左天溪8秒
         time: 2
       },
       {
         index: 1,
-        command: [ms, '02', '00', '00', '00', '00', ms, '02', '00', '00', '00', '00'],//右天溪8秒
+        command: [ms, '02', '00', '00', '00', '00', ms, '02', '00', '00', '00', '00'], //右天溪8秒
         time: 2
       },
       {
         index: 2,
-        command: ['00', '00', '00', '00', ms, '02', '00', '00', '00', '00', ms, '02'],//左右天溪8秒
+        command: ['00', '00', '00', '00', ms, '02', '00', '00', '00', '00', ms, '02'], //左右天溪8秒
         time: 2
       }
     ];
-    var stepD = [
-      {
-        index: 0,
-        command: [ms, '08', , ms, '08', ms, '08', '00', '00', '00', '00', '00', '00'],//左天溪8秒
-        time: 8
-      }
-    ];
-    var stepE = [
-      {
-        index: 0,
-        command: ['00', '00', '00', '00', '00', '00', ms, '08', ms, '08', ms, '08'],//右天溪8秒
-        time: 8
-      }
-    ];
-    var stepF = [
-      {
-        index: 0,
-        command: [ms, '08', ms, '08', ms, '08', ms, '08', ms, '08', ms, '08'],//左右天溪8秒
-        time: 8
-      }
-    ];
-    return [
-      {
+    var stepD = [{
+      index: 0,
+      command: [ms, '08', , ms, '08', ms, '08', '00', '00', '00', '00', '00', '00'], //左天溪8秒
+      time: 8
+    }];
+    var stepE = [{
+      index: 0,
+      command: ['00', '00', '00', '00', '00', '00', ms, '08', ms, '08', ms, '08'], //右天溪8秒
+      time: 8
+    }];
+    var stepF = [{
+      index: 0,
+      command: [ms, '08', ms, '08', ms, '08', ms, '08', ms, '08', ms, '08'], //左右天溪8秒
+      time: 8
+    }];
+    return [{
         step: stepA,
         loop: 5
       },
@@ -197,27 +178,30 @@ class Shake {
     }
   }
 }
-let shaker = null;//本地震动对象
-let timer = null;//本地震动定时器
-let timer2 = null;//diy震动定时器
+let shaker = null; //本地震动对象
+let timer = null; //本地震动定时器
+let timer2 = null; //diy震动定时器
+const api = {
+  uploadZD: mi.ip + 'zhimito/used/post', //获取温度列表
+}
 Page({
   data: {
-    bleIsConnect: false,//是否连接蓝牙
-    bleIsSync: '',//是否蓝牙信息同步
-    bleEnergy: 0,//电池电量
+    bleIsConnect: false, //是否连接蓝牙
+    bleIsSync: '', //是否蓝牙信息同步
+    bleEnergy: 0, //电池电量
     imgUrls: [
       'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
     ],
-    allLoops: 1,//总循环几次
-    allLoop: 0,//当前总循环次数轮大循环计数
-    nowTime: 0,//已用时间
-    allTime: 0,//总共时间
-    current: 0,//整个进度第几部
-    stepIndex: 0,//大步中第几部
-    stepLoop: 0,//至少循环1遍
-    index: 0,//每部中的小步
+    allLoops: 1, //总循环几次
+    allLoop: 0, //当前总循环次数轮大循环计数
+    nowTime: 0, //已用时间
+    allTime: 0, //总共时间
+    current: 0, //整个进度第几部
+    stepIndex: 0, //大步中第几部
+    stepLoop: 0, //至少循环1遍
+    index: 0, //每部中的小步
     indicatorDots: true,
     indicatorActiveColor: '#12C8C8',
     autoplay: false,
@@ -225,11 +209,10 @@ Page({
     duration: 1000,
     circular: true,
     displayMultipleItems: 2,
-    tabIndex: 0,//当前高亮的tab标签栏
-    isMenu: false,//是否显示菜单
-    menuIndex: 0,//当前高亮的菜单项
-    menuList: [
-      {
+    tabIndex: 0, //当前高亮的tab标签栏
+    isMenu: false, //是否显示菜单
+    menuIndex: 0, //当前高亮的菜单项
+    menuList: [{
         id: 0,
         title: '盛夏如花',
         mode: '10'
@@ -265,15 +248,15 @@ Page({
         mode: '00'
       }
     ],
-    mode: '10',//震动模式
-    play: false,//震动状态true/false
+    mode: '10', //震动模式
+    play: false, //震动状态true/false
     playTitle: '',
-    strength: '01',//震动强度01/02/03/04
-    playProgress: 0,//0~360,
-    playPoints: [],//当前播放的节点
-    playBgc: '#F7F7F7',//播放进度条背景色
-    diyIndex: -1,//当前diy震动的是第几个
-    diyArr: [],//diy按摩组合
+    strength: '01', //震动强度01/02/03/04
+    playProgress: 0, //0~360,
+    playPoints: [], //当前播放的节点
+    playBgc: '#F7F7F7', //播放进度条背景色
+    diyIndex: -1, //当前diy震动的是第几个
+    diyArr: [], //diy按摩组合
   },
   onLoad() {
     // this.updateStatus();
@@ -312,13 +295,13 @@ Page({
   },
   updateStatus() {
     this.setData({
-      bleIsConnect: app.bleIsConnect,//是否连接蓝牙
-      bleIsSync: app.bleIsSync,//是否蓝牙信息同步
-      bleEnergy: app.bleEnergy,//电池电量
-      bleDeviceId: app.bleDeviceId,//蓝牙设备的id号
-      bleServerId: app.bleServerId,//蓝牙设备的服务id号
-      bleCharWriteId: app.bleCharWriteId,//蓝牙设备的服务写入特征值id号
-      bleCharNotifyId: app.bleCharNotifyId,//蓝牙设备的服务接收通知特征值id号
+      bleIsConnect: app.bleIsConnect, //是否连接蓝牙
+      bleIsSync: app.bleIsSync, //是否蓝牙信息同步
+      bleEnergy: app.bleEnergy, //电池电量
+      bleDeviceId: app.bleDeviceId, //蓝牙设备的id号
+      bleServerId: app.bleServerId, //蓝牙设备的服务id号
+      bleCharWriteId: app.bleCharWriteId, //蓝牙设备的服务写入特征值id号
+      bleCharNotifyId: app.bleCharNotifyId, //蓝牙设备的服务接收通知特征值id号
       diyArr: mi.store.get('diyArr') ? mi.store.get('diyArr') : []
     });
 
@@ -334,7 +317,7 @@ Page({
     const command = {
       c1: '000500C1C4',
       c2: '000500C2C7',
-      c3: '000600C3',//后面需追加两位机位和两位校验码
+      c3: '000600C3', //后面需追加两位机位和两位校验码
       c4: '000500C4C1',
       c5: '001100C5',
       c6: '000500C6C3',
@@ -350,13 +333,13 @@ Page({
     if (obj.command == 'c3' || obj.command == 'c5') {
       console.log('obj.param', obj.param);
       obj.param.forEach(v => {
-        tempObj.hex += v;//追加上参数
+        tempObj.hex += v; //追加上参数
       });
       if ('check' in tempObj) {
         if (tempObj.check) {
-          tempObj.hex += mi.check(tempObj.hex);//追加运算校验码
+          tempObj.hex += mi.check(tempObj.hex); //追加运算校验码
         } else {
-          tempObj.hex += '00';//追加00校验码
+          tempObj.hex += '00'; //追加00校验码
         }
       }
     }
@@ -368,13 +351,13 @@ Page({
       serviceId: this.data.bleServerId,
       characteristicId: this.data.bleCharWriteId,
       value: mi.hex2buf(tempObj.hex),
-      success: function (res) {
+      success: function(res) {
         console.log('特征值写入成功', res);
         if (tempObj.success) {
           tempObj.success(res);
         }
       },
-      fail: function (res) {
+      fail: function(res) {
         console.log('特征值写入失败', res);
         if (tempObj.fail) {
           tempObj.fail(res);
@@ -398,26 +381,29 @@ Page({
     }
   },
   run() {
+    let _this = this;
     // this.test();
     if (!shaker) {
-      shaker = new Shake(this.data.mode, this.data.strength)//实例化
+      shaker = new Shake(this.data.mode, this.data.strength) //实例化
       this.setData({
         allTime: this.setAllTime(shaker)
       });
     }
-    this.allLoop(function () {
+    this.allLoop(function() {
       wx.vibrateLong();
       wx.showModal({
         title: '恭喜',
         content: '你已完成一次完整的按摩理疗，记得每天坚持哦！',
-        confirmText:'我会加油',
+        confirmText: '我会加油',
         showCancel: false
       });
+      //提交后台按摩数据（自动模式）
+      _this.uploadZDMode(1, _this.data.allTime * 1000);
     });
-  },//执行
+  }, //执行
   allLoop(callback) {
     let _this = this;
-    _this.loop(function () {
+    _this.loop(function() {
       console.log('大动画执行' + _this.data.allLoop + '完毕');
       let allLoop = _this.data.allLoop + 1;
       if (allLoop < _this.data.allLoops) {
@@ -443,7 +429,7 @@ Page({
   },
   loop(callback) {
     let _this = this;
-    _this.do(function () {
+    _this.do(function() {
       console.log('第' + _this.data.current + '大段执行' + _this.data.stepLoop + '轮完毕');
       let current = _this.data.current + 1;
       if (current < 4) {
@@ -489,7 +475,7 @@ Page({
         command: 'c5',
         param: stepObj.step[_this.data.index].command,
         check: false,
-        success: function () {
+        success: function() {
           _this.setData({
             play: true
           });
@@ -497,6 +483,7 @@ Page({
       });
       let roundTimes = stepObj.step[_this.data.index].time;
       circleTimes(roundTimes);
+
       function circleTimes(roundTimes) {
         if (roundTimes == 0) {
           _this.setData({
@@ -505,7 +492,7 @@ Page({
           _this.do(callback);
         } else {
           roundTimes--;
-          timer = setTimeout(function () {
+          timer = setTimeout(function() {
             _this.setData({
               nowTime: _this.data.nowTime + 1
             });
@@ -550,7 +537,7 @@ Page({
         }
       }
     }
-  },//每次执行一小段
+  }, //每次执行一小段
   setAllTime(shaker) {
     let step0 = shaker.getStep0();
     let step1 = shaker.getStep1();
@@ -599,14 +586,14 @@ Page({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false,
-      success: function () {
+      success: function() {
         _this.setData({
           play: false
         });
       }
     });
     clearTimeout(timer);
-  },//停止
+  }, //停止
   bindTab(e) {
     this.setData({
       tabIndex: e.currentTarget.dataset.index
@@ -640,16 +627,16 @@ Page({
       shaker.setStrength('0' + e.currentTarget.dataset.index);
     }
   },
-  setPlay: function (num) {
+  setPlay: function(num) {
     if (num < 180) {
       this.setData({
         playProgress: num,
-        playBgc: '#F7F7F7',//播放进度条背景色
+        playBgc: '#F7F7F7', //播放进度条背景色
       });
     } else {
       this.setData({
         playProgress: num - 180,
-        playBgc: '#12C8C8',//播放进度条背景色
+        playBgc: '#12C8C8', //播放进度条背景色
       });
     }
   },
@@ -735,18 +722,21 @@ Page({
       });
       this.diyPlay(cur);
     }
-  },//执行
+  }, //执行
   diyPlay(cur) {
     //开始执行diy震动
-    this.diyCore(cur, function () {
+    let _this = this;
+    this.diyCore(cur, function() {
       wx.vibrateLong();
       wx.showModal({
         title: '恭喜您',
         content: cur.title + '按摩组合执行完毕',
         showCancel: false
       });
+      //震动完毕，上传后台震动数据
+      _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeTotal * 1000);
     });
-  },//diy播放
+  }, //diy播放
   diyCore(cur, callback) {
     let _this = this;
     console.log('cur666', cur);
@@ -754,9 +744,10 @@ Page({
       command: 'c5',
       param: cur.shockArr[cur.playStep].command,
       check: false,
-      success: function () {
+      success: function() {
         let roundTimes = cur.shockArr[cur.playStep].time;
         circleTime(roundTimes);
+
         function circleTime(roundTimes) {
           if (roundTimes == 0) {
             cur.playStep++;
@@ -782,7 +773,7 @@ Page({
               }
             }
           } else {
-            timer2 = setTimeout(function () {
+            timer2 = setTimeout(function() {
               roundTimes--;
               _this.data.diyArr[_this.data.diyIndex].timeUsed++;
               _this.setData({
@@ -794,18 +785,37 @@ Page({
         }
       }
     });
-  },//diy执行核心代码
+  }, //diy执行核心代码
   diyStop() {
     let _this = this;
     _this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false,
-      success: function () {
+      success: function() {
         clearTimeout(timer2);
         timer2 = null;
       }
     });
 
-  }//diy暂停
+  }, //diy暂停
+  uploadZDMode(mode, time) {
+    console.log('url', api.uploadZD);
+    console.log({
+      "type": mode,
+      "ms": time,});
+    mi.ajax({
+      url: api.uploadZD,
+      method: 'post',
+      login: false,
+      data: {
+        "type": mode,
+        "ms": time,
+      },
+      dataPos: false,
+      callback: function(data) {
+        console.log('data', data);
+      }
+    });
+  }, //上传震动
 });

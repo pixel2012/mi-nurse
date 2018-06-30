@@ -1,10 +1,14 @@
 <view class='fb-container'>
-  <textarea bindblur="bindTextAreaBlur" auto-height placeholder="娘娘，有什么不爽就说出来吧..." />
-  <input type='text' placeholder="留个邮箱吧，方便小的给您回复" />
+  <textarea bindblur="bindTextAreaBlur" auto-height placeholder="娘娘，有什么不爽就说出来吧..." value="{{advice}}" data-type="advice" bindinput="bindInput" />
+  <input type='text' class='input-email' placeholder="留个邮箱吧，方便小的给您回复" value="{{email}}" data-type="email" bindinput="bindInput"/>
   <view class='fb-add-img'>
-    <image src='img/add.png' style='width:108rpx;height:108rpx;'></image>
+    <view class='fb-add-img-box' wx:if="{{imgs.length>0}}" wx:for="{{imgs}}" wx:key="{{index}}">
+      <image src='{{item}}' style='width:108rpx;height:108rpx;'></image>
+      <view class='fb-add-img-delete' data-index="{{index}}" bindtap='delImg'>X</view>
+    </view>
+    <image src='img/add.png' style='width:108rpx;height:108rpx;' bindtap='upload'></image>
   </view>
 </view>
 <view class='ble-button-box'>
-  <view class='ble-button'>提交</view>
+  <view class='ble-button' bindtap='submit'>提交</view>
 </view>

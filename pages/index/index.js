@@ -3,11 +3,15 @@ const echarts = require('../../common/components/ec-canvas/echarts.js');
 // let wxCharts = require('../../common/js/wxcharts.js');
 const mi = require('../../common/js/mi.js');
 const api = {
-  bindThirdAccount: mi.ip + 'user/bindThirdAccount',//绑定账号
-  login: mi.ip + 'user/login'//登录
+  bindThirdAccount: mi.ip + 'user/bindThirdAccount', //绑定账号
+  login: mi.ip + 'user/login', //登录
+  tempUpload: mi.ip + 'temperature/post', //温度上传
+  dateAble: mi.ip + 'temperature/historyMonth', //可用的温度时间列表
+  history: mi.ip + 'temperatur/list', //获取温度列表
 };
 
 let chart, chart2, chart3;
+
 function initChart(canvas, width, height) {
   chart = echarts.init(canvas, null, {
     width: width,
@@ -16,6 +20,7 @@ function initChart(canvas, width, height) {
   canvas.setChart(chart);
   return chart;
 }
+
 function initChart2(canvas, width, height) {
   chart2 = echarts.init(canvas, null, {
     width: width,
@@ -24,6 +29,7 @@ function initChart2(canvas, width, height) {
   canvas.setChart(chart2);
   return chart2;
 }
+
 function initChart3(canvas, width, height) {
   chart3 = echarts.init(canvas, null, {
     width: width,
@@ -36,33 +42,34 @@ function initChart3(canvas, width, height) {
 
 Page({
   data: {
-    bleIsConnect: false,//是否连接蓝牙
-    bleIsSync: '',//是否蓝牙信息同步
-    bleSyncInfo: '',//是否蓝牙信息同步
-    bleEnergy: 0,//电池电量
-    bleIsShowList: false,//是否显示已搜索到的蓝牙设备列表
-    bleLists: [],//搜索到蓝牙设备列表
-    bleDeviceId: '',//蓝牙设备的id号
-    bleServerId: '',//蓝牙设备的服务id号
-    bleCharWriteId: '',//蓝牙设备的服务写入特征值id号
-    bleCharNotifyId: '',//蓝牙设备的服务接收通知特征值id号
-    isAuthorize: true,//是否授权
-    available: false,//蓝牙是否可用
-    discovering: false,//蓝牙是否处于搜索
+    bleIsConnect: false, //是否连接蓝牙
+    bleIsSync: '', //是否蓝牙信息同步
+    bleSyncInfo: '', //是否蓝牙信息同步
+    bleEnergy: 0, //电池电量
+    bleIsShowList: false, //是否显示已搜索到的蓝牙设备列表
+    bleLists: [], //搜索到蓝牙设备列表
+    bleDeviceId: '', //蓝牙设备的id号
+    bleServerId: '', //蓝牙设备的服务id号
+    bleCharWriteId: '', //蓝牙设备的服务写入特征值id号
+    bleCharNotifyId: '', //蓝牙设备的服务接收通知特征值id号
+    isAuthorize: true, //是否授权
+    available: false, //蓝牙是否可用
+    discovering: false, //蓝牙是否处于搜索
     temp_score: '',
-    temp_lto: '',//左上外
-    temp_lti: '',//左上内
-    temp_rti: '',//右上内
-    temp_rto: '',//右上外
-    temp_avg: '',//平均乳温
-    temp_diff_num: '',//最大温差值
-    temp_avg_isNormal: true,//平均温是否处于正常范围
-    temp_avg_title: '',//平均温诊断标题
-    temp_avg_detial: '',//平均温诊断内容
+    temp_lto: '', //左上外
+    temp_lti: '', //左上内
+    temp_rti: '', //右上内
+    temp_rto: '', //右上外
+    temp_avg: '', //平均乳温
+    temp_diff_num: '', //最大温差值
+    temp_diff_max_obj: '', //最大乳温差是谁
+    temp_avg_isNormal: true, //平均温是否处于正常范围
+    temp_avg_title: '', //平均温诊断标题
+    temp_avg_detial: '', //平均温诊断内容
     temp_diff_isNormal: true, //最大温差是否处于正常范围
-    temp_diff_title: '',//最大温差诊断标题
-    temp_diff_detial: '',//最大温差诊断内容
-    temp_cache: [],//测温临时缓存
+    temp_diff_title: '', //最大温差诊断标题
+    temp_diff_detial: '', //最大温差诊断内容
+    temp_cache: [], //测温临时缓存
     ec: {
       onInit: initChart
     },
@@ -72,19 +79,25 @@ Page({
     ec3: {
       onInit: initChart3
     },
-    yearIndex: new Date().getFullYear(),
-    yearStart: '2018',
-    yearEnd: new Date().getFullYear(),
+    yearOptions: [], //年份备选
+    monthOptions: [], //当月合集
+    superYears: [], //时间备选合集
+    year: 0,
+    month: 0,
     echart0: 0,
     echart1: 0,
-    echart2: [0, 0, 0, 0]
-
+    echart2: [0, 0, 0, 0],
+    measurementTime: 0, //测温时长
   },
   onLoad() {
     let _this = this;
     // this.lineInit();
     if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
-      this.getUserInfo();
+      _this.getUserInfo(function () {
+        _this.getTempDateList()
+      });
+    } else {
+      _this.getTempDateList();
     }
     let timer = null;
     _this.updateStore(function () {
@@ -93,7 +106,7 @@ Page({
         _this.bluetoothInit(_this.data.bleDeviceId);
       }
     });
-    detch();//初始化曲线图
+    detch(); //初始化曲线图
     function detch() {
       timer = setTimeout(() => {
         if (chart && chart2 && chart3) {
@@ -128,16 +141,16 @@ Page({
   },
   updateStore(callback) {
     this.setData({
-      bleDeviceId: app.bleDeviceId,//蓝牙设备的id号
-      bleServerId: app.bleServerId,//蓝牙设备的服务id号
-      bleCharWriteId: app.bleCharWriteId,//蓝牙设备的服务写入特征值id号
-      bleCharNotifyId: app.bleCharNotifyId,//蓝牙设备的服务接收通知特征值id号
+      bleDeviceId: app.bleDeviceId, //蓝牙设备的id号
+      bleServerId: app.bleServerId, //蓝牙设备的服务id号
+      bleCharWriteId: app.bleCharWriteId, //蓝牙设备的服务写入特征值id号
+      bleCharNotifyId: app.bleCharNotifyId, //蓝牙设备的服务接收通知特征值id号
     });
     if (callback) {
       callback();
     }
   },
-  getUserInfo() {
+  getUserInfo(callback) {
     let _this = this;
     //获取用户信息
     mi.user.getSetting(function (status) {
@@ -170,8 +183,10 @@ Page({
               mi.store.set('myToken', res.data.myToken, 24 * 55 * 60);
               mi.store.set('myRefreshToken', res.data.myRefreshToken, 30 * 24 * 55 * 60);
               mi.store.set('userInfo', res.data);
+              if (callback) {
+                callback();
+              }
             }
-
           });
         });
       } else {
@@ -180,32 +195,74 @@ Page({
         });
       }
     });
-    // wx.getSetting({
-    //   success: function (res) {
-    //     if (res.authSetting['scope.userInfo']) {
-
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       wx.getUserInfo({
-    //         success: function (res) {
-    //           console.log(res.userInfo);
-    //           console.log(res);
-    //           let openId ='oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
-    //           // mi.ajax({
-    //           //   url: api.bindThirdAccount,
-    //           //   method:'post',
-    //           //   data:{
-
-    //           //   },
-    //           //   success:function(){
-
-    //           //   }
-    //           // });
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
   },
+  getTempDateList() {
+    let _this = this;
+    mi.ajax({
+      url: api.dateAble,
+      method: 'get',
+      login: true,
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('res', res);
+        res.data = [
+          "2017-03",
+          "2017-02",
+          "2016-08"
+        ];
+        let yearOptions = [];
+        let superYears = [];
+
+        if (res.data.length > 0) {
+          //yearOptions, superYears
+          _this.formateDate(res.data, function (yearOptions, superYears) {
+            _this.setData({
+              yearOptions: yearOptions,
+              superYears: superYears,
+              monthOptions: superYears[_this.data.year].months.reverse()
+            });
+          });
+        } else {
+          _this.setData({
+            yearOptions: []
+          });
+        }
+
+      }
+    });
+  }, //获取可用的时间列表
+  formateDate(date, callback) {
+    let yearOptions = [];
+    let superYears = [];
+    let curr = {
+      year: '',
+      months: []
+    };
+    for (let i = 0; i < date.length; i++) {
+      let cache = date[i].split('-');
+      if (i == 0) {
+        yearOptions.push(cache[0]);
+        curr.year = cache[0];
+        curr.months.push(cache[1]);
+
+      } else {
+        if (yearOptions.indexOf(cache[0]) > -1) {
+          curr.months.push(cache[1]);
+        } else {
+          superYears.push(JSON.parse(JSON.stringify(curr)));
+          curr.months = [];
+          yearOptions.push(cache[0]);
+          curr.year = cache[0];
+          curr.months.push(cache[1]);
+        }
+      }
+
+    }
+    superYears.push(JSON.parse(JSON.stringify(curr)));
+    if (callback) {
+      callback(yearOptions, superYears);
+    }
+  }, //格式化时间
   chartRender(chart, opts, unit) {
     let _this = this;
     let option = {
@@ -220,27 +277,25 @@ Page({
         right: 20,
         bottom: 15,
       },
-      dataZoom: [
-        {
-          show: true,
-          realtime: true,
-          top: 10,
-          height: 20,
-          start: 0,
-          end: 20,
-          minSpan: 10,
-          filterMode: 'none',
-          backgroundColor: '#fff',
-          dataBackground: {
-            lineStyle: {
-              color: '#d6d6d6'
-            },
-            areaStyle: {
-              color: '#fafbfd'
-            }
+      dataZoom: [{
+        show: true,
+        realtime: true,
+        top: 10,
+        height: 20,
+        start: 0,
+        end: 20,
+        minSpan: 10,
+        filterMode: 'none',
+        backgroundColor: '#fff',
+        dataBackground: {
+          lineStyle: {
+            color: '#d6d6d6'
+          },
+          areaStyle: {
+            color: '#fafbfd'
           }
         }
-      ],
+      }],
       xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -306,8 +361,8 @@ Page({
             wx.onBluetoothAdapterStateChange(function (res) {
               console.log(`adapterState changed, now is`, res);
               _this.setData({
-                available: res.available,//蓝牙是否可用
-                discovering: res.discovering,//蓝牙是否处于搜索
+                available: res.available, //蓝牙是否可用
+                discovering: res.discovering, //蓝牙是否处于搜索
               });
             });
             //如果蓝牙此时处于空闲，则可以
@@ -411,13 +466,13 @@ Page({
           success: function (res) {
             console.log('获取蓝牙设备所有服务', res);
             for (let i = 0; i < res.services.length; i++) {
-              if (res.services[i].uuid.indexOf('0000FF92') > -1) {//查找自定义服务
+              if (res.services[i].uuid.indexOf('0000FF92') > -1) { //查找自定义服务
                 _this.setData({
                   bleServerId: res.services[i].uuid
                 });
                 app.bleServerId = _this.data.bleServerId;
                 mi.store.set('bleServerId', _this.data.bleServerId);
-                break;//终止循环
+                break; //终止循环
               }
             }
             wx.getBLEDeviceCharacteristics({
@@ -461,7 +516,7 @@ Page({
                     setTimeout(function () {
                       _this.command({
                         command: 'c2'
-                      });//查询电量
+                      }); //查询电量
                     }, 500);
                   },
                   fail: function (res) {
@@ -482,7 +537,7 @@ Page({
     const command = {
       c1: '000500C1C4',
       c2: '000500C2C7',
-      c3: '000600C3',//后面需追加两位机位和两位校验码
+      c3: '000600C3', //后面需追加两位机位和两位校验码
       c4: '000500C4C1',
       c5: '',
       c6: '000500C6C3',
@@ -497,12 +552,12 @@ Page({
     tempObj.hex = command[obj.command];
     if (obj.command == 'c3') {
       obj.param.forEach(v => {
-        tempObj.hex += v;//追加上参数
+        tempObj.hex += v; //追加上参数
       });
       if (tempObj.check) {
-        tempObj.hex += mi.check(tempObj.hex);//追加运算校验码
+        tempObj.hex += mi.check(tempObj.hex); //追加运算校验码
       } else {
-        tempObj.hex += '00';//追加00校验码
+        tempObj.hex += '00'; //追加00校验码
       }
 
     }
@@ -589,12 +644,12 @@ Page({
               confirmText: '再试一次',
               success: function (res) {
                 if (res.confirm) {
-                  _this.getTem();//重新获取温度
+                  _this.getTem(); //重新获取温度
                   _this.setData({
-                    temp_lto: '',//左上外
-                    temp_lti: '',//左上内
-                    temp_rti: '',//右上内
-                    temp_rto: ''//右上外
+                    temp_lto: '', //左上外
+                    temp_lti: '', //左上内
+                    temp_rti: '', //右上内
+                    temp_rto: '' //右上外
                   });
                 }
               }
@@ -605,13 +660,17 @@ Page({
             _this.setData({
               bleIsSync: mi.format('hh:mm'),
               bleSyncInfo: mi.format('MM月dd日 hh:mm'),
-              temp_lto: _this.data.temp_cache[0],//左上外
-              temp_lti: _this.data.temp_cache[1],//左上内
-              temp_rti: _this.data.temp_cache[2],//右上内
-              temp_rto: _this.data.temp_cache[3]//右上外
+              temp_lto: _this.data.temp_cache[0], //左上外
+              temp_lti: _this.data.temp_cache[1], //左上内
+              temp_rti: _this.data.temp_cache[2], //右上内
+              temp_rto: _this.data.temp_cache[3], //右上外
+              measurementTime: new Date().getTime() - _this.data.measurementTime
             });
             app.bleIsSync = _this.data.bleIsSync;
-            _this.calcTemp();
+            _this.calcTemp(function () {
+              //计算完所有温度后，提交后台
+              _this.uploadTem();
+            });
           }
         }
       }
@@ -636,34 +695,38 @@ Page({
   getTem() {
     mi.showLoading('测温中');
     let _this = this;
+    //设置测温时间起始节点
+    this.setData({
+      measurementTime: new Date().getTime()
+    });
     setTimeout(function () {
       _this.command({
         command: 'c3',
         param: ['01'],
         check: true
-      });//左胸
+      }); //左胸
     }, 500);
     setTimeout(function () {
       _this.command({
         command: 'c3',
         param: ['02'],
         check: true
-      });//右胸
+      }); //右胸
     }, 1000);
   },
-  calcTemp() {
+  calcTemp(callback) {
     //平均温度
     let temp_avg = ((this.data.temp_lto + this.data.temp_lti + this.data.temp_rti + this.data.temp_rto) / 4).toFixed(1);
     //8种温差组合
-    let temp_lto_lti = this.data.temp_lto - this.data.temp_lti;//左上外,左上内
-    let temp_rto_rti = this.data.temp_rto - this.data.temp_rti;//右上外,右上内
-    let temp_lto_rto = this.data.temp_lto - this.data.temp_rto;//左上外,右上外
-    let temp_lti_rti = this.data.temp_lti - this.data.temp_rti;//左上内,右上内
+    let temp_lto_lti = this.data.temp_lto - this.data.temp_lti; //左上外,左上内
+    let temp_rto_rti = this.data.temp_rto - this.data.temp_rti; //右上外,右上内
+    let temp_lto_rto = this.data.temp_lto - this.data.temp_rto; //左上外,右上外
+    let temp_lti_rti = this.data.temp_lti - this.data.temp_rti; //左上内,右上内
 
-    let temp_lti_lto = this.data.temp_lti - this.data.temp_lto;//左上内,左上外
-    let temp_rti_rto = this.data.temp_rti - this.data.temp_rto;//右上内,右上外
-    let temp_rto_lto = this.data.temp_rto - this.data.temp_lto;//右上外,左上外
-    let temp_rti_lti = this.data.temp_rti - this.data.temp_lti;//右上内,左上内
+    let temp_lti_lto = this.data.temp_lti - this.data.temp_lto; //左上内,左上外
+    let temp_rti_rto = this.data.temp_rti - this.data.temp_rto; //右上内,右上外
+    let temp_rto_lto = this.data.temp_rto - this.data.temp_lto; //右上外,左上外
+    let temp_rti_lti = this.data.temp_rti - this.data.temp_lti; //右上内,左上内
 
     //列出三组温差值
     let temp_group1_max = [temp_lto_rto, temp_lti_rti];
@@ -673,8 +736,8 @@ Page({
     //计算健康分数
     let temp_score = this.calcScore(temp_avg, temp_group1_max, temp_group2_max, temp_group3_max);
     this.setData({
-      temp_score: temp_score,//健康值
-      temp_avg: temp_avg,//平均乳温
+      temp_score: temp_score, //健康值
+      temp_avg: temp_avg, //平均乳温
 
     });
     //计算诊断结果
@@ -691,10 +754,13 @@ Page({
       temp_rti_lti
     ]);
     //根据蓝牙数据得到温度值
+    if (callback) {
+      callback();
+    }
 
-  },//计算温度，蓝牙得到温度后触发
+  }, //计算温度，蓝牙得到温度后触发
   calcScore(avg, g1, g2, g3) {
-    let score = '';//所得分数
+    let score = ''; //所得分数
     //分别对数组进行倒序排列，得出最大温差值
     let gmax1 = mi.getArryMax(g1);
     let gmax2 = mi.getArryMax(g2);
@@ -705,7 +771,7 @@ Page({
     this.setData({
       temp_diff_num: temp_max.toFixed(1)
     });
-    let group_max = '';//最大温差的那个组合序号
+    let group_max = ''; //最大温差的那个组合序号
     for (let i = 0; i < group_arr.length; i++) {
       if (temp_max == group_arr[i]) {
         group_max = i + 1;
@@ -765,8 +831,8 @@ Page({
         score = 1.9 - (temp_max - 3.7) ^ (1 / 4) / 2.5 - (avg - 37.1) / 12.67;
       }
     }
-    return score.toFixed(1);//返回分数值
-  },//计算健康值
+    return score.toFixed(1); //返回分数值
+  }, //计算健康值
   calcAvgDiagnose(curr, last) {
     let avg_isNormal = true;
     let avg_title = '';
@@ -791,7 +857,7 @@ Page({
       }
     } else {
       //有历史数据
-      let diff = curr - last;//与历史比较的温差
+      let diff = curr - last; //与历史比较的温差
       if (diff <= 0.3) {
         if (curr > 37.2) {
           //高于正常范围
@@ -851,7 +917,7 @@ Page({
       temp_avg_detial: avg_detial,
     });
 
-  },//计算平均乳温诊断结果
+  }, //计算平均乳温诊断结果
   calcDiffDiagnose(arr) {
     const tempDiffText = [
       ['左乳上外', '左乳上内'],
@@ -874,6 +940,7 @@ Page({
       }
       this.setData({
         temp_diff_isNormal: false,
+        temp_diff_max_obj: this.getDiffMaxObj(tempDiffText[tempIndex][0], tempDiffText[tempIndex][1]),
         temp_diff_title: `${tempDiffText[tempIndex][0]}区域温度显著高于${tempDiffText[tempIndex][1]}区域`,
         temp_diff_detial: '温馨提醒：有研究表明，当乳房对照位置的温度差超过1℃时，可能存在乳腺增生、恶性肿瘤的风险，建议就医检查。',
         temp_diff_num: tempMax.toFixed(1)
@@ -886,10 +953,64 @@ Page({
         temp_diff_num: tempMax.toFixed(1)
       });
     }
-  },//计算乳温差值诊断结果
+  }, //计算乳温差值诊断结果
+  getDiffMaxObj(a, b) {
+    console.log('a,b', a, b);
+    const tempDiffText = ['左乳上外', '左乳上内', '右乳上内', '右乳上外'];
+    let anum = tempDiffText.indexOf(a);
+    let bnum = tempDiffText.indexOf(b);
+    let result = anum > bnum ? bnum.toString() + anum.toString() : anum.toString() + bnum.toString();
+    console.log('result', result);
+    return result;
+
+  }, //得到最大乳温差是谁
+  uploadTem() {
+    let _this = this;
+    mi.ajax({
+      url: api.tempUpload,
+      login: false,
+      data: {
+        "tp1": this.data.temp_lto,
+        "tp2": this.data.temp_lti,
+        "tp3": this.data.temp_rti,
+        "tp4": this.data.temp_rto,
+        "d1": this.data.temp_diff_max_obj,
+        "maxDiff": this.data.temp_diff_num,
+        "needTime": this.data.measurementTime,
+        "label": '',
+        "taskId": app.bleDeviceId,
+        "tips1": this.data.temp_avg_title,
+        "tips2": this.data.temp_avg_detial,
+        "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
+        "startIdx": 0,
+        "endIdx": 0,
+        "healthIndex": this.data.temp_score
+      },
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('res', res);
+      }
+    });
+  },
   bindPickerChange(e) {
+    console.log(e);
     this.setData({
-      yearIndex: e.detail.value
+      year: e.detail.value,
+      monthOptions: this.data.superYears[e.detail.value * 1].months.reverse()
+    });
+  },
+  changeMonth(e) {
+    let _this = this;
+    mi.ajax({
+      url: api.history,
+      login: false,
+      data: {
+        "month": this.data.yearOptions[this.data.year] + '-' + e.currentTarget.dataset.month,
+      },
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('res', res);
+      }
     });
   }
 });

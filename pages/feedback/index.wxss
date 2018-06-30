@@ -1,42 +1,72 @@
-.fb-container{
+.fb-container {
   display: block;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 }
-textarea{
+
+textarea {
   display: inline-block;
   width: 100%;
   min-height: 400rpx;
   box-sizing: border-box;
-  padding:20rpx;
+  padding: 20rpx;
   font-size: 28rpx;
-  color:textarea;
+  color: #333;
   background-color: #fff;
 }
-input{
+
+input {
   margin-top: 30rpx;
   background-color: #fff;
   padding: 30rpx;
   font-size: 28rpx;
-  color: #D7D7D7;
+  color: #d7d7d7;
 }
-.fb-add-img{
-  padding:30rpx;
+
+.fb-add-img {
+  padding: 30rpx;
 }
-.ble-button-box{
+
+.ble-button-box {
   display: block;
   width: 100%;
   text-align: center;
   margin-top: 80rpx;
 }
-.ble-button{
+
+.ble-button {
   display: inline-block;
   width: 307rpx;
-  padding:20rpx;
-  border:1rpx solid #FF4578;
+  padding: 20rpx;
+  border: 1rpx solid #ff4578;
   border-radius: 8rpx;
   font-size: 30rpx;
-  color: #FF4578;
+  color: #ff4578;
+}
+
+.fb-add-img-box {
+  display: inline-block;
+  margin-right: 20rpx;
+  position: relative;
+}
+
+.fb-add-img-delete {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24rpx;
+  height: 24rpx;
+  color: #fff;
+  font-size: 16rpx;
+  text-align: center;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  background-color: #f00;
+}
+
+.input-email {
+  color: #333;
 }

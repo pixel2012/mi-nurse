@@ -11,7 +11,7 @@
         </view>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{bleIsConnect?'status-active.png':'status.png'}}" style="width:18rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text> 
+          <text class='mi-text'>{{bleIsSync != ''? bleIsSync :'未同步'}}</text>
         </view>
       </view>
       <view class='col-50 mi-r'>
@@ -89,28 +89,30 @@
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康记录</view>
       <view class='col-50 mi-assess-time'>
-        <picker bindchange="bindPickerChange" value="{{yearIndex}}" mode="date" fields="year" start="{{yearStart}}" end="{{yearEnd}}">
+        <picker bindchange="bindPickerChange" value="{{year}}" range="{{yearOptions}}">
           <view class="picker">
-            {{yearIndex}}
+            {{yearOptions.length>0?yearOptions[year]:'暂无数据'}}
             <image src='img/arrow-down.png' style='width:20rpx;height:10rpx;'></image>
           </view>
         </picker>
       </view>
     </view>
-    <scroll-view class="scroll-view_H" scroll-x='true' style="width: 100%">
-      <view class="scroll-view-item_H">1月</view>
-      <view class="scroll-view-item_H">2月</view>
-      <view class="scroll-view-item_H active">3月</view>
-      <view class="scroll-view-item_H">4月</view>
-      <view class="scroll-view-item_H">5月</view>
-      <view class="scroll-view-item_H">6月</view>
-      <view class="scroll-view-item_H">7月</view>
-      <view class="scroll-view-item_H">8月</view>
-      <view class="scroll-view-item_H">9月</view>
-      <view class="scroll-view-item_H">10月</view>
-      <view class="scroll-view-item_H">11月</view>
-      <view class="scroll-view-item_H">12月</view>
+    <scroll-view wx:if="{{monthOptions.length>0}}" class="scroll-view_H" scroll-x='true' style="width: 100%">
+     <view class="scroll-view-item_H {{index==month?'active':''}}" wx:for="{{monthOptions}}" wx:key="{{index}}" data-month="{{item}}" bindtap='changeMonth'>{{item}}月</view>
+      <!-- <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('01')>-1}}">1月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('02')>-1}}">2月</view>
+      <view class="scroll-view-item_H active" wx:if="{{monthOptions.indexOf('03')>-1}}">3月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('04')>-1}}">4月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('05')>-1}}">5月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('06')>-1}}">6月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('07')>-1}}">7月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('08')>-1}}">8月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('09')>-1}}">9月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('10')>-1}}">10月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('11')>-1}}">11月</view>
+      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('12')>-1}}">12月</view> -->
     </scroll-view>
+    
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 </text>
@@ -151,29 +153,29 @@
 
     <view class="mi-temp-show-box">
       <view class='mi-temp-show-box-shadow'>
-      <view class='mi-temp-show-box-title'>温度信息</view>
-      <view class='mi-tem-box row' style='margin-top:0;'>
-        <view class='col-25 mi-tc'>
-          <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
-          <view class='mi-lt-pos mi-tc'>左上外</view>
-          <view class='mi-lt-tep'>{{echart2[0]?echart2[0]:'未知'}}℃</view>
+        <view class='mi-temp-show-box-title'>温度信息</view>
+        <view class='mi-tem-box row' style='margin-top:0;'>
+          <view class='col-25 mi-tc'>
+            <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+            <view class='mi-lt-pos mi-tc'>左上外</view>
+            <view class='mi-lt-tep'>{{echart2[0]?echart2[0]:'未知'}}℃</view>
+          </view>
+          <view class='col-25 mi-tc'>
+            <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+            <view class='mi-lt-pos mi-tc'>左上内</view>
+            <view class='mi-lt-tep'>{{echart2[1]?echart2[1]:'未知'}}℃</view>
+          </view>
+          <view class='col-25 mi-tc'>
+            <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
+            <view class='mi-lt-pos mi-tc'>右上内</view>
+            <view class='mi-lt-tep'>{{echart2[2]?echart2[2]:'未知'}}℃</view>
+          </view>
+          <view class='col-25 mi-tc'>
+            <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
+            <view class='mi-lt-pos mi-tc'>右上外</view>
+            <view class='mi-lt-tep'>{{echart2[3]?echart2[3]:'未知'}}℃</view>
+          </view>
         </view>
-        <view class='col-25 mi-tc'>
-          <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
-          <view class='mi-lt-pos mi-tc'>左上内</view>
-          <view class='mi-lt-tep'>{{echart2[1]?echart2[1]:'未知'}}℃</view>
-        </view>
-        <view class='col-25 mi-tc'>
-          <image src='img/lt.png' style='width:46rpx;height:46rpx;'></image>
-          <view class='mi-lt-pos mi-tc'>右上内</view>
-          <view class='mi-lt-tep'>{{echart2[2]?echart2[2]:'未知'}}℃</view>
-        </view>
-        <view class='col-25 mi-tc'>
-          <image src='img/rt.png' style='width:46rpx;height:46rpx;'></image>
-          <view class='mi-lt-pos mi-tc'>右上外</view>
-          <view class='mi-lt-tep'>{{echart2[3]?echart2[3]:'未知'}}℃</view>
-        </view>
-      </view>
       </view>
     </view>
 
@@ -185,7 +187,7 @@
   <view class='mi-ble-list' wx:if="{{!isAuthorize}}">
     <view class='mi-ble-content'>
       <view class='mi-ble-title'>咪小护需要取得您的授权</view>
-       <button class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">立即授权</button> 
+      <button class='mi-button' open-type="getUserInfo" bindgetuserinfo="getUserInfo">立即授权</button>
     </view>
   </view>
 </view>
