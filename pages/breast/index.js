@@ -7,6 +7,7 @@ class Shake {
     this.loop = 0; //循环次数
   }
   getStep0() {
+    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -30,6 +31,7 @@ class Shake {
     }];
   }
   getStep1() {
+    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -53,6 +55,7 @@ class Shake {
     }];
   }
   getStep2() {
+    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -76,6 +79,7 @@ class Shake {
     }];
   }
   getStep3() {
+    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var stepA = [{
         index: 0,
@@ -170,12 +174,13 @@ class Shake {
     if (mode) {
       this.mode = mode;
     }
+    console.log('setmode', mode);
   }
   setStrength(strength) {
     if (strength) {
-      console.log('setstrength', strength, 'setmode', mode, );
       this.strength = strength;
     }
+    console.log('setstrength', strength);
   }
 }
 let shaker = null; //本地震动对象
@@ -383,6 +388,9 @@ Page({
   run() {
     let _this = this;
     // this.test();
+    if (!app.bleIsConnect) {
+      return mi.toast('请先连接蓝牙设备再进行相关操作');
+    }
     if (!shaker) {
       shaker = new Shake(this.data.mode, this.data.strength) //实例化
       this.setData({
@@ -390,7 +398,7 @@ Page({
       });
     }
     this.allLoop(function() {
-      wx.vibrateLong();
+      wx.vibrateLong(); //手机震动
       wx.showModal({
         title: '恭喜',
         content: '你已完成一次完整的按摩理疗，记得每天坚持哦！',
@@ -485,6 +493,10 @@ Page({
       circleTimes(roundTimes);
 
       function circleTimes(roundTimes) {
+        if (!app.bleIsConnect) {
+          _this.stop();
+          return mi.toast('请先连接蓝牙设备再进行相关操作');
+        }
         if (roundTimes == 0) {
           _this.setData({
             index: _this.data.index + 1
@@ -593,6 +605,9 @@ Page({
       }
     });
     clearTimeout(timer);
+    _this.setData({
+      play: false
+    });
   }, //停止
   bindTab(e) {
     this.setData({
@@ -689,6 +704,9 @@ Page({
     });
   },
   diyRun(e) {
+    if (!app.bleIsConnect) {
+      return mi.toast('请先连接蓝牙设备再进行相关操作');
+    }
     //关闭所有正在执行的震动模式
     if (timer) {
       this.stop();
@@ -749,6 +767,10 @@ Page({
         circleTime(roundTimes);
 
         function circleTime(roundTimes) {
+          if (!app.bleIsConnect) {
+            _this.diyStop();
+            return mi.toast('请先连接蓝牙设备再进行相关操作');
+          }
           if (roundTimes == 0) {
             cur.playStep++;
             _this.data.diyArr[_this.data.diyIndex].playStep++;
@@ -795,6 +817,10 @@ Page({
       success: function() {
         clearTimeout(timer2);
         timer2 = null;
+        _this.data.diyArr[_this.data.diyIndex].play = false;
+        _this.setData({
+          diyArr: _this.data.diyArr
+        });
       }
     });
 
@@ -803,7 +829,8 @@ Page({
     console.log('url', api.uploadZD);
     console.log({
       "type": mode,
-      "ms": time,});
+      "ms": time,
+    });
     mi.ajax({
       url: api.uploadZD,
       method: 'post',

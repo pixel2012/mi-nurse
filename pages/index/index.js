@@ -377,6 +377,17 @@ Page({
                 wx.startBluetoothDevicesDiscovery({
                   services: [],
                   success: function (res) {
+                    //开启定时器，一分钟后没有搜索，自动关闭蓝牙搜索
+                    setTimeout(function () {
+                      if (!_this.data.bleIsConnect) {
+                        wx.stopBluetoothDevicesDiscovery({
+                          success: function () {
+                            mi.hideLoading();
+                            mi.toast('未搜索到可用蓝牙设备');
+                          }
+                        });
+                      }
+                    }, 60000);
                     console.log('蓝牙搜索的结果列表', res);
                     // _this.setData({
                     //   bleIsShowList:true
@@ -400,6 +411,11 @@ Page({
               console.log('蓝牙正忙');
               mi.toast('蓝牙正忙');
               mi.hideLoading();
+              wx.stopBluetoothDevicesDiscovery({
+                success: function () {
+                  _this.bluetoothInit(oldId);
+                }
+              });
             }
 
 
@@ -421,6 +437,7 @@ Page({
     });
   },
   connect(id) {
+
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
       success: function (res) {
@@ -449,10 +466,18 @@ Page({
         bleIsConnect: res.connected
       });
       app.bleIsConnect = res.connected;
-      if (!res.connected) {
+      if (!res.connected && (_this.data.available && !_this.data.discovering)) {
         //如果蓝牙断开，自动重连
         mi.showLoading('蓝牙重连中');
         _this.connect(id);
+      } else {
+        mi.toast('蓝牙正忙，连接已断开');
+        wx.stopBluetoothDevicesDiscovery({
+          success: function () {
+            _this.connect(id);
+          }
+        });
+
       }
     });
     console.log('创建蓝牙连接');
@@ -521,6 +546,8 @@ Page({
                   },
                   fail: function (res) {
                     console.log('特征值订阅开启失败', res);
+                    console.log('特征值订阅开启失败');
+                    wx.stopBluetoothDevicesDiscovery();
                   }
                 });
               }
@@ -530,6 +557,9 @@ Page({
       },
       fail: function () {
         console.log('设备连接失败');
+        mi.toast('设备连接失败');
+        //关闭蓝牙搜索
+        wx.stopBluetoothDevicesDiscovery();
       }
     });
   },
