@@ -3,7 +3,7 @@ const aesKey = 'u.!4pb.pLzh^sN)u';
 const mi = {
   version: '0.0.1',
   ip: 'https://api.51mito.com/api/',
-  ajax: function (params) {
+  ajax: function(params) {
     let _this = this;
     //默认请求方式为get
     if (!params.hasOwnProperty('method') || !params.method) {
@@ -24,7 +24,7 @@ const mi = {
           myRefreshToken: myRefreshToken,
           os: systemInfo.system.indexOf('ios') > -1 ? 'ios' : 'android'
         },
-        success: function (data) {
+        success: function(data) {
           if (data) {
             //1，存储到本地
             data.forEach(v => {
@@ -34,7 +34,7 @@ const mi = {
             request(params, myToken);
           }
         },
-        fail: function () {
+        fail: function() {
           wx.showModal({
             title: '提示',
             content: "刷新myRefreshToken失败！"
@@ -77,11 +77,12 @@ const mi = {
         url: urlData.slice(0, urlData.length - 1),
         method: params.method,
         header: {
-          uid: myId,
-          token: myToken
+          'content-type': (params.hasOwnProperty('contentType') && params.contentType == 'form') ? 'application/x-www-form-urlencoded' : 'application/json',
+          'uid': myId,
+          'token': myToken
         },
         data: sendData,
-        success: function (res) {
+        success: function(res) {
           console.log(res);
           if (res.statusCode == 200) {
             //成功回调
@@ -101,7 +102,7 @@ const mi = {
             }
           }
         },
-        fail: function (res) {
+        fail: function(res) {
           if (!params.hasOwnProperty('errorTip') || params.errorTip) {
             wx.showModal({
               title: '提示',
@@ -110,7 +111,7 @@ const mi = {
           }
 
         },
-        complete: function (res) {
+        complete: function(res) {
           if (!params.hasOwnProperty('loading') || params.loading) {
             wx.hideLoading()
           }
@@ -122,18 +123,18 @@ const mi = {
     }
   },
   store: {
-    set: function (key, data, expires) {
+    set: function(key, data, expires) {
       wx.setStorageSync(key, data);
       //如果传入了过期时间，则追加一个参数存储过期时间
       if (expires) {
         console.log(!!expires);
-        setTimeout(function () {
-          wx.setStorageSync(key + '_expires', new Date().getTime() + expires);//单位毫秒
+        setTimeout(function() {
+          wx.setStorageSync(key + '_expires', new Date().getTime() + expires); //单位毫秒
         }, 0);
       }
     },
-    get: function (key) {
-      let value = '';//获取的值
+    get: function(key) {
+      let value = ''; //获取的值
       let content = wx.getStorageSync(key);
       let expires = wx.getStorageSync(key + '_expires');
       if (expires) {
@@ -150,31 +151,37 @@ const mi = {
         return content
       }
     },
-    remove: function (key) {
+    remove: function(key) {
       wx.removeStorageSync(key);
     },
-    clear: function () {
+    clear: function() {
       wx.clearStorageSync();
     }
   },
   crypto: {
-    encode: function (word) {
+    encode: function(word) {
       let key = crypto.enc.Utf8.parse(aesKey);
       let result = crypto.enc.Utf8.parse(word);
-      let encrypted = crypto.AES.encrypt(result, key, { mode: crypto.mode.ECB, padding: crypto.pad.Pkcs7 });
+      let encrypted = crypto.AES.encrypt(result, key, {
+        mode: crypto.mode.ECB,
+        padding: crypto.pad.Pkcs7
+      });
       // let encryptedStr = encrypted.ciphertext.toString();
       return encrypted.toString();
     },
-    decode: function (word) {
+    decode: function(word) {
       let key = crypto.enc.Utf8.parse(aesKey);
-      let result = crypto.AES.decrypt(word, key, { mode: crypto.mode.ECB, padding: crypto.pad.Pkcs7 });
+      let result = crypto.AES.decrypt(word, key, {
+        mode: crypto.mode.ECB,
+        padding: crypto.pad.Pkcs7
+      });
       return crypto.enc.Utf8.stringify(result).toString();
     }
   },
   user: {
-    getSetting: function (callback) {
+    getSetting: function(callback) {
       wx.getSetting({
-        success: function (res) {
+        success: function(res) {
           if (res.authSetting['scope.userInfo']) {
             callback(true);
           } else {
@@ -182,19 +189,19 @@ const mi = {
           }
         }
       });
-    },//获取用户授权状态
-    login: function (callback) {
+    }, //获取用户授权状态
+    login: function(callback) {
       wx.login({
-        success: function (res) {
+        success: function(res) {
           if (callback) {
             callback(res.code);
           }
         }
       });
     },
-    getInfo: function (callback) {
+    getInfo: function(callback) {
       wx.getUserInfo({
-        success: function (res) {
+        success: function(res) {
           console.log(res);
           mi.store.set('openId', res.openId);
           mi.store.set('signature', res.signature);
@@ -212,7 +219,7 @@ const mi = {
           //   }
           // });
         },
-        fail: function () {
+        fail: function() {
           wx.toast('获取用户信息失败');
         }
       });
@@ -248,14 +255,14 @@ const mi = {
   buf2hex(buffer) {
     let hexArr = Array.prototype.map.call(
       new Uint8Array(buffer),
-      function (bit) {
+      function(bit) {
         return ('00' + bit.toString(16)).slice(-2)
       }
     )
     return hexArr.join('');
-  },//二进制转16进制
+  }, //二进制转16进制
   hex2buf(hex) {
-    let typedArray = new Uint8Array(hex.match(/[\da-f]{2}/gi).map(function (h) {
+    let typedArray = new Uint8Array(hex.match(/[\da-f]{2}/gi).map(function(h) {
       return parseInt(h, 16);
     }));
     return typedArray.buffer;
@@ -267,7 +274,7 @@ const mi = {
       str += String.fromCharCode(arr[i])
     }
     return str
-  },//二进制转字符串
+  }, //二进制转字符串
   hex2str(hex) {
     let trimedStr = hex.trim();
     let rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
@@ -297,7 +304,7 @@ const mi = {
       }
     }
     return code;
-  },//计算校验码
+  }, //计算校验码
   xr(x1, x2) {
     let xi1 = parseInt(x1, 16);
     let xi2 = parseInt(x2, 16);
@@ -331,7 +338,7 @@ const mi = {
     }
     let resultHex = parseInt(result, 2).toString(16);
     return resultHex[1] ? resultHex : '0' + resultHex;
-  },//异或比较
+  }, //异或比较
   isRight(hex) {
     //先校验数据是否完整
     let data = hex.replace('fbfa', '').slice(0, -2);
@@ -365,14 +372,14 @@ const mi = {
       // millisecond  
     }
     if (/(y+)/.test(format)) {
-      format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4
-        - RegExp.$1.length));
+      format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 -
+        RegExp.$1.length));
     }
     for (let k in o) {
       if (new RegExp("(" + k + ")").test(format)) {
-        format = format.replace(RegExp.$1, RegExp.$1.length == 1
-          ? o[k]
-          : ("00" + o[k]).substr(("" + o[k]).length));
+        format = format.replace(RegExp.$1, RegExp.$1.length == 1 ?
+          o[k] :
+          ("00" + o[k]).substr(("" + o[k]).length));
       }
     }
     return format;
@@ -389,6 +396,11 @@ const mi = {
   hideLoading() {
     wx.hideLoading();
   },
+  guid() {
+    function S4() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+  },//随机生成uuid
 }
 module.exports = mi;
-

@@ -1,24 +1,23 @@
 var app = getApp();
 const mi = require('../../common/js/mi.js');
 const api = {
-  wh: mi.ip + 'user/updateHeightWeight',//身高
-  chest: mi.ip + 'user/updateChest',//胸围
-  birthday: mi.ip + 'user/updateBirthday',//生日
-  version: mi.ip + 'open/getNewVersion',//获取最新版本
+  wh: mi.ip + 'user/updateHeightWeight', //身高
+  chest: mi.ip + 'user/updateChest', //胸围
+  birthday: mi.ip + 'user/updateBirthday', //生日
+  version: mi.ip + 'open/getNewVersion', //获取最新版本
 };
 Page({
   data: {
     nickName: '',
     headerUrl: '',
-    isFigure: false,//是否显示身材
-    isBreast: false,//是否显示胸围
-    height: '',//身高
-    weight: '',//体重
+    isFigure: false, //是否显示身材
+    isBreast: false, //是否显示胸围
+    height: '', //身高
+    weight: '', //体重
     currentDate: new Date().getFullYear() + '-01',
     dateStart: new Date().getFullYear() - 50 + '-01',
     dataEnd: new Date().getFullYear() + '-12',
-    imgUrls: [
-      {
+    imgUrls: [{
         title: '圆盘型',
         url: 'img/01.jpg'
       },
@@ -68,24 +67,24 @@ Page({
   onShow() {
 
   },
-  hideAll: function () {
+  hideAll: function() {
     this.setData({
       isFigure: false,
       isBreast: false
     });
   },
-  preventBubble: function () { },
-  bindFigureChange: function (e) {
+  preventBubble: function() {},
+  bindFigureChange: function(e) {
     this.setData({
       isFigure: true
     });
   },
-  bindBreastChange: function (e) {
+  bindBreastChange: function(e) {
     this.setData({
       isBreast: true
     });
   },
-  closeBreast: function () {
+  closeBreast: function() {
     this.setData({
       isBreast: false
     });
@@ -108,7 +107,7 @@ Page({
       },
       encrypt: true,
       dataPos: false,
-      callback: function (data) {
+      callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
         _this.setData({
@@ -117,7 +116,7 @@ Page({
       }
     });
   },
-  bindDateChange: function (e) {
+  bindDateChange: function(e) {
     console.log('picker发送选择改变，携带值为', e.detail.value);
     this.setData({
       currentDate: e.detail.value
@@ -131,22 +130,22 @@ Page({
       },
       encrypt: true,
       dataPos: false,
-      callback: function (data) {
+      callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
       }
     });
-  },//生日
+  }, //生日
   inputHeight(e) {
     this.setData({
       height: e.detail.value
     });
-  },//身高
+  }, //身高
   inputWeight(e) {
     this.setData({
       weight: e.detail.value
     });
-  },//体重
+  }, //体重
   bindSave() {
     if (!this.data.height) {
       return mi.toast('请输入合适的身高');
@@ -165,7 +164,7 @@ Page({
       },
       encrypt: true,
       dataPos: false,
-      callback: function (data) {
+      callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
         _this.setData({
@@ -173,32 +172,32 @@ Page({
         });
       }
     });
-  },//身高体重
-  bindsliderChange1: function (e) {
+  }, //身高体重
+  bindsliderChange1: function(e) {
     this.setData({
       up: e.detail.value
     });
     let _this = this;
-    this.calc(function (val) {
+    this.calc(function(val) {
       _this.setData({
         result: val
       });
     });
-  },//上胸围
-  bindsliderChange2: function (e) {
+  }, //上胸围
+  bindsliderChange2: function(e) {
     this.setData({
       down: e.detail.value
     });
     let _this = this;
-    this.calc(function (val) {
+    this.calc(function(val) {
       _this.setData({
         result: val
       });
     });
-  },//下胸围
+  }, //下胸围
   calc(callback) {
-    let up = this.data.up;//上胸围
-    let down = this.data.down;//下胸围
+    let up = this.data.up; //上胸围
+    let down = this.data.down; //下胸围
     let diff = up - down;
     let val = '';
     if (diff <= 0 || diff > 23) {
@@ -208,357 +207,290 @@ Page({
     if (down >= 63 && down <= 67) {
       if (diff >= 7 && diff <= 8) {
         val = '65AA';
+      } else
+      if (diff >= 9 && diff <= 11) {
+        val = '65A';
+      } else
+      if (diff >= 12 && diff <= 13) {
+        val = '65B';
+      } else
+      if (diff >= 14 && diff <= 16) {
+        val = '65C';
+      } else
+      if (diff >= 17 && diff <= 18) {
+        val = '65D';
+      } else
+      if (diff >= 19 && diff <= 21) {
+        val = '65E';
+      } else
+      if (diff >= 22 && diff <= 23) {
+        val = '65F';
+      } else {
+        callback('');
       }
-      else
-        if (diff >= 9 && diff <= 11) {
-          val = '65A';
-        }
-        else
-          if (diff >= 12 && diff <= 13) {
-            val = '65B';
-          }
-          else
-            if (diff >= 14 && diff <= 16) {
-              val = '65C';
-            }
-            else
-              if (diff >= 17 && diff <= 18) {
-                val = '65D';
-              }
-              else
-                if (diff >= 19 && diff <= 21) {
-                  val = '65E';
-                }
-                else
-                  if (diff >= 22 && diff <= 23) {
-                    val = '65F';
-                  }
-                  else {
-                    callback('');
-                  }
-    }
-    else
+    } else
       // 68~72
       if (down >= 68 && down <= 72) {
         if (diff >= 7 && diff <= 8) {
           val = '70AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '70A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '70B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '70C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '70D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '70E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '70F';
+        } else {
+          callback('');
         }
-        else
-          if (diff >= 9 && diff <= 11) {
-            val = '70A';
-          }
-          else
-            if (diff >= 12 && diff <= 13) {
-              val = '70B';
-            }
-            else
-              if (diff >= 14 && diff <= 16) {
-                val = '70C';
-              }
-              else
-                if (diff >= 17 && diff <= 18) {
-                  val = '70D';
-                }
-                else
-                  if (diff >= 19 && diff <= 21) {
-                    val = '70E';
-                  }
-                  else
-                    if (diff >= 22 && diff <= 23) {
-                      val = '70F';
-                    }
-                    else {
-                      callback('');
-                    }
       }
-      else
-        // 73~77
-        if (down >= 73 && down <= 77) {
-          if (diff >= 7 && diff <= 8) {
-            val = '75AA';
-          }
-          else
-            if (diff >= 9 && diff <= 11) {
-              val = '75A';
-            }
-            else
-              if (diff >= 12 && diff <= 13) {
-                val = '75B';
-              }
-              else
-                if (diff >= 14 && diff <= 16) {
-                  val = '75C';
-                }
-                else
-                  if (diff >= 17 && diff <= 18) {
-                    val = '75D';
-                  }
-                  else
-                    if (diff >= 19 && diff <= 21) {
-                      val = '75E';
-                    }
-                    else
-                      if (diff >= 22 && diff <= 23) {
-                        val = '75F';
-                      }
-                      else {
-                        callback('');
-                      }
+    else
+      // 73~77
+      if (down >= 73 && down <= 77) {
+        if (diff >= 7 && diff <= 8) {
+          val = '75AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '75A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '75B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '75C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '75D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '75E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '75F';
+        } else {
+          callback('');
         }
-        else
-          // 78~82
-          if (down >= 78 && down <= 82) {
-            if (diff >= 7 && diff <= 8) {
-              val = '80AA';
-            }
-            else
-              if (diff >= 9 && diff <= 11) {
-                val = '80A';
-              }
-              else
-                if (diff >= 12 && diff <= 13) {
-                  val = '80B';
-                }
-                else
-                  if (diff >= 14 && diff <= 16) {
-                    val = '80C';
-                  }
-                  else
-                    if (diff >= 17 && diff <= 18) {
-                      val = '80D';
-                    }
-                    else
-                      if (diff >= 19 && diff <= 21) {
-                        val = '80E';
-                      }
-                      else
-                        if (diff >= 22 && diff <= 23) {
-                          val = '80F';
-                        }
-                        else {
-                          callback('');
-                        }
-          }
-          else
-            // 83~87
-            if (down >= 83 && down <= 87) {
-              if (diff >= 7 && diff <= 8) {
-                val = '85AA';
-              }
-              else
-                if (diff >= 9 && diff <= 11) {
-                  val = '85A';
-                }
-                else
-                  if (diff >= 12 && diff <= 13) {
-                    val = '85B';
-                  }
-                  else
-                    if (diff >= 14 && diff <= 16) {
-                      val = '85C';
-                    }
-                    else
-                      if (diff >= 17 && diff <= 18) {
-                        val = '85D';
-                      }
-                      else
-                        if (diff >= 19 && diff <= 21) {
-                          val = '85E';
-                        }
-                        else
-                          if (diff >= 22 && diff <= 23) {
-                            val = '85F';
-                          }
-                          else {
-                            callback('');
-                          }
-            }
-            else
-              // 87~92
-              if (down >= 87 && down <= 92) {
-                if (diff >= 7 && diff <= 8) {
-                  val = '90AA';
-                }
-                else
-                  if (diff >= 9 && diff <= 11) {
-                    val = '90A';
-                  }
-                  else
-                    if (diff >= 12 && diff <= 13) {
-                      val = '90B';
-                    }
-                    else
-                      if (diff >= 14 && diff <= 16) {
-                        val = '90C';
-                      }
-                      else
-                        if (diff >= 17 && diff <= 18) {
-                          val = '90D';
-                        }
-                        else
-                          if (diff >= 19 && diff <= 21) {
-                            val = '90E';
-                          }
-                          else
-                            if (diff >= 22 && diff <= 23) {
-                              val = '90F';
-                            }
-                            else {
-                              callback('');
-                            }
-              }
-              else
-                // 93~97
-                if (down >= 93 && down <= 97) {
-                  if (diff >= 7 && diff <= 8) {
-                    val = '95AA';
-                  }
-                  else
-                    if (diff >= 9 && diff <= 11) {
-                      val = '95A';
-                    }
-                    else
-                      if (diff >= 12 && diff <= 13) {
-                        val = '95B';
-                      }
-                      else
-                        if (diff >= 14 && diff <= 16) {
-                          val = '95C';
-                        }
-                        else
-                          if (diff >= 17 && diff <= 18) {
-                            val = '95D';
-                          }
-                          else
-                            if (diff >= 19 && diff <= 21) {
-                              val = '95E';
-                            }
-                            else
-                              if (diff >= 22 && diff <= 23) {
-                                val = '95F';
-                              }
-                              else {
-                                callback('');
-                              }
-                }
-                else
-                  // 98~102
-                  if (down >= 98 && down <= 102) {
-                    if (diff >= 7 && diff <= 8) {
-                      val = '100AA';
-                    }
-                    else
-                      if (diff >= 9 && diff <= 11) {
-                        val = '100A';
-                      }
-                      else
-                        if (diff >= 12 && diff <= 13) {
-                          val = '100B';
-                        }
-                        else
-                          if (diff >= 14 && diff <= 16) {
-                            val = '100C';
-                          }
-                          else
-                            if (diff >= 17 && diff <= 18) {
-                              val = '100D';
-                            }
-                            else
-                              if (diff >= 19 && diff <= 21) {
-                                val = '100E';
-                              }
-                              else
-                                if (diff >= 22 && diff <= 23) {
-                                  val = '100F';
-                                }
-                                else {
-                                  callback('');
-                                }
-                  }
-                  else
-                    // 103~107
-                    if (down >= 103 && down <= 107) {
-                      if (diff >= 7 && diff <= 8) {
-                        val = '105AA';
-                      }
-                      else
-                        if (diff >= 9 && diff <= 11) {
-                          val = '105A';
-                        }
-                        else
-                          if (diff >= 12 && diff <= 13) {
-                            val = '105B';
-                          }
-                          else
-                            if (diff >= 14 && diff <= 16) {
-                              val = '105C';
-                            }
-                            else
-                              if (diff >= 17 && diff <= 18) {
-                                val = '105D';
-                              }
-                              else
-                                if (diff >= 19 && diff <= 21) {
-                                  val = '105E';
-                                }
-                                else
-                                  if (diff >= 22 && diff <= 23) {
-                                    val = '105F';
-                                  }
-                                  else {
-                                    callback('');
-                                  }
-                    }
-                    else
-                      // 108~112
-                      if (down >= 108 && down <= 112) {
-                        if (diff >= 7 && diff <= 8) {
-                          val = '110AA';
-                        }
-                        else
-                          if (diff >= 9 && diff <= 11) {
-                            val = '110A';
-                          }
-                          else
-                            if (diff >= 12 && diff <= 13) {
-                              val = '110B';
-                            }
-                            else
-                              if (diff >= 14 && diff <= 16) {
-                                val = '110C';
-                              }
-                              else
-                                if (diff >= 17 && diff <= 18) {
-                                  val = '110D';
-                                }
-                                else
-                                  if (diff >= 19 && diff <= 21) {
-                                    val = '110E';
-                                  }
-                                  else
-                                    if (diff >= 22 && diff <= 23) {
-                                      val = '110F';
-                                    }
-                                    else {
-                                      callback('');
-                                    }
-                      }
-                      else {
-                        callback('');
-                      }
+      }
+    else
+      // 78~82
+      if (down >= 78 && down <= 82) {
+        if (diff >= 7 && diff <= 8) {
+          val = '80AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '80A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '80B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '80C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '80D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '80E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '80F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 83~87
+      if (down >= 83 && down <= 87) {
+        if (diff >= 7 && diff <= 8) {
+          val = '85AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '85A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '85B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '85C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '85D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '85E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '85F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 87~92
+      if (down >= 87 && down <= 92) {
+        if (diff >= 7 && diff <= 8) {
+          val = '90AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '90A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '90B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '90C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '90D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '90E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '90F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 93~97
+      if (down >= 93 && down <= 97) {
+        if (diff >= 7 && diff <= 8) {
+          val = '95AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '95A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '95B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '95C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '95D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '95E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '95F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 98~102
+      if (down >= 98 && down <= 102) {
+        if (diff >= 7 && diff <= 8) {
+          val = '100AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '100A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '100B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '100C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '100D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '100E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '100F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 103~107
+      if (down >= 103 && down <= 107) {
+        if (diff >= 7 && diff <= 8) {
+          val = '105AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '105A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '105B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '105C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '105D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '105E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '105F';
+        } else {
+          callback('');
+        }
+      }
+    else
+      // 108~112
+      if (down >= 108 && down <= 112) {
+        if (diff >= 7 && diff <= 8) {
+          val = '110AA';
+        } else
+        if (diff >= 9 && diff <= 11) {
+          val = '110A';
+        } else
+        if (diff >= 12 && diff <= 13) {
+          val = '110B';
+        } else
+        if (diff >= 14 && diff <= 16) {
+          val = '110C';
+        } else
+        if (diff >= 17 && diff <= 18) {
+          val = '110D';
+        } else
+        if (diff >= 19 && diff <= 21) {
+          val = '110E';
+        } else
+        if (diff >= 22 && diff <= 23) {
+          val = '110F';
+        } else {
+          callback('');
+        }
+      }
+    else {
+      callback('');
+    }
     callback(val);
   },
-  searchVer(){
+  searchVer() {
     mi.ajax({
       url: api.version,
       login: true,
       data: {
-        "v": '0.1',
-        "type": '3'
+        "v": 1,
+        "type": 3
       },
-      callback: function (data) {
-        console.log('版本',data);
+      callback: function(data) {
+        console.log('data', data);
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('版本', res);
+        mi.toast(res.data ? res.data : '未知版本');
+
       }
     });
-  }//查看版本
+  } //查看版本
 });

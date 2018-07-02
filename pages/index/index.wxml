@@ -1,5 +1,4 @@
 <wxs module="filterCell" src="../../common/wxs/filter-cell.wxs"></wxs>
-
 <view class='mi-container'>
   <!--头部信息&仪表盘  -->
   <view class='mi-box'>

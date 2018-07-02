@@ -106,6 +106,7 @@ Page({
         _this.bluetoothInit(_this.data.bleDeviceId);
       }
     });
+    this.uploadTem();
     detch(); //初始化曲线图
     function detch() {
       timer = setTimeout(() => {
@@ -998,24 +999,27 @@ Page({
     let _this = this;
     mi.ajax({
       url: api.tempUpload,
+      method:'post',
+      // contentType:'form',
       login: false,
       data: {
-        "tp1": this.data.temp_lto,
-        "tp2": this.data.temp_lti,
-        "tp3": this.data.temp_rti,
-        "tp4": this.data.temp_rto,
-        "d1": this.data.temp_diff_max_obj,
-        "maxDiff": this.data.temp_diff_num,
-        "needTime": this.data.measurementTime,
+        "tp1": 36,//this.data.temp_lto,
+        "tp2": 36,//this.data.temp_lti,
+        "tp3": 36,//this.data.temp_rti,
+        "tp4": 36,//this.data.temp_rto,
+        "d1": 12,//this.data.temp_diff_max_obj,
+        "maxDiff": 0.1,//this.data.temp_diff_num,
+        "needTime": 3000,//this.data.measurementTime,
         "label": '',
-        "taskId": app.bleDeviceId,
-        "tips1": this.data.temp_avg_title,
-        "tips2": this.data.temp_avg_detial,
-        "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
+        "taskId": mi.guid(),
+        "tips1": '01',//this.data.temp_avg_title,
+        "tips2": '02',//this.data.temp_avg_detial,
+        "tips3": '03',//this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
         "startIdx": 0,
         "endIdx": 0,
-        "healthIndex": this.data.temp_score
+        "healthIndex": 80.2,//this.data.temp_score
       },
+      dataPos:false,
       callback: function (data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);

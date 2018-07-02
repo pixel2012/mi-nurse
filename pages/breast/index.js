@@ -294,6 +294,7 @@ Page({
     //   ]//执行的动画序列
     // }];
     // mi.store.set('diyArr',test);
+    this.uploadZDMode(2,10000);
   },
   onShow() {
     this.updateStatus();
@@ -834,6 +835,7 @@ Page({
     mi.ajax({
       url: api.uploadZD,
       method: 'post',
+      contentType:'form',
       login: false,
       data: {
         "type": mode,

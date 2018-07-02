@@ -57,6 +57,7 @@ Page({
       url: api.feedback,
       method: 'post',
       login: false,
+      contentType:'form',
       data: {
         "content": this.data.advice,
         "email": this.data.email,
@@ -68,5 +69,21 @@ Page({
         mi.toast('上传成功');
       }
     });
+    // wx.uploadFile({
+    //   url: api.feedback, //仅为示例，非真实的接口地址
+    //   method: 'post',
+    //   filePath: this.data.imgs[0],
+    //   name: 'picture',
+    //   formData: {
+    //     "content": this.data.advice,
+    //     "email": this.data.email,
+    //   },
+    //   success: function (res) {
+    //     console.log(res);
+    //     var data = res.data
+
+    //     //do something
+    //   }
+    // });
   } //提交
 });

@@ -1,0 +1,10 @@
+.title{
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  padding:30rpx;
+}
+.content{
+  padding:30rpx;
+  font-size: 26rpx;
+}
