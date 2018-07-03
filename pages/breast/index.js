@@ -837,6 +837,7 @@ Page({
       method: 'post',
       contentType:'form',
       login: false,
+      loading:false,
       data: {
         "type": mode,
         "ms": time,

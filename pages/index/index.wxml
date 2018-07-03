@@ -16,7 +16,7 @@
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{available?'可用':'不可用'}}，{{discovering?'搜索':'未搜索'}}{{bleEnergy? bleEnergy :'未知'}}</text>
+          <text class='mi-text'>{{available?'可用':'不可用'}}{{bleEnergy? bleEnergy :'未知'}}</text>
         </view>
       </view>
     </view>

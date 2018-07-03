@@ -47,7 +47,7 @@
         </view>
       </view>
     </navigator>
-    <navigator url="/pages/feedback/index">
+    <!-- <navigator url="/pages/feedback/index">
       <view class='my-list-item'>
         <view class='my-list-item-left'>
           <image class='my-list-item-left-icon' src='img/feedback.png' style='width:31rpx;height:34rpx;'></image>
@@ -57,7 +57,7 @@
           <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
         </view>
       </view>
-    </navigator>
+    </navigator> -->
     <navigator url="/pages/help/index">
       <view class='my-list-item'>
         <view class='my-list-item-left'>

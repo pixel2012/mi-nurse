@@ -106,7 +106,7 @@ Page({
         _this.bluetoothInit(_this.data.bleDeviceId);
       }
     });
-    this.uploadTem();
+    // this.uploadTem();
     detch(); //初始化曲线图
     function detch() {
       timer = setTimeout(() => {
@@ -203,14 +203,15 @@ Page({
       url: api.dateAble,
       method: 'get',
       login: true,
+      loading: false,
       callback: function (data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
-        res.data = [
-          "2017-03",
-          "2017-02",
-          "2016-08"
-        ];
+        // res.data = [
+        //   "2017-03",
+        //   "2017-02",
+        //   "2016-08"
+        // ];
         let yearOptions = [];
         let superYears = [];
 
@@ -222,6 +223,10 @@ Page({
               superYears: superYears,
               monthOptions: superYears[_this.data.year].months.reverse()
             });
+            //如果年份数组大于0，则请求请求第一个月份的数据
+            if (res.data.length>0){
+              _this.getMonthHistory();
+            }
           });
         } else {
           _this.setData({
@@ -232,6 +237,24 @@ Page({
       }
     });
   }, //获取可用的时间列表
+  getMonthHistory() {
+    let _this = this;
+    mi.ajax({
+      url: api.history,
+      method: 'get',
+      contentType:'form',
+      data: {
+        month: '2018-07',//this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month]+'月'
+      },
+      dataPos:false,
+      login: true,
+      loading: false,
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('res', res);
+      }
+    });
+  },//获取当月的数据
   formateDate(date, callback) {
     let yearOptions = [];
     let superYears = [];
@@ -410,7 +433,7 @@ Page({
               }
             } else {
               console.log('蓝牙正忙');
-              mi.toast('蓝牙正忙');
+              // mi.toast('蓝牙正忙');
               mi.hideLoading();
               wx.stopBluetoothDevicesDiscovery({
                 success: function () {
@@ -472,7 +495,7 @@ Page({
         mi.showLoading('蓝牙重连中');
         _this.connect(id);
       } else {
-        mi.toast('蓝牙正忙，连接已断开');
+        // mi.toast('蓝牙正忙，连接已断开');
         wx.stopBluetoothDevicesDiscovery({
           success: function () {
             _this.connect(id);
@@ -541,9 +564,16 @@ Page({
                     });
                     setTimeout(function () {
                       _this.command({
-                        command: 'c2'
+                        command: 'c2',
+                        check: false
                       }); //查询电量
                     }, 500);
+                    setTimeout(function () {
+                      _this.command({
+                        command: 'c1',
+                        check: false
+                      }); //查询版本
+                    }, 1000);
                   },
                   fail: function (res) {
                     console.log('特征值订阅开启失败', res);
@@ -558,7 +588,7 @@ Page({
       },
       fail: function () {
         console.log('设备连接失败');
-        mi.toast('设备连接失败');
+        // mi.toast('设备连接失败');
         //关闭蓝牙搜索
         wx.stopBluetoothDevicesDiscovery();
       }
@@ -999,27 +1029,28 @@ Page({
     let _this = this;
     mi.ajax({
       url: api.tempUpload,
-      method:'post',
-      // contentType:'form',
+      method: 'post',
+      contentType: 'form',
       login: false,
+      loading: false,
       data: {
-        "tp1": 36,//this.data.temp_lto,
-        "tp2": 36,//this.data.temp_lti,
-        "tp3": 36,//this.data.temp_rti,
-        "tp4": 36,//this.data.temp_rto,
-        "d1": 12,//this.data.temp_diff_max_obj,
-        "maxDiff": 0.1,//this.data.temp_diff_num,
-        "needTime": 3000,//this.data.measurementTime,
+        "tp1": this.data.temp_lto,
+        "tp2": this.data.temp_lti,
+        "tp3": this.data.temp_rti,
+        "tp4": this.data.temp_rto,
+        "d1": this.data.temp_diff_max_obj,
+        "maxDiff": parseInt(this.data.temp_diff_num),
+        "needTime": this.data.measurementTime,
         "label": '',
         "taskId": mi.guid(),
-        "tips1": '01',//this.data.temp_avg_title,
-        "tips2": '02',//this.data.temp_avg_detial,
-        "tips3": '03',//this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
+        "tips1": this.data.temp_avg_title,
+        "tips2": this.data.temp_avg_detial,
+        "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
         "startIdx": 0,
         "endIdx": 0,
         "healthIndex": 80.2,//this.data.temp_score
       },
-      dataPos:false,
+      dataPos: false,
       callback: function (data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
