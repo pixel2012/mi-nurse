@@ -7,10 +7,11 @@ const api = {
   login: mi.ip + 'user/login', //登录
   tempUpload: mi.ip + 'temperature/post', //温度上传
   dateAble: mi.ip + 'temperature/historyMonth', //可用的温度时间列表
-  history: mi.ip + 'temperatur/list', //获取温度列表
+  history: mi.ip + 'temperature/list', //获取温度列表
 };
 
 let chart, chart2, chart3;
+let count = 0; //测量温度计数
 
 function initChart(canvas, width, height) {
   chart = echarts.init(canvas, null, {
@@ -93,52 +94,93 @@ Page({
     let _this = this;
     // this.lineInit();
     if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
-      _this.getUserInfo(function () {
+      _this.getUserInfo(function() {
         _this.getTempDateList()
       });
     } else {
       _this.getTempDateList();
     }
-    let timer = null;
-    _this.updateStore(function () {
+    _this.updateStore(function() {
       console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
       if (_this.data.bleDeviceId) {
         _this.bluetoothInit(_this.data.bleDeviceId);
       }
     });
     // this.uploadTem();
-    detch(); //初始化曲线图
-    function detch() {
-      timer = setTimeout(() => {
-        if (chart && chart2 && chart3) {
-          _this.chartRender(chart, {
-            target: 'echart0',
-            color: ["#FF4578"],
-            dataZoom: [{
-              fillerColor: 'rgba(254,216,227,.5)',
-              handleStyle: {
-                color: 'rgba(254,216,227,1)'
-              }
-            }]
-          }, '分');
-          _this.chartRender(chart2, {
-            target: 'echart1',
-            color: ["#4586FF"],
-          }, '℃');
-          _this.chartRender(chart3, {
-            target: 'echart2',
-            color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
-          }, '℃');
-        } else {
-          clearTimeout(timer);
-          detch();
-        }
-      }, 1000);
-    }
+    // this.detch(); //初始化曲线图
 
   },
   onShow() {
 
+  },
+  detch(char1, char2, char3) {
+    let timer = null;
+    let _this = this;
+    timer = setTimeout(() => {
+      if (chart && chart2 && chart3) {
+        _this.chartRender(chart, {
+          target: 'echart0',
+          color: ["#FF4578"],
+          dataZoom: [{
+            fillerColor: 'rgba(254,216,227,.5)',
+            handleStyle: {
+              color: 'rgba(254,216,227,1)'
+            }
+          }],
+          xAxis: {
+            data: char1.x
+          },
+          series: [{
+            name: '健康值',
+            type: 'line',
+            data: char1.y
+          }]
+        }, '分');
+        _this.chartRender(chart2, {
+          target: 'echart1',
+          color: ["#4586FF"],
+          xAxis: {
+            data: char2.x
+          },
+          series: [{
+            name: '乳温差',
+            type: 'line',
+            data: char2.y
+          }]
+        }, '℃');
+        _this.chartRender(chart3, {
+          target: 'echart2',
+          color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
+          xAxis: {
+            data: char3.x
+          },
+          series: [{
+              name: '左上外',
+              type: 'line',
+              data: char3.y1
+            },
+            {
+              name: '左上内',
+              type: 'line',
+              data: char3.y2
+            },
+            {
+              name: '右上内',
+              type: 'line',
+              data: char3.y3
+            },
+            {
+              name: '右上外',
+              type: 'line',
+              data: char3.y4
+            }
+          ]
+        }, '℃');
+      } else {
+        clearTimeout(timer);
+        detch();
+      }
+    }, 1000);
   },
   updateStore(callback) {
     this.setData({
@@ -154,12 +196,12 @@ Page({
   getUserInfo(callback) {
     let _this = this;
     //获取用户信息
-    mi.user.getSetting(function (status) {
+    mi.user.getSetting(function(status) {
       if (status) {
         _this.setData({
           isAuthorize: true
         });
-        mi.user.getInfo(function (res) {
+        mi.user.getInfo(function(res) {
           mi.ajax({
             url: api.login,
             method: 'post',
@@ -176,7 +218,7 @@ Page({
             },
             encrypt: true,
             dataPos: false,
-            callback: function (data) {
+            callback: function(data) {
               let res = JSON.parse(mi.crypto.decode(data));
               console.log('res', res);
               //将信息存储到本地缓存中
@@ -204,7 +246,7 @@ Page({
       method: 'get',
       login: true,
       loading: false,
-      callback: function (data) {
+      callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
         // res.data = [
@@ -217,15 +259,25 @@ Page({
 
         if (res.data.length > 0) {
           //yearOptions, superYears
-          _this.formateDate(res.data, function (yearOptions, superYears) {
+          _this.formateDate(res.data, function(yearOptions, superYears) {
             _this.setData({
               yearOptions: yearOptions,
               superYears: superYears,
               monthOptions: superYears[_this.data.year].months.reverse()
             });
             //如果年份数组大于0，则请求请求第一个月份的数据
-            if (res.data.length>0){
-              _this.getMonthHistory();
+            if (res.data.length > 0) {
+              _this.getMonthHistory(function(res) {
+
+                let obj = JSON.parse(res);
+                console.log(obj);
+                if (obj && obj.data.length > 0) {
+                  let charArr = mi.switchCharData(obj.data);
+                  _this.detch(charArr[0], charArr[1], charArr[2]);
+                } else {
+                  mi.toast('您还没有任何测试数据');
+                }
+              });
             }
           });
         } else {
@@ -237,24 +289,32 @@ Page({
       }
     });
   }, //获取可用的时间列表
-  getMonthHistory() {
+  changeMonth(e) {
+    this.setData({
+      month: e.currentTarget.dataset.month
+    });
+    this.getMonthHistory();
+  },
+  getMonthHistory(callback) {
     let _this = this;
     mi.ajax({
       url: api.history,
       method: 'get',
-      contentType:'form',
+      contentType: 'form',
       data: {
-        month: '2018-07',//this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month]+'月'
+        month: this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月'
       },
-      dataPos:false,
+      dataPos: false,
       login: true,
       loading: false,
-      callback: function (data) {
-        let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
+      callback: function(data) {
+        let res = mi.crypto.decode(data);
+        if (callback) {
+          callback(res);
+        }
       }
     });
-  },//获取当月的数据
+  }, //获取当月的数据
   formateDate(date, callback) {
     let yearOptions = [];
     let superYears = [];
@@ -323,20 +383,13 @@ Page({
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push('X' + i);
-          }
-          return arr;
-        })(),
+        data: [],
         axisPointer: {
           label: {
-            formatter: function (params) {
+            formatter: function(params) {
               // console.log(params);
               // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
               if (opts.target == 'echart2') {
-                console.log(params.seriesData);
                 _this.setData({
                   [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value]
                 });
@@ -354,15 +407,9 @@ Page({
         type: 'value'
       },
       series: [{
-        name: 'A商品',
+        name: '',
         type: 'line',
-        data: (function () {
-          let arr = [];
-          for (let i = 0; i < 100; i++) {
-            arr.push(parseInt(Math.random() * 100));
-          }
-          return arr;
-        })()
+        data: []
       }]
     };
     option = mi.deepMerge(option, opts);
@@ -370,19 +417,19 @@ Page({
 
     chart.setOption(option);
   },
-  bluetoothInit: function (oldId) {
+  bluetoothInit: function(oldId) {
     let _this = this;
     //检测蓝牙是否打开
     wx.openBluetoothAdapter({
-      success: function (res) {
+      success: function(res) {
         mi.showLoading('蓝牙已打开');
         console.log('打开蓝牙适配器', res);
         //检测蓝牙此时的状态
         wx.getBluetoothAdapterState({
-          success: function (res) {
+          success: function(res) {
             console.log('获取蓝牙适配器状态成功', res);
             //监听蓝牙适配器状态
-            wx.onBluetoothAdapterStateChange(function (res) {
+            wx.onBluetoothAdapterStateChange(function(res) {
               console.log(`adapterState changed, now is`, res);
               _this.setData({
                 available: res.available, //蓝牙是否可用
@@ -400,12 +447,12 @@ Page({
                 //开启蓝牙搜索模式
                 wx.startBluetoothDevicesDiscovery({
                   services: [],
-                  success: function (res) {
+                  success: function(res) {
                     //开启定时器，一分钟后没有搜索，自动关闭蓝牙搜索
-                    setTimeout(function () {
+                    setTimeout(function() {
                       if (!_this.data.bleIsConnect) {
                         wx.stopBluetoothDevicesDiscovery({
-                          success: function () {
+                          success: function() {
                             mi.hideLoading();
                             mi.toast('未搜索到可用蓝牙设备');
                           }
@@ -417,7 +464,7 @@ Page({
                     //   bleIsShowList:true
                     // });
 
-                    wx.onBluetoothDeviceFound(function (res) {
+                    wx.onBluetoothDeviceFound(function(res) {
                       console.log('new device list has founded');
                       console.log(res);
                       if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
@@ -426,7 +473,7 @@ Page({
                       }
                     })
                   },
-                  fail: function (res) {
+                  fail: function(res) {
                     console.log(res);
                   }
                 });
@@ -436,7 +483,7 @@ Page({
               // mi.toast('蓝牙正忙');
               mi.hideLoading();
               wx.stopBluetoothDevicesDiscovery({
-                success: function () {
+                success: function() {
                   _this.bluetoothInit(oldId);
                 }
               });
@@ -444,7 +491,7 @@ Page({
 
 
           },
-          fail: function (res) {
+          fail: function(res) {
             console.log('获取蓝牙适配器状态失败', res);
             mi.toast('获取蓝牙适配器状态失败');
             mi.hideLoading();
@@ -453,7 +500,7 @@ Page({
 
 
       },
-      fail: function (res) {
+      fail: function(res) {
         console.log('蓝牙未打开');
         mi.toast('蓝牙未打开');
         mi.hideLoading();
@@ -464,7 +511,7 @@ Page({
 
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
-      success: function (res) {
+      success: function(res) {
         console.log('关闭蓝牙搜索', res);
         _this.setData({
           bleIsShowList: false
@@ -472,7 +519,7 @@ Page({
       }
     });
     wx.getBluetoothDevices({
-      success: function (res) {
+      success: function(res) {
         console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
       }
     });
@@ -483,7 +530,7 @@ Page({
     });
     app.bleDeviceId = this.data.bleDeviceId;
     mi.store.set('bleDeviceId', this.data.bleDeviceId);
-    wx.onBLEConnectionStateChange(function (res) {
+    wx.onBLEConnectionStateChange(function(res) {
       console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
       mi.toast(res.connected ? '连接成功' : '连接失败');
       _this.setData({
@@ -497,7 +544,7 @@ Page({
       } else {
         // mi.toast('蓝牙正忙，连接已断开');
         wx.stopBluetoothDevicesDiscovery({
-          success: function () {
+          success: function() {
             _this.connect(id);
           }
         });
@@ -507,12 +554,12 @@ Page({
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
       deviceId: deviceId,
-      success: function (res) {
+      success: function(res) {
         mi.hideLoading();
         console.log('设备连接成功', res);
         wx.getBLEDeviceServices({
           deviceId: deviceId,
-          success: function (res) {
+          success: function(res) {
             console.log('获取蓝牙设备所有服务', res);
             for (let i = 0; i < res.services.length; i++) {
               if (res.services[i].uuid.indexOf('0000FF92') > -1) { //查找自定义服务
@@ -527,7 +574,7 @@ Page({
             wx.getBLEDeviceCharacteristics({
               deviceId: deviceId,
               serviceId: _this.data.bleServerId,
-              success: function (res) {
+              success: function(res) {
                 console.log('读取蓝牙服务特征值', _this.data.bleServerId, res);
                 let writeId, notifyId;
                 for (let j = 0; j < res.characteristics.length; j++) {
@@ -554,28 +601,28 @@ Page({
                   serviceId: _this.data.bleServerId,
                   characteristicId: _this.data.bleCharNotifyId,
                   state: true,
-                  success: function (res) {
+                  success: function(res) {
                     console.log('特征值订阅开启成功', res);
-                    wx.onBLECharacteristicValueChange(function (res) {
+                    wx.onBLECharacteristicValueChange(function(res) {
                       console.log('检测到特征值发生变化', res);
                       let hex = mi.buf2hex(res.value);
                       console.log('特征值二进制转十六进制后结果', hex);
                       _this.deal(hex);
                     });
-                    setTimeout(function () {
+                    setTimeout(function() {
                       _this.command({
                         command: 'c2',
                         check: false
                       }); //查询电量
                     }, 500);
-                    setTimeout(function () {
+                    setTimeout(function() {
                       _this.command({
                         command: 'c1',
                         check: false
                       }); //查询版本
                     }, 1000);
                   },
-                  fail: function (res) {
+                  fail: function(res) {
                     console.log('特征值订阅开启失败', res);
                     console.log('特征值订阅开启失败');
                     wx.stopBluetoothDevicesDiscovery();
@@ -586,7 +633,7 @@ Page({
           }
         });
       },
-      fail: function () {
+      fail: function() {
         console.log('设备连接失败');
         // mi.toast('设备连接失败');
         //关闭蓝牙搜索
@@ -629,13 +676,13 @@ Page({
       serviceId: this.data.bleServerId,
       characteristicId: this.data.bleCharWriteId,
       value: mi.hex2buf(tempObj.hex),
-      success: function (res) {
+      success: function(res) {
         console.log('特征值写入成功', res);
         if (tempObj.success) {
           tempObj.success(res);
         }
       },
-      fail: function (res) {
+      fail: function(res) {
         console.log('特征值写入失败', res);
         if (tempObj.fail) {
           tempObj.fail(res);
@@ -687,23 +734,24 @@ Page({
       mi.hideLoading();
       _this.data.temp_cache
       if (result.slot == '01') {
-        _this.data.temp_cache[0] = result.temp1;
-        _this.data.temp_cache[1] = result.temp2;
-      }
-      if (result.slot == '02') {
         _this.data.temp_cache[2] = result.temp1;
         _this.data.temp_cache[3] = result.temp2;
+      }
+      if (result.slot == '02') {
+        _this.data.temp_cache[1] = result.temp1;
+        _this.data.temp_cache[0] = result.temp2;
         _this.setData({
           temp_cache: _this.data.temp_cache
         });
-        for (let i = 0; i < _this.data.temp_cache.length; I++) {
+        for (let i = 0; i < _this.data.temp_cache.length; i++) {
           if (_this.data.temp_cache[i] <= 32 || _this.data.temp_cache[i] >= 41) {
+            count = 0;
             return wx.showModal({
               title: '数据不准确',
               content: '请确保温度传感器紧贴胸部皮肤，并保持皮肤表面干爽',
               cancelText: '取消',
               confirmText: '再试一次',
-              success: function (res) {
+              success: function(res) {
                 if (res.confirm) {
                   _this.getTem(); //重新获取温度
                   _this.setData({
@@ -718,21 +766,26 @@ Page({
             break;
           } else {
             //校验通过
-            _this.setData({
-              bleIsSync: mi.format('hh:mm'),
-              bleSyncInfo: mi.format('MM月dd日 hh:mm'),
-              temp_lto: _this.data.temp_cache[0], //左上外
-              temp_lti: _this.data.temp_cache[1], //左上内
-              temp_rti: _this.data.temp_cache[2], //右上内
-              temp_rto: _this.data.temp_cache[3], //右上外
-              measurementTime: new Date().getTime() - _this.data.measurementTime
-            });
-            app.bleIsSync = _this.data.bleIsSync;
-            _this.calcTemp(function () {
-              //计算完所有温度后，提交后台
-              _this.uploadTem();
-            });
+            count++;
           }
+        }
+        if (count == 4) {
+          count = 0;
+          console.log('温度全部校验通过，提交温度信息');
+          _this.setData({
+            bleIsSync: mi.format('hh:mm'),
+            bleSyncInfo: mi.format('MM月dd日 hh:mm'),
+            temp_lto: _this.data.temp_cache[0], //左上外
+            temp_lti: _this.data.temp_cache[1], //左上内
+            temp_rti: _this.data.temp_cache[2], //右上内
+            temp_rto: _this.data.temp_cache[3], //右上外
+            measurementTime: new Date().getTime() - _this.data.measurementTime
+          });
+          app.bleIsSync = _this.data.bleIsSync;
+          _this.calcTemp(function() {
+            //计算完所有温度后，提交后台
+            _this.uploadTem();
+          });
         }
       }
       return result;
@@ -760,14 +813,14 @@ Page({
     this.setData({
       measurementTime: new Date().getTime()
     });
-    setTimeout(function () {
+    setTimeout(function() {
       _this.command({
         command: 'c3',
         param: ['01'],
         check: true
       }); //左胸
     }, 500);
-    setTimeout(function () {
+    setTimeout(function() {
       _this.command({
         command: 'c3',
         param: ['02'],
@@ -1018,8 +1071,8 @@ Page({
   getDiffMaxObj(a, b) {
     console.log('a,b', a, b);
     const tempDiffText = ['左乳上外', '左乳上内', '右乳上内', '右乳上外'];
-    let anum = tempDiffText.indexOf(a);
-    let bnum = tempDiffText.indexOf(b);
+    let anum = tempDiffText.indexOf(a) + 1;
+    let bnum = tempDiffText.indexOf(b) + 1;
     let result = anum > bnum ? bnum.toString() + anum.toString() : anum.toString() + bnum.toString();
     console.log('result', result);
     return result;
@@ -1027,6 +1080,23 @@ Page({
   }, //得到最大乳温差是谁
   uploadTem() {
     let _this = this;
+    console.log({
+      "tp1": this.data.temp_lto,
+      "tp2": this.data.temp_lti,
+      "tp3": this.data.temp_rti,
+      "tp4": this.data.temp_rto,
+      "d1": this.data.temp_diff_max_obj,
+      "maxDiff": parseInt(this.data.temp_diff_num),
+      "needTime": this.data.measurementTime,
+      "label": '',
+      "taskId": mi.guid(),
+      "tips1": this.data.temp_avg_title,
+      "tips2": this.data.temp_avg_detial,
+      "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
+      "startIdx": 0,
+      "endIdx": 0,
+      "healthIndex": 80.2, //this.data.temp_score
+    });
     mi.ajax({
       url: api.tempUpload,
       method: 'post',
@@ -1034,10 +1104,10 @@ Page({
       login: false,
       loading: false,
       data: {
-        "tp1": this.data.temp_lto,
-        "tp2": this.data.temp_lti,
-        "tp3": this.data.temp_rti,
-        "tp4": this.data.temp_rto,
+        "tp1": this.data.temp_lto, //parseInt(this.data.temp_lto),
+        "tp2": this.data.temp_lti, //parseInt(this.data.temp_lti),
+        "tp3": this.data.temp_rti, //parseInt(this.data.temp_rti),
+        "tp4": this.data.temp_rto, //parseInt(this.data.temp_rto),
         "d1": this.data.temp_diff_max_obj,
         "maxDiff": parseInt(this.data.temp_diff_num),
         "needTime": this.data.measurementTime,
@@ -1048,34 +1118,19 @@ Page({
         "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
         "startIdx": 0,
         "endIdx": 0,
-        "healthIndex": 80.2,//this.data.temp_score
+        "healthIndex": this.data.temp_score
       },
       dataPos: false,
-      callback: function (data) {
+      callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
       }
     });
   },
   bindPickerChange(e) {
-    console.log(e);
     this.setData({
       year: e.detail.value,
       monthOptions: this.data.superYears[e.detail.value * 1].months.reverse()
-    });
-  },
-  changeMonth(e) {
-    let _this = this;
-    mi.ajax({
-      url: api.history,
-      login: false,
-      data: {
-        "month": this.data.yearOptions[this.data.year] + '-' + e.currentTarget.dataset.month,
-      },
-      callback: function (data) {
-        let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
-      }
     });
   }
 });

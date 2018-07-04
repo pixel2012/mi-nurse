@@ -356,11 +356,11 @@ const mi = {
     let hex2 = Number('0x' + h2);
     return (hex1 + hex2).toString(16);
   },
-  format(format) {
+  format(format, stamp) {
     /*
      * eg:format="yyyy-MM-dd hh:mm:ss";
      */
-    let date = new Date();
+    let date = stamp ? new Date(stamp) : new Date();
     let o = {
       "M+": date.getMonth() + 1, // month  
       "d+": date.getDate(), // day  
@@ -401,6 +401,47 @@ const mi = {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-  },//随机生成uuid
+  }, //随机生成uuid
+  switchCharData(charts) {
+    let obj1 = {
+      x: [],
+      y: []
+    }; //健康分数
+    let obj2 = {
+      x: [],
+      y: []
+    }; //乳温差
+    let obj3 = {
+      x: [],
+      y1: [],
+      y2: [],
+      y3: [],
+      y4: []
+    }; //乳温（四个）
+    for (let i = 0; i < charts.length; i++) {
+      let time = this.format('dd日\nhh:mm', charts[i].ctime);
+      obj1.x.push(time);
+      obj2.x.push(time);
+      obj3.x.push(time);
+      obj1.y.push(charts[i].healthIndex);
+      obj2.y.push(charts[i].maxDiff);
+      obj3.y1.push(charts[i].tp1);
+      obj3.y2.push(charts[i].tp2);
+      obj3.y3.push(charts[i].tp3);
+      obj3.y4.push(charts[i].tp4);
+      // obj1.x.push();
+      // obj1.healthIndex = charts[i].healthIndex;//健康分
+      // obj1.healthIndex = charts[i].healthIndex;//健康分
+      // obj2.maxDiff = charts[i].maxDiff;//乳温差
+      // obj3.tp1 = charts[i].tp1;//乳温
+      // obj3.tp2 = charts[i].tp2;//乳温
+      // obj3.tp3 = charts[i].tp3;//乳温
+      // obj3.tp4 = charts[i].tp4;//乳温
+      // arr1.push(obj1);
+      // arr2.push(obj2);
+      // arr3.push(obj3);
+    }
+    return [obj1, obj2, obj3];
+  }
 }
 module.exports = mi;
