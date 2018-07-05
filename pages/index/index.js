@@ -89,8 +89,25 @@ Page({
     echart1: 0,
     echart2: [0, 0, 0, 0],
     measurementTime: 0, //测温时长
+    jump0: null, //健康
+    jump1: null, //温差
+    jump2: null, //乳温
+    superMonthArr: null, //当月的所有温度信息
   },
   onLoad() {
+    let _this=this;
+    this.tempUpdate();
+    this.updateStore(function () {
+      console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
+      if (_this.data.bleDeviceId) {
+        _this.bluetoothInit(_this.data.bleDeviceId);
+      }
+    });
+  },
+  onShow() {
+    
+  },
+  tempUpdate() {
     let _this = this;
     // this.lineInit();
     if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
@@ -100,18 +117,6 @@ Page({
     } else {
       _this.getTempDateList();
     }
-    _this.updateStore(function() {
-      console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
-      if (_this.data.bleDeviceId) {
-        _this.bluetoothInit(_this.data.bleDeviceId);
-      }
-    });
-    // this.uploadTem();
-    // this.detch(); //初始化曲线图
-
-  },
-  onShow() {
-
   },
   detch(char1, char2, char3) {
     let timer = null;
@@ -120,6 +125,7 @@ Page({
       if (chart && chart2 && chart3) {
         _this.chartRender(chart, {
           target: 'echart0',
+          jump: 'jump0',
           color: ["#FF4578"],
           dataZoom: [{
             fillerColor: 'rgba(254,216,227,.5)',
@@ -138,6 +144,7 @@ Page({
         }, '分');
         _this.chartRender(chart2, {
           target: 'echart1',
+          jump: 'jump1',
           color: ["#4586FF"],
           xAxis: {
             data: char2.x
@@ -150,6 +157,7 @@ Page({
         }, '℃');
         _this.chartRender(chart3, {
           target: 'echart2',
+          jump: 'jump2',
           color: ["#6DB35B", "#4586FF", "#FF4578", "#AB45FF"],
           xAxis: {
             data: char3.x
@@ -181,6 +189,81 @@ Page({
         detch();
       }
     }, 1000);
+  },
+  chartRender(chart, opts, unit) {
+    let _this = this;
+    let option = {
+      backgroundColor: '#FFF',
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        containLabel: true,
+        left: 15,
+        top: 40,
+        right: 20,
+        bottom: 15,
+      },
+      dataZoom: [{
+        show: true,
+        realtime: true,
+        top: 10,
+        height: 20,
+        start: 0,
+        end: 100,
+        minSpan: 10,
+        filterMode: 'none',
+        backgroundColor: '#fff',
+        dataBackground: {
+          lineStyle: {
+            color: '#d6d6d6'
+          },
+          areaStyle: {
+            color: '#fafbfd'
+          }
+        }
+      }],
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [],
+        axisPointer: {
+          label: {
+            formatter: function(params) {
+              console.log(params);
+              // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
+              if (opts.target == 'echart2') {
+                console.log('当前图表点击了' + opts.jump);
+                _this.setData({
+                  [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value],
+                  [opts.jump]: params.seriesData[0]
+                });
+              } else {
+                console.log('当前图表点击了' + opts.jump);
+                _this.setData({
+                  [opts.target]: params.seriesData[0].value,
+                  [opts.jump]: params.seriesData[0]
+                });
+              }
+              console.log('superYears', _this.data.superYears);
+            }
+          }
+        },
+      },
+      yAxis: {
+        x: 'center',
+        type: 'value'
+      },
+      series: [{
+        name: '',
+        type: 'line',
+        data: []
+      }]
+    };
+    option = mi.deepMerge(option, opts);
+    // console.log(option);
+
+    chart.setOption(option);
   },
   updateStore(callback) {
     this.setData({
@@ -248,7 +331,7 @@ Page({
       loading: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
+        console.log('res88888888888888888888888', res);
         // res.data = [
         //   "2017-03",
         //   "2017-02",
@@ -268,16 +351,20 @@ Page({
             //如果年份数组大于0，则请求请求第一个月份的数据
             if (res.data.length > 0) {
               _this.getMonthHistory(function(res) {
-
                 let obj = JSON.parse(res);
-                console.log(obj);
+                console.log('temp1111111111111111111111111111', obj);
                 if (obj && obj.data.length > 0) {
                   let charArr = mi.switchCharData(obj.data);
                   _this.detch(charArr[0], charArr[1], charArr[2]);
+                  _this.setData({
+                    superMonthArr: obj.data
+                  });
                 } else {
-                  mi.toast('您还没有任何测试数据');
+                  mi.toast('您当月还没有任何测试数据');
                 }
               });
+            } else {
+              mi.toast('您还没有任何测试数据');
             }
           });
         } else {
@@ -347,76 +434,6 @@ Page({
       callback(yearOptions, superYears);
     }
   }, //格式化时间
-  chartRender(chart, opts, unit) {
-    let _this = this;
-    let option = {
-      backgroundColor: '#FFF',
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        containLabel: true,
-        left: 15,
-        top: 40,
-        right: 20,
-        bottom: 15,
-      },
-      dataZoom: [{
-        show: true,
-        realtime: true,
-        top: 10,
-        height: 20,
-        start: 0,
-        end: 20,
-        minSpan: 10,
-        filterMode: 'none',
-        backgroundColor: '#fff',
-        dataBackground: {
-          lineStyle: {
-            color: '#d6d6d6'
-          },
-          areaStyle: {
-            color: '#fafbfd'
-          }
-        }
-      }],
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: [],
-        axisPointer: {
-          label: {
-            formatter: function(params) {
-              // console.log(params);
-              // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
-              if (opts.target == 'echart2') {
-                _this.setData({
-                  [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value]
-                });
-              } else {
-                _this.setData({
-                  [opts.target]: params.seriesData[0].value
-                });
-              }
-            }
-          }
-        },
-      },
-      yAxis: {
-        x: 'center',
-        type: 'value'
-      },
-      series: [{
-        name: '',
-        type: 'line',
-        data: []
-      }]
-    };
-    option = mi.deepMerge(option, opts);
-    // console.log(option);
-
-    chart.setOption(option);
-  },
   bluetoothInit: function(oldId) {
     let _this = this;
     //检测蓝牙是否打开
@@ -540,7 +557,11 @@ Page({
       if (!res.connected && (_this.data.available && !_this.data.discovering)) {
         //如果蓝牙断开，自动重连
         mi.showLoading('蓝牙重连中');
-        _this.connect(id);
+        wx.stopBluetoothDevicesDiscovery({
+          success: function() {
+            _this.connect(id);
+          }
+        });
       } else {
         // mi.toast('蓝牙正忙，连接已断开');
         wx.stopBluetoothDevicesDiscovery({
@@ -744,7 +765,7 @@ Page({
           temp_cache: _this.data.temp_cache
         });
         for (let i = 0; i < _this.data.temp_cache.length; i++) {
-          if (_this.data.temp_cache[i] <= 32 || _this.data.temp_cache[i] >= 41) {
+          if (!_this.data.temp_cache[i] || _this.data.temp_cache[i] <= 32 || !_this.data.temp_cache[i] || _this.data.temp_cache[i] >= 41) {
             count = 0;
             return wx.showModal({
               title: '数据不准确',
@@ -1045,13 +1066,13 @@ Page({
     ];
 
     let tempMax = mi.getArryMax(arr);
-    if (tempMax > 1) {
-      let tempIndex = '';
-      for (let i = 0; i < arr.length; i++) {
-        if (tempMax == arr[i]) {
-          tempIndex = i;
-        }
+    let tempIndex = '';
+    for (let i = 0; i < arr.length; i++) {
+      if (tempMax == arr[i]) {
+        tempIndex = i;
       }
+    }
+    if (tempMax > 1) {
       this.setData({
         temp_diff_isNormal: false,
         temp_diff_max_obj: this.getDiffMaxObj(tempDiffText[tempIndex][0], tempDiffText[tempIndex][1]),
@@ -1062,6 +1083,7 @@ Page({
     } else {
       this.setData({
         temp_diff_isNormal: true,
+        temp_diff_max_obj: this.getDiffMaxObj(tempDiffText[tempIndex][0], tempDiffText[tempIndex][1]),
         temp_diff_title: '各测量部位未出现显著温差，要坚持测量乳房温度，防患于未然哦！',
         temp_diff_detial: '温馨提醒：测量乳房温度变化，对于及早发现乳腺增生、肿瘤有积极作用。因为乳腺增生、恶性肿瘤等部位血供丰富、代谢旺盛、产热增多，病灶处所产生的热传导至皮肤可使皮肤表面温度高于病灶周围其他区域的温度。',
         temp_diff_num: tempMax.toFixed(1)
@@ -1074,19 +1096,19 @@ Page({
     let anum = tempDiffText.indexOf(a) + 1;
     let bnum = tempDiffText.indexOf(b) + 1;
     let result = anum > bnum ? bnum.toString() + anum.toString() : anum.toString() + bnum.toString();
-    console.log('result', result);
+    console.log('result00000000000000000000000000000', result);
     return result;
 
   }, //得到最大乳温差是谁
   uploadTem() {
     let _this = this;
-    console.log({
-      "tp1": this.data.temp_lto,
-      "tp2": this.data.temp_lti,
-      "tp3": this.data.temp_rti,
-      "tp4": this.data.temp_rto,
-      "d1": this.data.temp_diff_max_obj,
-      "maxDiff": parseInt(this.data.temp_diff_num),
+    let opt = {
+      "tp1": parseInt(this.data.temp_lto * 100),
+      "tp2": parseInt(this.data.temp_lti * 100),
+      "tp3": parseInt(this.data.temp_rti * 100),
+      "tp4": parseInt(this.data.temp_rto * 100),
+      "d1": this.data.temp_diff_max_obj * 1,
+      "maxDiff": parseInt(this.data.temp_diff_num * 100),
       "needTime": this.data.measurementTime,
       "label": '',
       "taskId": mi.guid(),
@@ -1095,35 +1117,21 @@ Page({
       "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
       "startIdx": 0,
       "endIdx": 0,
-      "healthIndex": 80.2, //this.data.temp_score
-    });
+      "healthIndex": this.data.temp_score * 1
+    }
+    console.log(opt);
     mi.ajax({
       url: api.tempUpload,
       method: 'post',
       contentType: 'form',
       login: false,
       loading: false,
-      data: {
-        "tp1": this.data.temp_lto, //parseInt(this.data.temp_lto),
-        "tp2": this.data.temp_lti, //parseInt(this.data.temp_lti),
-        "tp3": this.data.temp_rti, //parseInt(this.data.temp_rti),
-        "tp4": this.data.temp_rto, //parseInt(this.data.temp_rto),
-        "d1": this.data.temp_diff_max_obj,
-        "maxDiff": parseInt(this.data.temp_diff_num),
-        "needTime": this.data.measurementTime,
-        "label": '',
-        "taskId": mi.guid(),
-        "tips1": this.data.temp_avg_title,
-        "tips2": this.data.temp_avg_detial,
-        "tips3": this.data.temp_diff_title + ';' + this.data.temp_diff_detial,
-        "startIdx": 0,
-        "endIdx": 0,
-        "healthIndex": this.data.temp_score
-      },
+      data: opt,
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
+        _this.tempUpdate();//图表同步更新
       }
     });
   },
@@ -1132,5 +1140,20 @@ Page({
       year: e.detail.value,
       monthOptions: this.data.superYears[e.detail.value * 1].months.reverse()
     });
+  },
+  jump(e) {
+    let index = e.currentTarget.dataset.go;
+    let jumpIndex = 'jump' + index;
+    console.log('jumpIndex', jumpIndex);
+    if (this.data[jumpIndex]) {
+      if (this.data.superMonthArr) {
+        let tempInfo = this.data.superMonthArr[this.data[jumpIndex].dataIndex]; //拿到点击那个点的温度详细信息
+        wx.navigateTo({
+          url: `/pages/health-detail/index?tp1=${tempInfo.tp1}&tp2=${tempInfo.tp2}&tp3=${tempInfo.tp3}&tp4=${tempInfo.tp4}&ctime=${tempInfo.ctime}`
+        });
+      }
+    } else {
+      mi.toast('请点击图表中具体的节点，再点详情');
+    }
   }
 });

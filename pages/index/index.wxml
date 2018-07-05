@@ -16,7 +16,7 @@
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{available?'可用':'不可用'}}{{bleEnergy? bleEnergy :'未知'}}</text>
+          <text class='mi-text'>{{bleEnergy? bleEnergy :'未知'}}</text>
         </view>
       </view>
     </view>
@@ -67,7 +67,7 @@
     </view>
   </view>
   <!--健康评估  -->
-  <view class='mi-assess-box'>
+  <view class='mi-assess-box' wx:hidden="{{yearOptions.length==0}}">
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康评估</view>
       <view class='col-50 mi-assess-time'>{{bleSyncInfo}}</view>
@@ -84,7 +84,7 @@
     </view>
   </view>
   <!--健康记录  -->
-  <view class='mi-assess-box'>
+  <view class='mi-assess-box' wx:hidden="{{yearOptions.length==0}}">
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康记录</view>
       <view class='col-50 mi-assess-time'>
@@ -97,7 +97,7 @@
       </view>
     </view>
     <scroll-view wx:if="{{monthOptions.length>0}}" class="scroll-view_H" scroll-x='true' style="width: 100%">
-     <view class="scroll-view-item_H {{index==month?'active':''}}" wx:for="{{monthOptions}}" wx:key="{{index}}" data-month="{{item}}" bindtap='changeMonth'>{{item}}月</view>
+      <view class="scroll-view-item_H {{index==month?'active':''}}" wx:for="{{monthOptions}}" wx:key="{{index}}" data-month="{{index}}" bindtap='changeMonth'>{{item}}月</view>
       <!-- <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('01')>-1}}">1月</view>
       <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('02')>-1}}">2月</view>
       <view class="scroll-view-item_H active" wx:if="{{monthOptions.indexOf('03')>-1}}">3月</view>
@@ -111,14 +111,15 @@
       <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('11')>-1}}">11月</view>
       <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('12')>-1}}">12月</view> -->
     </scroll-view>
-    
+
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 </text>
         <text wx:if="{{echart0 != 0}}"> {{echart0}} 分</text>
       </view>
       <view class='col-50 mi-assess-time'>
-        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+        <!-- <navigator url="/pages/health-detail/index"></navigator> -->
+        <text data-go='0' bindtap='jump'>点击查看详情></text>
       </view>
     </view>
     <view class='mi-line'>
@@ -131,7 +132,8 @@
         <text wx:if="{{echart1 != 0}}"> {{echart1}} ℃</text>
       </view>
       <view class='col-50 mi-assess-time'>
-        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+        <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
+        <text data-go='1' bindtap='jump'>点击查看详情></text>
       </view>
     </view>
     <view class='mi-line'>
@@ -143,7 +145,8 @@
         <text style='color:#ff4578;'>乳温 {{echart2}}</text>
       </view>
       <view class='col-50 mi-assess-time'>
-        <navigator url="/pages/health-detail/index">点击查看详情></navigator>
+        <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
+        <text data-go='2' bindtap='jump'>点击查看详情></text>
       </view>
     </view>
     <view class='mi-line'>

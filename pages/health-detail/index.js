@@ -3,33 +3,33 @@ let mi = require('../../common/js/mi.js');
 
 Page({
   data: {
-    isAuthorize: true,//是否授权
+    isAuthorize: true, //是否授权
     temp_score: '',
-    temp_lto: '',//左上外
-    temp_lti: '',//左上内
-    temp_rti: '',//右上内
-    temp_rto: '',//右上外
-    temp_avg: '',//平均乳温
-    temp_avg_isNormal: true,//平均温是否处于正常范围
-    temp_avg_title: '',//平均温诊断标题
-    temp_avg_detial: '',//平均温诊断内容
+    temp_lto: '', //左上外
+    temp_lti: '', //左上内
+    temp_rti: '', //右上内
+    temp_rto: '', //右上外
+    temp_avg: '', //平均乳温
+    temp_avg_isNormal: true, //平均温是否处于正常范围
+    temp_avg_title: '', //平均温诊断标题
+    temp_avg_detial: '', //平均温诊断内容
     temp_diff_isNormal: true, //最大温差是否处于正常范围
-    temp_diff_title: '',//最大温差诊断标题
-    temp_diff_detial: '',//最大温差诊断内容
-    temp_diff_num: '',//最大温差值
-
+    temp_diff_title: '', //最大温差诊断标题
+    temp_diff_detial: '', //最大温差诊断内容
+    temp_diff_num: '', //最大温差值
+    currentTime: '', //当前时间
   },
-  onLoad() {
+  onLoad(options) {
+    console.log('options', options);
     this.setData({
-      temp_lto: 36.5,//左上外
-      temp_lti: 37.4,//左上内
-      temp_rti: 37.8,//右上内
-      temp_rto: 37,//右上外
+      temp_lto: options.tp1 / 100, //左上外
+      temp_lti: options.tp2 / 100, //左上内
+      temp_rti: options.tp3 / 100, //右上内
+      temp_rto: options.tp4 / 100, //右上外
+      currentTime: mi.format('MM月dd日 hh:mm', options.ctime*1)
     });
     this.calcTemp();
 
-  },
-  onReady() {
   },
   onShow() {
 
@@ -38,15 +38,15 @@ Page({
     //平均温度
     let temp_avg = ((this.data.temp_lto + this.data.temp_lti + this.data.temp_rti + this.data.temp_rto) / 4).toFixed(1);
     //8种温差组合
-    let temp_lto_lti = this.data.temp_lto - this.data.temp_lti;//左上外,左上内
-    let temp_rto_rti = this.data.temp_rto - this.data.temp_rti;//右上外,右上内
-    let temp_lto_rto = this.data.temp_lto - this.data.temp_rto;//左上外,右上外
-    let temp_lti_rti = this.data.temp_lti - this.data.temp_rti;//左上内,右上内
+    let temp_lto_lti = this.data.temp_lto - this.data.temp_lti; //左上外,左上内
+    let temp_rto_rti = this.data.temp_rto - this.data.temp_rti; //右上外,右上内
+    let temp_lto_rto = this.data.temp_lto - this.data.temp_rto; //左上外,右上外
+    let temp_lti_rti = this.data.temp_lti - this.data.temp_rti; //左上内,右上内
 
-    let temp_lti_lto = this.data.temp_lti - this.data.temp_lto;//左上内,左上外
-    let temp_rti_rto = this.data.temp_rti - this.data.temp_rto;//右上内,右上外
-    let temp_rto_lto = this.data.temp_rto - this.data.temp_lto;//右上外,左上外
-    let temp_rti_lti = this.data.temp_rti - this.data.temp_lti;//右上内,左上内
+    let temp_lti_lto = this.data.temp_lti - this.data.temp_lto; //左上内,左上外
+    let temp_rti_rto = this.data.temp_rti - this.data.temp_rto; //右上内,右上外
+    let temp_rto_lto = this.data.temp_rto - this.data.temp_lto; //右上外,左上外
+    let temp_rti_lti = this.data.temp_rti - this.data.temp_lti; //右上内,左上内
 
     //列出三组温差值
     let temp_group1_max = [temp_lto_rto, temp_lti_rti];
@@ -73,11 +73,11 @@ Page({
     //根据蓝牙数据得到温度值
     this.setData({
       temp_score: temp_score,
-      temp_avg: temp_avg,//平均乳温
+      temp_avg: temp_avg, //平均乳温
     });
-  },//计算温度，蓝牙得到温度后触发
+  }, //计算温度，蓝牙得到温度后触发
   calcScore(avg, g1, g2, g3) {
-    let score = '';//所得分数
+    let score = ''; //所得分数
     //分别对数组进行倒序排列，得出最大温差值
     let gmax1 = mi.getArryMax(g1);
     let gmax2 = mi.getArryMax(g2);
@@ -85,7 +85,7 @@ Page({
     //对三组最大温差值进行比较，得出最大的温差赋予temp
     let group_arr = [gmax1, gmax2, gmax3];
     let temp_max = mi.getArryMax(group_arr);
-    let group_max = '';//最大温差的那个组合序号
+    let group_max = ''; //最大温差的那个组合序号
     for (let i = 0; i < group_arr.length; i++) {
       if (temp_max == group_arr[i]) {
         group_max = i + 1;
@@ -145,8 +145,8 @@ Page({
         score = 1.9 - (temp_max - 3.7) ^ (1 / 4) / 2.5 - (avg - 37.1) / 12.67;
       }
     }
-    return score.toFixed(1);//返回分数值
-  },//计算健康值
+    return score.toFixed(1); //返回分数值
+  }, //计算健康值
   calcAvgDiagnose(curr, last) {
     let avg_isNormal = true;
     let avg_title = '';
@@ -171,7 +171,7 @@ Page({
       }
     } else {
       //有历史数据
-      let diff = curr - last;//与历史比较的温差
+      let diff = curr - last; //与历史比较的温差
       if (diff <= 0.3) {
         if (curr > 37.2) {
           //高于正常范围
@@ -231,7 +231,7 @@ Page({
       temp_avg_detial: avg_detial,
     });
 
-  },//计算平均乳温诊断结果
+  }, //计算平均乳温诊断结果
   calcDiffDiagnose(arr) {
     const tempDiffText = [
       ['左乳上外', '左乳上内'],
@@ -266,6 +266,6 @@ Page({
         temp_diff_num: ''
       });
     }
-  },//计算乳温差值诊断结果
+  }, //计算乳温差值诊断结果
 
 });

@@ -424,11 +424,11 @@ const mi = {
       obj2.x.push(time);
       obj3.x.push(time);
       obj1.y.push(charts[i].healthIndex);
-      obj2.y.push(charts[i].maxDiff);
-      obj3.y1.push(charts[i].tp1);
-      obj3.y2.push(charts[i].tp2);
-      obj3.y3.push(charts[i].tp3);
-      obj3.y4.push(charts[i].tp4);
+      obj2.y.push(charts[i].maxDiff / 100);
+      obj3.y1.push(charts[i].tp1 / 100);
+      obj3.y2.push(charts[i].tp2 / 100);
+      obj3.y3.push(charts[i].tp3 / 100);
+      obj3.y4.push(charts[i].tp4 / 100);
       // obj1.x.push();
       // obj1.healthIndex = charts[i].healthIndex;//健康分
       // obj1.healthIndex = charts[i].healthIndex;//健康分

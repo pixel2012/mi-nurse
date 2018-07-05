@@ -4,7 +4,7 @@
     <view class='mi-meter'>
       <image src="../index/img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
       <view class='mi-score-box'>
-        <view class='mi-score-title'>4月24日 11:23</view>
+        <view class='mi-score-title'>{{currentTime?currentTime:''}}</view>
         <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
         <text class='mi-score-unit'>分</text>
       </view>
@@ -37,7 +37,7 @@
   <view class='mi-assess-box'>
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康评估</view>
-      <view class='col-50 mi-assess-time'>4月13日 13:00</view>
+      <view class='col-50 mi-assess-time'>{{currentTime?currentTime:''}}</view>
     </view>
     <view class='mi-assess-box2'>
       <view class="mi-assess-dt {{temp_avg_isNormal?'blue':'yellow'}}">{{temp_avg_title || '暂无'}}</view>
