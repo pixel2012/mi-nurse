@@ -303,7 +303,7 @@ const mi = {
         code = this.xr(code, dateArr[i + 1]);
       }
     }
-    return code;
+    return (code + '')[1] ? code : '0' + code;
   }, //计算校验码
   xr(x1, x2) {
     let xi1 = parseInt(x1, 16);
@@ -442,6 +442,35 @@ const mi = {
       // arr3.push(obj3);
     }
     return [obj1, obj2, obj3];
-  }
+  },
+  pass2Hex(num) {
+    let hex = (num * 1).toString(16).toUpperCase();
+    let lack = 6 - hex.length;
+    let patch = '';
+    if (lack > 0) {
+      for (let i = 0; i < lack; i++) {
+        patch += '0';
+      }
+    }
+    let result = patch + hex;
+    return [result.substring(0, 2), result.substring(2, 4), result.substring(4)];
+  }, //将十进制数转为6位十六进制数
+  hexCharCodeToStr(hexCharCodeStr) {
+    var trimedStr = hexCharCodeStr.trim();
+    var rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
+    var len = rawStr.length;
+    if (len % 2 !== 0) {
+      alert("Illegal Format ASCII Code!");
+      return "";
+    }
+    var curCharCode;
+    var resultStr = [];
+    for (var i = 0; i < len; i = i + 2) {
+      curCharCode = parseInt(rawStr.substr(i, 2), 16); // ASCII Code Value
+
+      resultStr.push(String.fromCharCode(curCharCode));
+    }
+    return resultStr.join("");
+  }, //16进制转字符串
 }
 module.exports = mi;

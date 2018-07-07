@@ -245,13 +245,13 @@ Page({
     ];
 
     let tempMax = mi.getArryMax(arr);
-    if (tempMax > 1) {
-      let tempIndex = '';
-      for (let i = 0; i < arr.length; i++) {
-        if (tempMax == arr[i]) {
-          tempIndex = i;
-        }
+    let tempIndex = '';
+    for (let i = 0; i < arr.length; i++) {
+      if (tempMax == arr[i]) {
+        tempIndex = i;
       }
+    }
+    if (tempMax > 1) {
       this.setData({
         temp_diff_isNormal: false,
         temp_diff_title: `${tempDiffText[tempIndex][0]}区域温度显著高于${tempDiffText[tempIndex][1]}区域`,
@@ -263,7 +263,7 @@ Page({
         temp_diff_isNormal: true,
         temp_diff_title: '各测量部位未出现显著温差，要坚持测量乳房温度，防患于未然哦！',
         temp_diff_detial: '温馨提醒：测量乳房温度变化，对于及早发现乳腺增生、肿瘤有积极作用。因为乳腺增生、恶性肿瘤等部位血供丰富、代谢旺盛、产热增多，病灶处所产生的热传导至皮肤可使皮肤表面温度高于病灶周围其他区域的温度。',
-        temp_diff_num: ''
+        temp_diff_num: tempMax.toFixed(1)
       });
     }
   }, //计算乳温差值诊断结果

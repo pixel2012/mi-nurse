@@ -93,29 +93,48 @@ Page({
     jump1: null, //温差
     jump2: null, //乳温
     superMonthArr: null, //当月的所有温度信息
+    cellTime: '', //电池测量时间
   },
   onLoad() {
-    let _this=this;
-    this.tempUpdate();
-    this.updateStore(function () {
-      console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
-      if (_this.data.bleDeviceId) {
-        _this.bluetoothInit(_this.data.bleDeviceId);
-      }
+    let _this = this;
+    this.tempUpdate(function() {
+      //先授权，后蓝牙
+      _this.updateStore(function() {
+        console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
+        if (_this.data.bleDeviceId) {
+          _this.bluetoothInit(_this.data.bleDeviceId);
+        }
+      });
     });
   },
   onShow() {
-    
+
   },
-  tempUpdate() {
+  updateLastTemp() {
+    let lastTemp = mi.store.get('lastTemp');
+    console.log('lastTemp', lastTemp);
+    if (lastTemp) {
+      this.setData({
+        bleIsSync: lastTemp.bleIsSync,
+        bleSyncInfo: lastTemp.bleSyncInfo,
+        temp_lto: lastTemp.temp_lto, //左上外
+        temp_lti: lastTemp.temp_lti, //左上内
+        temp_rti: lastTemp.temp_rti, //右上内
+        temp_rto: lastTemp.temp_rto, //右上外
+      });
+      this.calcTemp();
+    }
+  },
+  tempUpdate(callback) {
     let _this = this;
     // this.lineInit();
     if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
-      _this.getUserInfo(function() {
-        _this.getTempDateList()
-      });
+      _this.getUserInfo();
     } else {
       _this.getTempDateList();
+      if (callback) {
+        callback();
+      }
     }
   },
   detch(char1, char2, char3) {
@@ -197,6 +216,15 @@ Page({
       tooltip: {
         trigger: 'axis'
       },
+      noDataLoadingOption: {
+        text: '暂无数据',
+        effect: 'bubble',
+        effectOption: {
+          effect: {
+            n: 10
+          }
+        }
+      },
       grid: {
         containLabel: true,
         left: 15,
@@ -262,7 +290,7 @@ Page({
     };
     option = mi.deepMerge(option, opts);
     // console.log(option);
-
+    chart.resize();
     chart.setOption(option);
   },
   updateStore(callback) {
@@ -284,6 +312,19 @@ Page({
         _this.setData({
           isAuthorize: true
         });
+        //授权成功，开始连接蓝牙
+        if (callback && typeof callback.constructor == 'Function') {
+          console.log(callback);
+          callback();
+        } else {
+          _this.updateStore(function() {
+            console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
+            if (_this.data.bleDeviceId) {
+              _this.bluetoothInit(_this.data.bleDeviceId);
+            }
+          });
+        }
+        //请求用户信息
         mi.user.getInfo(function(res) {
           mi.ajax({
             url: api.login,
@@ -309,9 +350,7 @@ Page({
               mi.store.set('myToken', res.data.myToken, 24 * 55 * 60);
               mi.store.set('myRefreshToken', res.data.myRefreshToken, 30 * 24 * 55 * 60);
               mi.store.set('userInfo', res.data);
-              if (callback) {
-                callback();
-              }
+              _this.getTempDateList();
             }
           });
         });
@@ -324,6 +363,7 @@ Page({
   },
   getTempDateList() {
     let _this = this;
+    this.updateLastTemp(); //将本地最新测量温度还原回来
     mi.ajax({
       url: api.dateAble,
       method: 'get',
@@ -360,16 +400,22 @@ Page({
                     superMonthArr: obj.data
                   });
                 } else {
-                  mi.toast('您当月还没有任何测试数据');
+                  // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
+                  // _this.detch(charArr[0], charArr[1], charArr[2]);
+                  // mi.toast('您当月还没有任何测试数据');
                 }
               });
             } else {
-              mi.toast('您还没有任何测试数据');
+              // mi.toast('您还没有任何测试数据');
+              // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
+              // _this.detch(charArr[0], charArr[1], charArr[2]);
             }
           });
         } else {
           _this.setData({
-            yearOptions: []
+            yearOptions: [],
+            monthOptions: [],
+            superYears: []
           });
         }
 
@@ -554,23 +600,20 @@ Page({
         bleIsConnect: res.connected
       });
       app.bleIsConnect = res.connected;
-      if (!res.connected && (_this.data.available && !_this.data.discovering)) {
+      if (!res.connected) {
         //如果蓝牙断开，自动重连
-        mi.showLoading('蓝牙重连中');
-        wx.stopBluetoothDevicesDiscovery({
-          success: function() {
-            _this.connect(id);
-          }
-        });
-      } else {
-        // mi.toast('蓝牙正忙，连接已断开');
-        wx.stopBluetoothDevicesDiscovery({
-          success: function() {
-            _this.connect(id);
-          }
-        });
-
-      }
+        if (_this.data.available && !_this.data.discovering){
+          mi.showLoading('蓝牙重连中');
+          _this.connect(id);
+        } else {
+          // mi.toast('蓝牙正忙，连接已断开');
+          wx.stopBluetoothDevicesDiscovery({
+            success: function () {
+              _this.connect(id);
+            }
+          });
+        }
+      } 
     });
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
@@ -635,13 +678,13 @@ Page({
                         command: 'c2',
                         check: false
                       }); //查询电量
-                    }, 500);
+                    }, 100);
                     setTimeout(function() {
                       _this.command({
                         command: 'c1',
                         check: false
                       }); //查询版本
-                    }, 1000);
+                    }, 300);
                   },
                   fail: function(res) {
                     console.log('特征值订阅开启失败', res);
@@ -716,18 +759,19 @@ Page({
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
       if (!mi.isRight(hex)) {
-        return console.log('返回数据不完整');
+        return console.log('c1返回数据不完整');
       }
       let pkg = hex.split('01c1')[1].slice(0, -2);
       console.log(pkg);
-      let result = mi.hex2str(pkg);
+      let result = mi.hexCharCodeToStr(pkg);
       console.log('结果c1', result);
+      app.bleVer = result;
       return result;
     }
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
       if (!mi.isRight(hex)) {
-        return console.log('返回数据不完整');
+        return console.log('c2返回数据不完整');
       }
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
@@ -736,6 +780,27 @@ Page({
         bleEnergy: result
       });
       app.bleEnergy = _this.data.bleEnergy;
+      if (result < 10) {
+        if (_this.data.cellTime) { //电量低于10，每隔10分钟提醒一次
+          if ((new Date().getTime() - _this.data.cellTime) > 1000 * 60 * 10) {
+            wx.showModal({
+              title: '提示',
+              content: '电量不足，请及时充电',
+              showCancel: false,
+              success: function(res) {
+                _this.setData({
+                  cellTime: new Date().getTime()
+                });
+              }
+            });
+          }
+
+        } else {
+          _this.setData({
+            cellTime: new Date().getTime()
+          });
+        }
+      }
       return result;
     }
     //查询温度命令（0xC3）
@@ -751,9 +816,12 @@ Page({
         temp2: parseInt(pkg.slice(6), 16) / 100,
       }; //parseInt(pkg, 16);
       console.log('结果c3', result);
-      //验证温度在正常范围区间
       mi.hideLoading();
-      _this.data.temp_cache
+      //先判断是否是传感器断开或者短路
+      if (result.temp1 == '167.05' || result.temp2 == '167.05' || result.temp1 == '169.62' || result.temp2 == '169.62') {
+        return mi.toast('硬件可能有异常，请联系售后');
+      }
+      //验证温度在正常范围区间
       if (result.slot == '01') {
         _this.data.temp_cache[2] = result.temp1;
         _this.data.temp_cache[3] = result.temp2;
@@ -793,7 +861,7 @@ Page({
         if (count == 4) {
           count = 0;
           console.log('温度全部校验通过，提交温度信息');
-          _this.setData({
+          let lastTemp = {
             bleIsSync: mi.format('hh:mm'),
             bleSyncInfo: mi.format('MM月dd日 hh:mm'),
             temp_lto: _this.data.temp_cache[0], //左上外
@@ -801,8 +869,10 @@ Page({
             temp_rti: _this.data.temp_cache[2], //右上内
             temp_rto: _this.data.temp_cache[3], //右上外
             measurementTime: new Date().getTime() - _this.data.measurementTime
-          });
+          };
+          _this.setData(lastTemp);
           app.bleIsSync = _this.data.bleIsSync;
+          mi.store.set('lastTemp', lastTemp); //将温度信息存储到本地
           _this.calcTemp(function() {
             //计算完所有温度后，提交后台
             _this.uploadTem();
@@ -824,6 +894,38 @@ Page({
       let pkg = hex.split('01c6')[1].slice(0, -2);
       let result = pkg; //parseInt(pkg, 16);
       console.log('结果c6', result);
+      return result;
+    }
+    //设置密码是否设置成功（0xC8）
+    if (hex.indexOf('01c8') > -1) {
+      if (!mi.isRight(hex)) {
+        return console.log('c8返回数据不完整');
+      }
+      let pkg = '0x' + hex.split('01c8')[1].substr(0, 2);
+      console.log('c8', pkg);
+      let result = parseInt(pkg, 16);
+      console.log('结果c8', result);
+      if (result == 0) {
+        app.setPass = '00';
+      } else {
+        app.setPass = '01';
+      }
+      return result;
+    }
+
+    //查询密码是否设置成功（0xC9）
+    if (hex.indexOf('01c9') > -1) {
+      if (!mi.isRight(hex)) {
+        return console.log('c8返回数据不完整');
+      }
+      let pkg = '0x' + hex.split('01c9')[1].substr(0, 2);
+      let result = parseInt(pkg, 16);
+      console.log('结果c9', result);
+      if (result == 0) {
+        app.verPass = '00';
+      } else {
+        app.verPass = '01';
+      }
       return result;
     }
   },
@@ -1131,7 +1233,7 @@ Page({
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
-        _this.tempUpdate();//图表同步更新
+        _this.tempUpdate(); //图表同步更新
       }
     });
   },

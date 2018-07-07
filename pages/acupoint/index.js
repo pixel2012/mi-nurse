@@ -16,7 +16,7 @@ Page({
     console.log('acupoint-onLoad', options);
     if ('edit' in options) {
       let param = app.param;
-      app.param = '';//读完后删除之
+      app.param = ''; //读完后删除之
       this.setData({
         index: options.index,
         idx: options.idx,
@@ -86,21 +86,21 @@ Page({
       position: this.data.position,
       modeName: this.data.modeName,
       mode: this.data.mode,
-      command: this.getCommand(),//左乳中8秒
+      command: this.getCommand(), //左乳中8秒
       time: this.data.time
     };
     app.result = param;
     app.idx = this.data.idx;
     console.log('app.result', app.result);
     console.log('app.idx', app.idx);
-    wx.navigateBack();//返回上一级
+    wx.navigateBack(); //返回上一级
   },
   getCommand() {
     let left = ['00', '00', '00', '00', '00', '00'];
     let right = ['00', '00', '00', '00', '00', '00'];
     let ms = this.getMode(this.data.mode);
     let ts = parseInt(this.data.time).toString(16);
-    ts = ts > 10 ? ts : '0' + ts;
+    ts = ts[1] ? ts : '0' + ts;
     console.log('ts', ts);
     if (this.data.acupoint == 1 && (this.data.position == 1 || this.data.position == 2)) {
       left = [ms, ts, '00', '00', '00', '00'];

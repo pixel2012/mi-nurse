@@ -16,7 +16,7 @@
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
           <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleEnergy? bleEnergy :'未知'}}</text>
+          <text class='mi-text'>{{bleIsConnect?(bleEnergy? bleEnergy :'查询中'):'未知'}}</text>
         </view>
       </view>
     </view>
@@ -67,7 +67,7 @@
     </view>
   </view>
   <!--健康评估  -->
-  <view class='mi-assess-box' wx:hidden="{{yearOptions.length==0}}">
+  <view class='mi-assess-box'>
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康评估</view>
       <view class='col-50 mi-assess-time'>{{bleSyncInfo}}</view>
@@ -84,7 +84,7 @@
     </view>
   </view>
   <!--健康记录  -->
-  <view class='mi-assess-box' wx:hidden="{{yearOptions.length==0}}">
+  <view class="mi-assess-box {{yearOptions.length==0?'none':''}}">
     <view class='row mi-assess-wrap'>
       <view class='col-50 mi-assess-title'>健康记录</view>
       <view class='col-50 mi-assess-time'>
@@ -142,7 +142,7 @@
 
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
-        <text style='color:#ff4578;'>乳温 {{echart2}}</text>
+        <text style='color:#ff4578;'>乳温</text>
       </view>
       <view class='col-50 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
@@ -153,7 +153,8 @@
       <ec-canvas id="mychart-dom-line3" canvas-id="mychart-line3" ec="{{ ec3 }}"></ec-canvas>
     </view>
 
-    <view class="mi-temp-show-box">
+    <view class="mi-temp-show-box" style="text-algin:center;">
+      <image src="img/tip.jpg" style="width:100%;height:60rpx;"></image>
       <view class='mi-temp-show-box-shadow'>
         <view class='mi-temp-show-box-title'>温度信息</view>
         <view class='mi-tem-box row' style='margin-top:0;'>

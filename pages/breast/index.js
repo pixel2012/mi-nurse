@@ -199,7 +199,7 @@ Page({
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
     ],
-    allLoops: 1, //总循环几次
+    allLoops: 5, //总循环几次
     allLoop: 0, //当前总循环次数轮大循环计数
     nowTime: 0, //已用时间
     allTime: 0, //总共时间

@@ -1,7 +1,7 @@
 <view class='ble-container'>
   <view class='ble-li row'>
     <view class='col-50 ble-title'>蓝牙配置</view>
-    <view class='col-50 ble-text'>9079798</view>
+    <view class='col-50 ble-text'>{{pass}}</view>
   </view>
   <navigator url="/pages/ble-set/index">
     <view class='ble-li row'>

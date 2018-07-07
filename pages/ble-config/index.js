@@ -1,12 +1,15 @@
 var app = getApp();
+const mi = require('../../common/js/mi.js');
 Page({
   data: {
-    
+    pass: '123'
   },
   onLoad() {
-
-  },
-  onShow() {
-
+    let oldPass = mi.store.get('pass');
+    if (oldPass) {
+      this.setData({
+        pass: oldPass
+      });
+    }
   }
 });
