@@ -470,6 +470,6 @@ const mi = {
       resultStr.push(String.fromCharCode(curCharCode));
     }
     return resultStr.join("");
-  }, //16进制转字符串
+  } //16进制转字符串
 }
 module.exports = mi;

@@ -481,7 +481,7 @@ Page({
       url: api.version,
       login: true,
       data: {
-        "v": 1,
+        "v": app.bleVer,
         "type": 3
       },
       callback: function(data) {
