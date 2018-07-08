@@ -2,4 +2,5 @@
 <view class='title'>{{title}}</view>
 <view class='content'>
 {{content}}
+{{description}}
 </view>

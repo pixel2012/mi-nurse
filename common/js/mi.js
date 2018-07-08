@@ -127,9 +127,8 @@ const mi = {
       wx.setStorageSync(key, data);
       //如果传入了过期时间，则追加一个参数存储过期时间
       if (expires) {
-        console.log(!!expires);
         setTimeout(function() {
-          wx.setStorageSync(key + '_expires', new Date().getTime() + expires); //单位毫秒
+          wx.setStorageSync(key + '_expires', expires); //单位毫秒
         }, 0);
       }
     },
@@ -203,7 +202,7 @@ const mi = {
       wx.getUserInfo({
         success: function(res) {
           console.log(res);
-          mi.store.set('openId', res.openId);
+          // mi.store.set('openId', res.openId);
           mi.store.set('signature', res.signature);
           mi.store.set('userInfo', res.userInfo);
           // res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId

@@ -6,7 +6,8 @@ const api = {
 Page({
   data: {
     title:'',
-    content:''
+    content:'',
+    description:''
   },
   onLoad() {
     let _this=this;
@@ -21,7 +22,8 @@ Page({
         console.log('data', res);
         _this.setData({
           title:res.data.title,
-          content:res.data.content
+          content:res.data.content,
+          description: res.data.description
         });
 
       }

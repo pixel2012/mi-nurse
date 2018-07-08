@@ -346,9 +346,9 @@ Page({
               let res = JSON.parse(mi.crypto.decode(data));
               console.log('res', res);
               //将信息存储到本地缓存中
-              mi.store.set('myId', res.data.myId, res.data.myId);
-              mi.store.set('myToken', res.data.myToken, 24 * 55 * 60);
-              mi.store.set('myRefreshToken', res.data.myRefreshToken, 30 * 24 * 55 * 60);
+              mi.store.set('myId', res.data.myId);
+              mi.store.set('myToken', res.data.myToken, res.data.outTime + 1000 * 60 * 60 * 24);
+              mi.store.set('myRefreshToken', res.data.myRefreshToken, res.data.outTime + 1000 * 60 * 60 * 24 * 30);
               mi.store.set('userInfo', res.data);
               _this.getTempDateList();
             }
@@ -602,18 +602,18 @@ Page({
       app.bleIsConnect = res.connected;
       if (!res.connected) {
         //如果蓝牙断开，自动重连
-        if (_this.data.available && !_this.data.discovering){
+        if (_this.data.available && !_this.data.discovering) {
           mi.showLoading('蓝牙重连中');
           _this.connect(id);
         } else {
           // mi.toast('蓝牙正忙，连接已断开');
           wx.stopBluetoothDevicesDiscovery({
-            success: function () {
+            success: function() {
               _this.connect(id);
             }
           });
         }
-      } 
+      }
     });
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
