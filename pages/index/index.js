@@ -125,6 +125,26 @@ Page({
       this.calcTemp();
     }
   },
+  verify() {
+    app.command({
+      command: 'c9',
+      param: ['31', '32', '33'],
+      check: true,
+      success: function () {
+        setTimeout(function () {
+          if (typeof app.verPass == 'string' && app.verPass == '00') {
+            app.verPass = false;//恢复原状
+            mi.hideLoading();
+            mi.toast('验证成功');
+          } else {
+            mi.hideLoading();
+            mi.toast('验证失败');
+            app.verPass = false;//恢复原状
+          }
+        }, 1000);
+      }
+    });
+  },
   tempUpdate(callback) {
     let _this = this;
     // this.lineInit();
@@ -927,6 +947,13 @@ Page({
         app.verPass = '01';
       }
       return result;
+    }
+    //恢复出厂设置
+    if (hex.indexOf('01cb') > -1) {
+      if (!mi.isRight(hex)) {
+        return console.log('cb返回数据不完整');
+      }
+      app.resetPass = '00';
     }
   },
   getTem() {

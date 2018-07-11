@@ -77,7 +77,7 @@ const mi = {
         url: urlData.slice(0, urlData.length - 1),
         method: params.method,
         header: {
-          'content-type': (params.hasOwnProperty('contentType') && params.contentType == 'form') ? 'application/x-www-form-urlencoded' : 'application/json',
+          'content-type': (params.hasOwnProperty('contentType') && params.contentType == 'form') ? 'application/x-www-form-urlencoded;charset=utf-8' : 'application/json;charset=utf-8',
           'uid': myId,
           'token': myToken
         },
@@ -442,7 +442,7 @@ const mi = {
     }
     return [obj1, obj2, obj3];
   },
-  pass2Hex(num) {
+  pass2Hex(str) {
     let hex = (num * 1).toString(16).toUpperCase();
     let lack = 6 - hex.length;
     let patch = '';
@@ -454,12 +454,21 @@ const mi = {
     let result = patch + hex;
     return [result.substring(0, 2), result.substring(2, 4), result.substring(4)];
   }, //将十进制数转为6位十六进制数
+  strToHexCharCode(str) {
+    if (str === "") return "";
+    var hexCharCode = [];
+    for (var i = 0; i < str.length; i++) {
+      let cache = (str.charCodeAt(i)).toString(16);
+      hexCharCode.push(cache[1] ? cache : '0' + cache);
+    }
+    return hexCharCode;
+  }, //字符串转16进制数
   hexCharCodeToStr(hexCharCodeStr) {
     var trimedStr = hexCharCodeStr.trim();
     var rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
     var len = rawStr.length;
     if (len % 2 !== 0) {
-      alert("Illegal Format ASCII Code!");
+      this.toast("不是合法的ASCII码");
       return "";
     }
     var curCharCode;

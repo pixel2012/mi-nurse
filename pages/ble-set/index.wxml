@@ -1,14 +1,14 @@
 <view class='ble-container'>
-<view class='ble-li'>
-   <input type="number" placeholder='请输入旧密码' data-pos='O' value="{{passO}}" bindinput='change'/>
+  <view class='ble-li'>
+    <input type="text" placeholder='请输入3位长度旧密码（不支持中文）' data-pos='O' value="{{passO}}" bindinput='change' />
   </view>
   <view class='ble-li'>
-   <input type="number" placeholder='请输入新密码' data-pos='A' value="{{passA}}" bindinput='change'/>
+    <input type="text" placeholder='请输入3位长度新密码（不支持中文）' data-pos='A' value="{{passA}}" bindinput='change' />
   </view>
   <view class='ble-li'>
-    <input type="number" placeholder='确认输入新密码' data-pos='B' value="{{passB}}" bindinput='change'/>
+    <input type="text" placeholder='确认输入3位长度新密码（不支持中文）' data-pos='B' value="{{passB}}" bindinput='change' />
   </view>
   <view class='ble-button-box'>
-   <view class='ble-button' bindtap='savePass'>确认保存</view>
+    <view class='ble-button' bindtap='savePass'>确认保存</view>
   </view>
 </view>

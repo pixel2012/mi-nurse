@@ -1,3 +1,5 @@
+@import "../../common/components/wxParse/wxParse.wxss";
+
 .title{
   text-align: center;
   font-size: 30rpx;
@@ -7,4 +9,7 @@
 .content{
   padding:30rpx;
   font-size: 26rpx;
+}
+.help-content{
+  padding:30rpx;
 }

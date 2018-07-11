@@ -14,6 +14,7 @@ App({
   systemInfo: '',
   setPass:false,
   verPass:false,
+  resetPass: false,
   bleVer:'',//蓝牙硬件版本号
   onLaunch() {
     let _this = this;
@@ -45,7 +46,7 @@ App({
       c6: '000500C6C3',
       c7: '',
       c8: '000B00C8',
-      C9: '000800C9',
+      c9: '000800C9',
       ca: '',
       cb: '000500CBCE',
       cc: '000500CCC9'

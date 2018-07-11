@@ -1,6 +1,5 @@
 <!-- <web-view src="https://www.baidu.com/"></web-view> -->
-<view class='title'>{{title}}</view>
-<view class='content'>
-{{content}}
-{{description}}
+<import src="../../common/components/wxParse/wxParse.wxml"/>
+<view class='help-content'>
+<template is="wxParse" data="{{wxParseData:description.nodes}}"/>
 </view>

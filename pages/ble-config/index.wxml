@@ -1,9 +1,9 @@
 <view class='ble-container'>
   <view class='ble-li row'>
-    <view class='col-50 ble-title'>蓝牙配置</view>
+    <view class='col-50 ble-title'>蓝牙密码</view>
     <view class='col-50 ble-text'>{{pass}}</view>
   </view>
-  <navigator url="/pages/ble-set/index">
+    <navigator url="/pages/ble-set/index">
     <view class='ble-li row'>
       <view class='col-50 ble-title'>修改配对密码</view>
       <view class='col-50 ble-text'>
@@ -11,4 +11,12 @@
       </view>
     </view>
   </navigator>
+  <view class='ble-li row' bindtap='verify'>
+    <view class='col-50 ble-title'>验证</view>
+    <view class='col-50 ble-text'></view>
+  </view>
+  <view class='ble-li row' bindtap='factoryReset'>
+    <view class='col-50 ble-title'>回复出厂设置</view>
+    <view class='col-50 ble-text'></view>
+  </view>
 </view>
