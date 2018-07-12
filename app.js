@@ -10,6 +10,7 @@ App({
   bleServerId: '',//蓝牙设备的服务id号
   bleCharWriteId: '',//蓝牙设备的服务写入特征值id号
   bleCharNotifyId: '',//蓝牙设备的服务接收通知特征值id号
+  blehdid:'',//蓝牙硬件ID
   wxCode: '',//wxCode
   systemInfo: '',
   setPass:false,
@@ -17,6 +18,7 @@ App({
   resetPass: false,
   bleVer:'',//蓝牙硬件版本号
   onLaunch() {
+    wx.hideTabBar();
     let _this = this;
     this.bleDeviceId = mi.store.get('bleDeviceId') || '';
     this.bleServerId = mi.store.get('bleServerId') || '';

@@ -221,7 +221,7 @@ ec-canvas {
 .mi-ble-title {
   font-size: 30rpx;
   text-align: center;
-  margin-bottom: 80rpx;
+  margin-bottom: 60rpx;
 }
 
 .mi-ble-item {
@@ -250,4 +250,10 @@ ec-canvas {
 .none{
   height:0;
   overflow:hidden;
+}
+.blue-pass{
+  margin-bottom: 60rpx;
+  font-size: 20rpx;
+  padding:10rpx;
+  border:1rpx solid #ddd;
 }

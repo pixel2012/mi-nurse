@@ -8,10 +8,12 @@ const api = {
   tempUpload: mi.ip + 'temperature/post', //温度上传
   dateAble: mi.ip + 'temperature/historyMonth', //可用的温度时间列表
   history: mi.ip + 'temperature/list', //获取温度列表
+  bindLog: mi.ip + 'zhimito/bindLog' //上传硬件信息
 };
 
 let chart, chart2, chart3;
 let count = 0; //测量温度计数
+let verifyFn = null; //验证完密码后的回调函数
 
 function initChart(canvas, width, height) {
   chart = echarts.init(canvas, null, {
@@ -53,6 +55,7 @@ Page({
     bleServerId: '', //蓝牙设备的服务id号
     bleCharWriteId: '', //蓝牙设备的服务写入特征值id号
     bleCharNotifyId: '', //蓝牙设备的服务接收通知特征值id号
+    blehdid: '', //蓝牙硬件ID
     isAuthorize: true, //是否授权
     available: false, //蓝牙是否可用
     discovering: false, //蓝牙是否处于搜索
@@ -94,6 +97,8 @@ Page({
     jump2: null, //乳温
     superMonthArr: null, //当月的所有温度信息
     cellTime: '', //电池测量时间
+    blePass: '', //蓝牙密码
+    blueRight: false, //是否让用户输入蓝牙密码
   },
   onLoad() {
     let _this = this;
@@ -124,26 +129,6 @@ Page({
       });
       this.calcTemp();
     }
-  },
-  verify() {
-    app.command({
-      command: 'c9',
-      param: ['31', '32', '33'],
-      check: true,
-      success: function () {
-        setTimeout(function () {
-          if (typeof app.verPass == 'string' && app.verPass == '00') {
-            app.verPass = false;//恢复原状
-            mi.hideLoading();
-            mi.toast('验证成功');
-          } else {
-            mi.hideLoading();
-            mi.toast('验证失败');
-            app.verPass = false;//恢复原状
-          }
-        }, 1000);
-      }
-    });
   },
   tempUpdate(callback) {
     let _this = this;
@@ -693,18 +678,41 @@ Page({
                       console.log('特征值二进制转十六进制后结果', hex);
                       _this.deal(hex);
                     });
-                    setTimeout(function() {
-                      _this.command({
-                        command: 'c2',
-                        check: false
-                      }); //查询电量
-                    }, 100);
-                    setTimeout(function() {
-                      _this.command({
-                        command: 'c1',
-                        check: false
-                      }); //查询版本
-                    }, 300);
+                    //验证蓝牙密码
+                    let oldPass = mi.store.get('pass');
+                    console.log('localstorageoldPass', oldPass);
+                    let sendPass = oldPass ? mi.strToHexCharCode(oldPass) : mi.strToHexCharCode('123');
+                    let callFn = function(data) {
+                      if (data) {
+                        //验证通过
+                        if (_this.data.blePass) {
+                          mi.toast('蓝牙密码验证通过');
+                        }
+                        setTimeout(function() {
+                          _this.command({
+                            command: 'c2',
+                            check: false
+                          }); //查询电量
+                        }, 100);
+                        setTimeout(function() {
+                          _this.command({
+                            command: 'c1',
+                            check: false
+                          }); //查询版本
+                        }, 300);
+                        setTimeout(function() {
+                          _this.command({
+                            command: 'cc',
+                            check: false
+                          }); //查询版本
+                        }, 600);
+                      } else {
+                        //验证失败
+                        mi.toast('蓝牙密码验证错误，请重新输入');
+                        _this.confirmBluePass(callFn);
+                      }
+                    };
+                    _this.verify(sendPass, callFn);
                   },
                   fail: function(res) {
                     console.log('特征值订阅开启失败', res);
@@ -725,6 +733,68 @@ Page({
       }
     });
   },
+  confirmBluePass(callback) {
+    this.setData({
+      blueRight: true
+    });
+    verifyFn = callback; //因为回调函数无法继续往下传，只能将回调函数赋给全局变量
+  }, //输入蓝牙密码
+  toVerify() {
+    if (this.data.blePass == '') {
+      return mi.toast('密码不能为空');
+    }
+    let reg = /[\x00-\xff]+/g;
+    let blePassArr = this.data.blePass.match(reg);
+    if (!(blePassArr && blePassArr[0].length == 3)) {
+      return mi.toast('密码长度仅支持3位且不能是中文');
+    }
+    let bluePass = mi.strToHexCharCode(this.data.blePass);
+    this.verify(bluePass, verifyFn);
+  }, //先验证蓝牙密码是否符合规则，再去通过硬件验证
+  verify(pass, callback) {
+    let _this = this;
+    app.command({
+      command: 'c9',
+      param: pass,
+      check: true,
+      success: function() {
+        setTimeout(function() {
+          if (typeof app.verPass == 'string' && app.verPass == '00') {
+            app.verPass = false; //恢复原状
+            mi.hideLoading();
+            _this.setData({
+              blueRight: false
+            });
+            if (_this.data.blePass) {
+              mi.store.set('pass', _this.data.blePass);
+            }
+            wx.showTabBar({
+              animation: true,
+              fail: function() {
+                wx.showTabBar({
+                  animation: true
+                });
+              }
+            });
+            if (callback) {
+              callback(true);
+            }
+          } else {
+            mi.hideLoading();
+            app.verPass = false; //恢复原状
+            if (callback) {
+              callback(false);
+            }
+          }
+        }, 1000);
+      }
+    });
+  },
+  changeBlue(e) {
+    this.setData({
+      blePass: e.detail.value
+    });
+  }, //修改蓝牙密码
   command(obj, hexStr) {
     const command = {
       c1: '000500C1C4',
@@ -955,7 +1025,34 @@ Page({
       }
       app.resetPass = '00';
     }
+    //读取硬件id
+    if (hex.indexOf('01cc') > -1) {
+      if (!mi.isRight(hex)) {
+        return console.log('cc返回数据不完整');
+      }
+      let pkg = hex.split('01cc')[1].slice(8, -2);
+      let result = 'Toys' + pkg;
+      console.log('cc', result);
+      _this.setData({
+        blehdid: result
+      });
+      app.blehdid = result;
+      _this.uploadDeviceId();
+    }
   },
+  uploadDeviceId() {
+    mi.ajax({
+      url: api.bindLog,
+      method: 'post',
+      contentType:'form',
+      data: {
+        "appType": app.systemInfo.system.indexOf('iOS') > -1 ? 'ios' : 'android',
+        "devId": app.blehdid,
+        "devMac": app.bleDeviceId
+      },
+      dataPos: false,
+    });
+  }, //上传硬件信息
   getTem() {
     mi.showLoading('测温中');
     let _this = this;
@@ -1284,5 +1381,5 @@ Page({
     } else {
       mi.toast('请点击图表中具体的节点，再点详情');
     }
-  }
+  },
 });
