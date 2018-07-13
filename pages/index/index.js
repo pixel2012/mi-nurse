@@ -127,6 +127,7 @@ Page({
         temp_rti: lastTemp.temp_rti, //右上内
         temp_rto: lastTemp.temp_rto, //右上外
       });
+      app.bleIsSync = lastTemp.bleIsSync;
       this.calcTemp();
     }
   },
@@ -136,7 +137,6 @@ Page({
     if (!(mi.store.get('myId') && mi.store.get('myToken') && mi.store.get('myRefreshToken'))) {
       _this.getUserInfo();
     } else {
-      _this.getTempDateList();
       if (callback) {
         callback();
       }
@@ -685,9 +685,11 @@ Page({
                     let callFn = function(data) {
                       if (data) {
                         //验证通过
-                        if (_this.data.blePass) {
-                          mi.toast('蓝牙密码验证通过');
-                        }
+                        // if (_this.data.blePass) {
+                        //   mi.toast('蓝牙密码验证通过');
+                        // }
+                        mi.toast('蓝牙密码验证通过');
+                        _this.getTempDateList();
                         setTimeout(function() {
                           _this.command({
                             command: 'c2',
@@ -752,6 +754,7 @@ Page({
     this.verify(bluePass, verifyFn);
   }, //先验证蓝牙密码是否符合规则，再去通过硬件验证
   verify(pass, callback) {
+    mi.showLoading('校验密码中...');
     let _this = this;
     app.command({
       command: 'c9',

@@ -264,7 +264,7 @@ Page({
     diyArr: [], //diy按摩组合
   },
   onLoad() {
-    // this.updateStatus();
+    this.updateStatus();
     // var that = this;
     // var num = 0
     // setInterval(function () {
@@ -294,7 +294,7 @@ Page({
     //   ]//执行的动画序列
     // }];
     // mi.store.set('diyArr',test);
-    this.uploadZDMode(2,10000);
+    this.uploadZDMode(2, 10000);
   },
   onShow() {
     this.updateStatus();
@@ -422,6 +422,7 @@ Page({
         _this.allLoop();
       } else {
         console.log('全部动画执行完毕');
+        console.log('callback', callback);
         _this.setData({
           allLoop: 0,
           nowTime: 0,
@@ -430,6 +431,7 @@ Page({
         shaker = null;
         timer = null;
         if (callback) {
+          console.log('callback进来了');
           callback();
         }
       }
@@ -712,16 +714,9 @@ Page({
     if (timer) {
       this.stop();
     }
-    if (timer2) {
-      this.diyStop();
-    }
     //其他操作
     let diyArr = this.data.diyArr;
-    for (let i = 0; i < diyArr.length; i++) {
-      if (e.currentTarget.dataset.index != i) {
-        diyArr[i].play = false;
-      }
-    }
+
     let cur = diyArr[e.currentTarget.dataset.index];
     if (cur.play) {
       cur.play = false;
@@ -732,6 +727,16 @@ Page({
       });
       this.diyStop();
     } else {
+      if (timer2) {
+        clearTimeout(timer2);
+        timer2 = null;
+      }
+      for (let i = 0; i < diyArr.length; i++) {
+        if (e.currentTarget.dataset.index != i) {
+          diyArr[i].play = false;
+          diyArr[i].timeUsed = 0;
+        }
+      }
       console.log('cur', cur);
       cur.play = true;
       diyArr[e.currentTarget.dataset.index] = cur;
@@ -799,6 +804,7 @@ Page({
             timer2 = setTimeout(function() {
               roundTimes--;
               _this.data.diyArr[_this.data.diyIndex].timeUsed++;
+              console.log(' _this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyArr[_this.data.diyIndex].timeUsed);
               _this.setData({
                 diyArr: _this.data.diyArr
               });
@@ -810,6 +816,7 @@ Page({
     });
   }, //diy执行核心代码
   diyStop() {
+    console.log('====================diyStop开始============================');
     let _this = this;
     _this.command({
       command: 'c5',
@@ -818,13 +825,23 @@ Page({
       success: function() {
         clearTimeout(timer2);
         timer2 = null;
-        _this.data.diyArr[_this.data.diyIndex].play = false;
-        _this.setData({
-          diyArr: _this.data.diyArr
-        });
+        console.log('stop', '_this.data.diyIndex', _this.data.diyIndex);
+        if (_this.data.diyArr[_this.data.diyIndex]){
+          _this.data.diyArr[_this.data.diyIndex].play = false;
+          _this.data.diyArr[_this.data.diyIndex].timeUsed = 0;
+          // let times = 0;
+          // for (let i = 0; i < _this.data.diyArr[_this.data.diyIndex].playStep; i++) {
+          //   times += _this.data.diyArr[_this.data.diyIndex].shockArr[i].time;
+          // }
+          // console.log('stop', '_this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyArr[_this.data.diyIndex].timeUsed, 'times', times);
+          // _this.data.diyArr[_this.data.diyIndex].timeUsed = times;
+          _this.setData({
+            diyArr: _this.data.diyArr
+          });
+        }
       }
     });
-
+    console.log('====================diyStop结束============================');
   }, //diy暂停
   uploadZDMode(mode, time) {
     console.log('url', api.uploadZD);
@@ -835,9 +852,9 @@ Page({
     mi.ajax({
       url: api.uploadZD,
       method: 'post',
-      contentType:'form',
+      contentType: 'form',
       login: false,
-      loading:false,
+      loading: false,
       data: {
         "type": mode,
         "ms": time,
