@@ -102,6 +102,7 @@ Page({
   },
   onLoad() {
     let _this = this;
+    //1,根据缓存判断用户是否注册过
     this.tempUpdate(function() {
       //先授权，后蓝牙
       _this.updateStore(function() {
@@ -535,7 +536,7 @@ Page({
                     wx.onBluetoothDeviceFound(function(res) {
                       console.log('new device list has founded');
                       console.log(res);
-                      if (res.devices[0].name.indexOf('mito-Smart') > -1 || res.devices[0].localName.indexOf('mito-Smart') > -1) {
+                      if (res.devices[0].name.indexOf('mito-Smart') > -1) {
                         //发现蜜桃设备直接连接
                         _this.connect(res.devices[0].deviceId);
                       }
@@ -728,7 +729,8 @@ Page({
         });
       },
       fail: function() {
-        console.log('设备连接失败');
+        console.log('创建连接失败,请手动点击连接');
+        mi.hideLoading();
         // mi.toast('设备连接失败');
         //关闭蓝牙搜索
         wx.stopBluetoothDevicesDiscovery();
@@ -1047,7 +1049,7 @@ Page({
     mi.ajax({
       url: api.bindLog,
       method: 'post',
-      contentType:'form',
+      contentType: 'form',
       data: {
         "appType": app.systemInfo.system.indexOf('iOS') > -1 ? 'ios' : 'android',
         "devId": app.blehdid,
@@ -1360,10 +1362,25 @@ Page({
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
-        _this.tempUpdate(); //图表同步更新
+        // _this.tempUpdate(); //图表同步更新
+        _this.getMonthHistory(function (res) {
+          let obj = JSON.parse(res);
+          console.log('temp1111111111111111111111111111', obj);
+          if (obj && obj.data.length > 0) {
+            let charArr = mi.switchCharData(obj.data);
+            _this.detch(charArr[0], charArr[1], charArr[2]);
+            _this.setData({
+              superMonthArr: obj.data
+            });
+          } else {
+            // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
+            // _this.detch(charArr[0], charArr[1], charArr[2]);
+            // mi.toast('您当月还没有任何测试数据');
+          }
+        });
       }
     });
-  },
+  }, //上传温度信息
   bindPickerChange(e) {
     this.setData({
       year: e.detail.value,
