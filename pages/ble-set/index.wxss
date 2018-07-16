@@ -25,3 +25,9 @@
   font-size: 30rpx;
   color: #FF4578;
 }
+.sm-placeholder{
+  text-align: center;
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 20rpx;
+}

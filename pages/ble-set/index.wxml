@@ -1,12 +1,15 @@
 <view class='ble-container'>
   <view class='ble-li'>
-    <input type="text" placeholder='旧密码（仅支持3位长度的字母，数字和特殊符号）' data-pos='O' value="{{passO}}" bindinput='change' />
+    <input type="text" placeholder='旧密码' data-pos='O' value="{{passO}}" bindinput='change' />
   </view>
   <view class='ble-li'>
-    <input type="text" placeholder='新密码（仅支持3位长度的字母，数字和特殊符号）' data-pos='A' value="{{passA}}" bindinput='change' />
+    <input type="text" placeholder='新密码' data-pos='A' value="{{passA}}" bindinput='change' />
   </view>
   <view class='ble-li'>
-    <input type="text" placeholder='确认密码（仅支持3位长度的字母，数字和特殊符号）' data-pos='B' value="{{passB}}" bindinput='change' />
+    <input type="text" placeholder='确认密码' data-pos='B' value="{{passB}}" bindinput='change' />
+  </view>
+  <view class='sm-placeholder'>
+    （密码仅支持3位字母，数字或特殊符号）
   </view>
   <view class='ble-button-box'>
     <view class='ble-button' bindtap='savePass'>确认保存</view>

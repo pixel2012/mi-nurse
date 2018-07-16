@@ -607,6 +607,9 @@ Page({
       });
       app.bleIsConnect = res.connected;
       if (!res.connected) {
+        _this.setData({
+          blueRight: false
+        });
         //如果蓝牙断开，自动重连
         if (_this.data.available && !_this.data.discovering) {
           mi.showLoading('蓝牙重连中');
@@ -1363,7 +1366,7 @@ Page({
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
         // _this.tempUpdate(); //图表同步更新
-        _this.getMonthHistory(function (res) {
+        _this.getMonthHistory(function(res) {
           let obj = JSON.parse(res);
           console.log('temp1111111111111111111111111111', obj);
           if (obj && obj.data.length > 0) {

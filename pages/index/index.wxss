@@ -253,7 +253,8 @@ ec-canvas {
 }
 .blue-pass{
   margin-bottom: 60rpx;
-  font-size: 20rpx;
+  font-size: 30rpx;
   padding:10rpx;
   border:1rpx solid #ddd;
+  color: #888;
 }

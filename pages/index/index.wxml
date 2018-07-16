@@ -15,8 +15,8 @@
       </view>
       <view class='col-50 mi-r'>
         <view class="mi-status {{bleIsConnect?'active':''}}">
-          <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:26rpx;height:18rpx;"></image>
-          <text class='mi-text'>{{bleIsConnect?(bleEnergy? bleEnergy :'查询中'):'未知'}}</text>
+          <image src="../../common/img/{{filterCell(bleIsConnect,bleEnergy)}}" style="width:30rpx;height:18rpx;"></image>
+          <text class='mi-text'>{{bleIsConnect?(bleEnergy? bleEnergy + '%' :'查询中'):'未知'}}</text>
         </view>
       </view>
     </view>
@@ -196,7 +196,7 @@
   <view class='mi-ble-list' wx:if="{{blueRight}}">
     <view class='mi-ble-content'>
       <view class='mi-ble-title'>请输入蓝牙密码</view>
-      <input type='text' class='blue-pass' placeholder="仅支持3位长度的字母，数字和特殊符号" value="{{blePass}}" bindinput="changeBlue" auto-focus/>
+      <input type='text' class='blue-pass' placeholder="3位字母、数字或特殊符号" value="{{blePass}}" bindinput="changeBlue" auto-focus/>
       <button class='mi-button' bindtap="toVerify">确 定</button>
     </view>
   </view>

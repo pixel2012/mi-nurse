@@ -98,7 +98,7 @@ Page({
             mi.hideLoading();
             mi.toast('设置失败');
           }
-        }, 1000);
+        }, 3000);
       }
 
     });

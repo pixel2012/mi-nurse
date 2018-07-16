@@ -145,12 +145,18 @@
 
 .mi-status image {
   vertical-align: middle;
-  margin-right: 10rpx;
+  margin-right: 14rpx;
 }
 
-.mi-text {
+.mi-status .mi-text {
   font-size: 24rpx;
+  color: #888;
 }
+.mi-status.active .mi-text {
+  font-size: 24rpx;
+  color: #000;
+}
+
 .mi-r {
   text-align: right;
 }
