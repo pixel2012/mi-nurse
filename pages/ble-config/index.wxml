@@ -11,12 +11,12 @@
       </view>
     </view>
   </navigator>
-  <view class='ble-li row' bindtap='verify'>
+  <!-- <view class='ble-li row' bindtap='verify'>
     <view class='col-50 ble-title'>验证</view>
     <view class='col-50 ble-text'></view>
-  </view>
+  </view> -->
   <view class='ble-li row' bindtap='factoryReset'>
-    <view class='col-50 ble-title'>回复出厂设置</view>
+    <view class='col-50 ble-title'>恢复出厂设置</view>
     <view class='col-50 ble-text'></view>
   </view>
 </view>

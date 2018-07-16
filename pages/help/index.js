@@ -17,7 +17,8 @@ Page({
       url: api.help,
       login: false,
       data: {
-        "id": 2
+        "id": 2,
+        type:'json'
       },
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));

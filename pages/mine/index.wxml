@@ -69,15 +69,15 @@
         </view>
       </view>
     </navigator>
-    <view class='my-list-item' bindtap='searchVer'>
-        <view class='my-list-item-left'>
-          <image class='my-list-item-left-icon' src='img/update.png' style='width:31rpx;height:34rpx;'></image>
-          <text class='my-list-item-left-text'>检测新版本</text>
-        </view>
-        <view class='my-list-item-right'>
-          <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
-        </view>
+    <!-- <view class='my-list-item' bindtap='searchVer'>
+      <view class='my-list-item-left'>
+        <image class='my-list-item-left-icon' src='img/update.png' style='width:31rpx;height:34rpx;'></image>
+        <text class='my-list-item-left-text'>检测新版本</text>
       </view>
+      <view class='my-list-item-right'>
+        <image class='my-list-item-right-icon' src='img/arrow-right.png'></image>
+      </view>
+    </view> -->
   </view>
   <!--芳龄几何弹框  -->
   <!--窈窕几许弹框  -->
