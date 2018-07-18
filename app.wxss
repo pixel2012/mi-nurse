@@ -154,7 +154,7 @@
 }
 .mi-status.active .mi-text {
   font-size: 24rpx;
-  color: #000;
+  color: #ff4578;
 }
 
 .mi-r {

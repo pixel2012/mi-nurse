@@ -256,5 +256,8 @@ ec-canvas {
   font-size: 30rpx;
   padding:10rpx;
   border:1rpx solid #ddd;
+  color: #333;
+}
+input.blue-pass:placeholder{
   color: #888;
 }
