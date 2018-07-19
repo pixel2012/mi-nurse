@@ -18,7 +18,7 @@ App({
   resetPass: false,
   bleVer:'',//蓝牙硬件版本号
   onLaunch() {
-    wx.hideTabBar();
+    // wx.hideTabBar();
     let _this = this;
     this.bleDeviceId = mi.store.get('bleDeviceId') || '';
     this.bleServerId = mi.store.get('bleServerId') || '';
