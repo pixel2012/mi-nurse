@@ -56,11 +56,20 @@ Page({
   },
   onLoad() {
     let userInfo = mi.store.get('userInfo');
+    let myBreast = mi.store.get('myBreast');
     console.log(userInfo);
     if (userInfo) {
       this.setData({
         nickName: userInfo.nickName,
         headerUrl: userInfo.avatar
+      });
+    }
+    if (myBreast){
+      this.setData({
+        up: myBreast.up,
+        down: myBreast.down,
+        result: myBreast.result,
+        current: myBreast.current
       });
     }
   },
@@ -89,12 +98,27 @@ Page({
       isBreast: false
     });
   },
+  changeCurrent(e){
+    console.log(e);
+    if(e.detail.source=='touch'){
+      this.setData({
+        current:e.detail.current
+      });
+    }
+  },
   save() {
     console.log(this.data.result);
     if (this.data.result == '') {
       return mi.toast('请输入合理的范围');
     }
     let _this = this;
+    let myBreast={
+      up: this.data.up,
+      down: this.data.down,
+      result: this.data.result,
+      current: this.data.current
+    };
+    mi.store.set('myBreast',myBreast);
     mi.ajax({
       url: api.chest,
       method: 'post',

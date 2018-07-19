@@ -102,7 +102,7 @@
       <!-- <view class='my-breast-slider-type'>
         <text class='my-breast-text'>酥胸</text>
       </view> -->
-      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px">
+      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px" bindchange="changeCurrent">
         <block wx:for="{{imgUrls}}" wx:key="{{index}}">
           <swiper-item>
             <image src="{{item.url}}" class="slide-image" mode='widthFix' />
@@ -113,11 +113,11 @@
         </block>
       </swiper>
       <view class='my-breast-slider-box'>
-        <slider bindchange="bindsliderChange1" min="70" max="135" block-size="16" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <slider bindchange="bindsliderChange1" min="70" max="135" block-size="16" block-color="#FF4578" activeColor="#FF4578" value="{{up}}" show-value/>
         <text class='my-breast-text'>上胸围（cm）</text>
       </view>
       <view class='my-breast-slider-box'>
-        <slider bindchange="bindsliderChange2" min="63" max="112" block-size="16" block-color="#FF4578" activeColor="#FF4578" show-value/>
+        <slider bindchange="bindsliderChange2" min="63" max="112" block-size="16" block-color="#FF4578" activeColor="#FF4578" value="{{down}}" show-value/>
         <text class='my-breast-text'>下胸围（cm）</text>
       </view>
       <view class='my-breast-slider-box'>

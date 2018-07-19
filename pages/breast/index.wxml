@@ -27,7 +27,7 @@
 </view>
 <view class='mi-tab-box row no-gutter'>
   <view class="col-50 mi-tab {{tabIndex==0?'active':''}}" data-index='0' bindtap='bindTab'>
-    <text class='mi-tab-text'>普通按摩</text>
+    <text class='mi-tab-text'>自动按摩</text>
   </view>
   <view class="col-50 mi-tab {{tabIndex==1?'active':''}}" data-index='1' bindtap='bindTab'>
     <view class='mi-tab-text'>DIY按摩</view>
@@ -45,6 +45,7 @@
       </block>
     </view>
     <view class='mi-tab-main'>
+     <view class='mi-des'>完整按摩流程将根据以下4个步骤循环5次</view> 
       <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" next-margin="30px">
         <!--第一步  -->
         <swiper-item>
@@ -54,7 +55,7 @@
               当前正处于第
               <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>1</text> 步中</view>
-            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <!-- <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view> -->
             <view class='mi-step row no-gutter'>
               <view class='col-10 mi-c'>
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
@@ -71,7 +72,7 @@
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
               </view>
               <view class='col-90 mi-fun-box'>
-                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-title'>穴位位置</view>
                 <view class='mi-fun-des'>
                   <image src='img/auto-01-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
                   <image src='img/auto-01-right.png' style='width:80rpx;height:80rpx;'></image>
@@ -110,7 +111,7 @@
               当前正处于第
               <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>2</text> 步中</view>
-            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <!-- <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view> -->
             <view class='mi-step row no-gutter'>
               <view class='col-10 mi-c'>
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
@@ -127,7 +128,7 @@
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
               </view>
               <view class='col-90 mi-fun-box'>
-                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-title'>穴位位置</view>
                 <view class='mi-fun-des'>
                   <image src='img/auto-02-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
                   <image src='img/auto-02-right.png' style='width:80rpx;height:80rpx;'></image>
@@ -166,7 +167,7 @@
               当前正处于第
               <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>3</text> 步中</view>
-            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <!-- <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view> -->
             <view class='mi-step row no-gutter'>
               <view class='col-10 mi-c'>
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
@@ -183,7 +184,7 @@
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
               </view>
               <view class='col-90 mi-fun-box'>
-                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-title'>穴位位置</view>
                 <view class='mi-fun-des'>
                   <image src='img/auto-03-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
                   <image src='img/auto-03-right.png' style='width:80rpx;height:80rpx;'></image>
@@ -222,7 +223,7 @@
               当前正处于第
               <text class='mi-main-color'>{{allLoop+1}}</text> 个循环的第
               <text class='mi-main-color'>4</text> 步中</view>
-            <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view>
+            <!-- <view class='mi-des'>按摩流程经根据以上4步按摩步骤循环5次</view> -->
             <view class='mi-step row no-gutter'>
               <view class='col-10 mi-c'>
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
@@ -239,9 +240,10 @@
                 <image src='img/go.png' style='width:14rpx;height:14rpx;'></image>
               </view>
               <view class='col-90 mi-fun-box'>
-                <view class='mi-fun-title'>穴位位置及震动位置</view>
+                <view class='mi-fun-title'>穴位位置</view>
                 <view class='mi--fun-des'>
-                  <text>同1,2,3的分布位置。</text>
+                   <image src='img/auto-04-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
+                  <image src='img/auto-04-right.png' style='width:80rpx;height:80rpx;'></image>
                 </view>
               </view>
             </view>

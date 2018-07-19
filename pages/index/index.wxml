@@ -192,7 +192,6 @@
     </view>
   </view>
 
-
   <view class='mi-ble-list' wx:if="{{blueRight}}">
     <view class='mi-ble-content'>
       <view class='mi-ble-title'>请输入蓝牙密码</view>

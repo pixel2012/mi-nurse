@@ -612,8 +612,14 @@ Page({
         });
         //如果蓝牙断开，自动重连
         if (_this.data.available && !_this.data.discovering) {
-          mi.showLoading('蓝牙重连中');
-          _this.connect(id);
+          wx.stopBluetoothDevicesDiscovery({
+            success: function () {
+              mi.showLoading('蓝牙重连中');
+              _this.connect(id);
+            }
+          });
+          // mi.showLoading('蓝牙重连中');
+          // _this.connect(id);
         } else {
           // mi.toast('蓝牙正忙，连接已断开');
           wx.stopBluetoothDevicesDiscovery({

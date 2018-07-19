@@ -7,6 +7,9 @@
   font-size: 28rpx;
   color: #D7D7D7;
 }
+.ble-li input{
+  color: #333;
+}
 .ble-li:first-child{
   padding-top:0;
 }

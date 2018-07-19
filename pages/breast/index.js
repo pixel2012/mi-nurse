@@ -264,6 +264,12 @@ Page({
     diyArr: [], //diy按摩组合
   },
   onLoad() {
+    if(!mi.store.get('yet')){
+      this.setData({
+        isMenu:true
+      });
+      mi.store.set('yet',true);
+    }
     this.updateStatus();
     // var that = this;
     // var num = 0

@@ -251,13 +251,13 @@ ec-canvas {
   height:0;
   overflow:hidden;
 }
+input.blue-pass::-webkit-input-placeholder{
+  color: #D7D7D7;
+}
 .blue-pass{
   margin-bottom: 60rpx;
   font-size: 30rpx;
   padding:10rpx;
   border:1rpx solid #ddd;
   color: #333;
-}
-input.blue-pass:placeholder{
-  color: #888;
 }
