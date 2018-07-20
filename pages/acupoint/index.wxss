@@ -122,6 +122,7 @@
 
 .acupoint-shake-content text {
   margin-right: 20rpx;
+  color: #333;
 }
 
 .how-long {
@@ -154,4 +155,7 @@
   border-radius: 8rpx;
   font-size: 30rpx;
   color: #FF4578;
+}
+.hong-long-box{
+  font-size: 28rpx;
 }

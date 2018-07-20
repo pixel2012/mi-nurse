@@ -27,11 +27,11 @@
           <view class='col-20 massag-item3'>
             {{item.modeName}}
           </view>
-          <view class='col-20 massag-item4'>
+          <view class='col-15 massag-item4'>
             {{filterTime.zh(item.time)}}
           </view>
-          <view class='col-10 massag-item5' data-idx='{{idx}}' catchtap='remove'>
-            X
+          <view class='col-15 massag-item5' data-idx='{{idx}}' catchtap='remove'>
+            删除
           </view>
         </view>
     </block>

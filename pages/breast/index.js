@@ -480,11 +480,11 @@ Page({
     //判断是否是自动模式
     console.log('_this.data.mode', _this.data.mode);
     if (_this.data.menuIndex == 6) {
-      let num = mi.getRadom(1, 7);
-      console.log('num', num);
-      let strength = (num - 1) + '0';
-      console.log('strength', strength);
-      shaker.setMode(strength);
+      let num = mi.getRadom(1, 6);
+      // console.log('num', num);
+      let mode = num + '0';
+      // console.log('mode', strength);
+      shaker.setMode(mode);
     }
 
     if (_this.data.index < stepObj.step.length) {
@@ -760,7 +760,7 @@ Page({
       wx.vibrateLong();
       wx.showModal({
         title: '恭喜您',
-        content: cur.title + '按摩组合执行完毕',
+        content: cur.title + '执行完毕',
         showCancel: false
       });
       //震动完毕，上传后台震动数据

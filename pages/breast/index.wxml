@@ -97,7 +97,7 @@
               <view class='col-90 mi-fun-box'>
                 <view class='mi-fun-title'>小贴士</view>
                 <view class='mi--fun-des'>
-                  <text>乳痈变现为：乳房肿胀疼痛，或出现硬块，伴有发 热。多由乳汁排出不畅引起。 开窍苏厥:开窍即疏通，苏厥即醒神。</text>
+                  <text>乳痈表现为：乳房肿胀疼痛，或出现硬块，伴有发热。多由乳汁排出不畅引起。 \n开窍苏厥:开窍即疏通，苏厥即醒神。</text>
                 </view>
               </view>
             </view>
@@ -242,8 +242,8 @@
               <view class='col-90 mi-fun-box'>
                 <view class='mi-fun-title'>穴位位置</view>
                 <view class='mi--fun-des'>
-                   <image src='img/auto-04-left.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
-                  <image src='img/auto-04-right.png' style='width:80rpx;height:80rpx;'></image>
+                  <image src='img/auto-04-right.png' style='width:80rpx;height:80rpx;margin-right:50rpx;'></image>
+                  <image src='img/auto-04-left.png' style='width:80rpx;height:80rpx;'></image>
                 </view>
               </view>
             </view>

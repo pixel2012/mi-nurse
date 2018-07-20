@@ -167,7 +167,7 @@
   text-align: center;
 }
 .mi-main-color{
-  color: #ff4578;
+  color: #ff4578 !important;
 }
 .mi-main-background-color{
   background-color: #ff4578;

@@ -57,7 +57,7 @@
   </view>
   <view class='massage-box'>
     <view class='acupoint-shake'>
-      <view class='acupoint-shake-title'>震动模块</view>
+      <view class='acupoint-shake-title'>震动模式</view>
       <scroll-view scroll-x='true'>
         <view class='acupoint-shake-content'>
           <text class="{{mode==0?'mi-main-color':''}}" data-mode='0' data-name='盛夏如花' bindtap='modeChange'>盛夏如花</text>
@@ -80,7 +80,7 @@
         <view class='how-long-title'>
           按摩时长<text class='how-long-time'> {{filterTime.zh(time)}}</text>
           <view class='hong-long-box'>
-            <slider bindchange="sliderChange" min="1" max="180" value="{{time}}" block-size="16" show-value/>
+            <slider bindchanging="sliderChange" min="1" max="60" value="{{time}}" block-size="16" style="display:inline-block;width:70%;vertical-align: middle;"/>60秒
           </view>
         </view>
       </view>
