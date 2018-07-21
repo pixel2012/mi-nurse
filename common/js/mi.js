@@ -479,6 +479,51 @@ const mi = {
       resultStr.push(String.fromCharCode(curCharCode));
     }
     return resultStr.join("");
-  } //16进制转字符串
+  }, //16进制转字符串
+  getMode(num, sn) {
+    let result = '';
+    if (num == 0) {
+      result = (10 + sn) + '';
+    }
+    if (num == 1) {
+      result = (20 + sn) + '';
+    }
+    if (num == 2) {
+      result = (30 + sn) + '';
+    }
+    if (num == 3) {
+      result = (40 + sn) + '';
+    }
+    if (num == 4) {
+      result = (50 + sn) + '';
+    }
+    if (num == 5) {
+      result = (60 + sn) + '';
+    }
+    return result;
+  },
+  getCommand(arr, mn, acupoint, position) {
+    let left = [arr[0], arr[1], arr[2], arr[3], arr[4], arr[5]];
+    let right = [arr[6], arr[7], arr[8], arr[9], arr[10], arr[11]];
+    if (acupoint == 1 && (position == 1 || position == 2)) {
+      left[0]=mn;
+    }
+    if (acupoint == 2 && (position == 1 || position == 2)) {
+      left[2] = mn;
+    }
+    if (acupoint == 3 && (position == 1 || position == 2)) {
+      left[4] = mn;
+    }
+    if (acupoint == 1 && (position == 1 || position == 3)) {
+      right[0] = mn;
+    }
+    if (acupoint == 2 && (position == 1 || position == 3)) {
+      right[2] = mn;
+    }
+    if (acupoint == 3 && (position == 1 || position == 3)) {
+      right[4] = mn;
+    }
+    return left.concat(right);
+  },
 }
 module.exports = mi;

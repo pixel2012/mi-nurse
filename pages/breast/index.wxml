@@ -34,6 +34,15 @@
   </view>
 </view>
 <view class='mi-tab-content' bindtap='hideMenu'>
+
+
+
+
+
+
+
+
+
   <!--普通按摩  -->
   <view class='mi-tab-item' wx:if="{{tabIndex==0}}">
     <image src='img/menu.png' class='menu' wx:if="{{!isMenu}}" catchtap='showMenu'></image>
@@ -45,7 +54,7 @@
       </block>
     </view>
     <view class='mi-tab-main'>
-     <view class='mi-des'>完整按摩流程将根据以下4个步骤循环5次</view> 
+      <view class='mi-des'>完整按摩流程将根据以下4个步骤循环5次</view>
       <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" next-margin="30px">
         <!--第一步  -->
         <swiper-item>
@@ -300,6 +309,17 @@
       </view>
     </view>
   </view>
+
+
+
+
+
+
+
+
+
+
+
   <!--DIY按摩  -->
   <view class='mi-tab-item' wx:if="{{tabIndex==1}}">
     <view class='mi-c'>
@@ -322,7 +342,7 @@
         <view class='r-04' bind:touchstart='longShock' data-code='4' bind:touchend='closeShock'></view>
       </view>
     </view>
-    <view class='massage-box'>
+    <view class='massage-box mi-tab-diy'>
       <view class='mi-assess-box2'>
         <view class='mi-assess-dt blue'>高阶玩法：我的按摩组合</view>
         <view class='mi-bottom-line'></view>
@@ -339,10 +359,11 @@
             <view class='col-25 massage-item' data-index='{{index}}' bindtap='diyRun'>
               <image src="img/{{item.play?'pause.png':'play.png'}}" style='width:48rpx;height:48rpx;'></image>
             </view>
-            <view class='col-25 massage-item'>
-              <navigator url="{{'/pages/massage/index?index='+index}}">
+            <view class='col-25 massage-item' data-index='{{index}}' bindtap='diyEdit'>
+            <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+              <!-- <navigator url="{{'/pages/massage/index?index='+index}}">
                 <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
-              </navigator>
+              </navigator> -->
             </view>
           </view>
         </view>
@@ -352,7 +373,24 @@
             <view class='ble-button'>添加按摩组合</view>
           </navigator>
         </view>
+
+      </view>
+
+    </view>
+
+  </view>
+  <view class='massage-box diy-play-detail' wx:if="{{tabIndex==1}}">
+    <view class='mi-play-detail row'>
+      <view class='col-25 mi-player-title' style="text-algin:right;">震动强度</view>
+      <view class='col-75 mi-play-detail-right'>
+        <view class='mi-play-line'></view>
+        <image src='img/01-{{diyStrength==1?"b":"a"}}.png' style='left:0;' data-index='1' bindtap='bindStrength1'></image>
+        <image src='img/02-{{diyStrength==2?"b":"a"}}.png' style='left:30%;' data-index='2' bindtap='bindStrength1'></image>
+        <image src='img/03-{{diyStrength==3?"b":"a"}}.png' style='left:55%;' data-index='3' bindtap='bindStrength1'></image>
+        <image src='img/04-{{diyStrength==4?"b":"a"}}.png' style='left:85%;' data-index='4' bindtap='bindStrength1'></image>
       </view>
     </view>
   </view>
+
+
 </view>

@@ -1,9 +1,11 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/breast/index",
+    
     "pages/mine/index",
     
-    "pages/breast/index",
+    
     
     
     

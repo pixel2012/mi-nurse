@@ -262,13 +262,14 @@ Page({
     playBgc: '#F7F7F7', //播放进度条背景色
     diyIndex: -1, //当前diy震动的是第几个
     diyArr: [], //diy按摩组合
+    diyStrength: 1, //diy震动强度
   },
   onLoad() {
-    if(!mi.store.get('yet')){
+    if (!mi.store.get('yet')) {
       this.setData({
-        isMenu:true
+        isMenu: true
       });
-      mi.store.set('yet',true);
+      mi.store.set('yet', true);
     }
     this.updateStatus();
     // var that = this;
@@ -304,6 +305,25 @@ Page({
   },
   onShow() {
     this.updateStatus();
+  },
+  onHide() {
+    // let _this=this;
+    // if(timer){
+    //   wx.showModal({
+    //     title: '提示',
+    //     content: '确定要退出吗？ 还没有完成一次完整的按摩疗程哦！',
+    //     success: function (res) {
+    //       if (res.confirm) {
+    //         return true;
+    //       } else if (res.cancel) {
+    //         return false;
+    //       }
+    //     }
+    //   })
+    // }
+    // if(timer2){
+
+    // }
   },
   updateStatus() {
     this.setData({
@@ -408,7 +428,7 @@ Page({
       wx.vibrateLong(); //手机震动
       wx.showModal({
         title: '恭喜',
-        content: '你已完成一次完整的按摩理疗，记得每天坚持哦！',
+        content: '你完成一次完整的按摩理疗，记得每天坚持哦！',
         confirmText: '我会加油',
         showCancel: false
       });
@@ -651,6 +671,12 @@ Page({
       shaker.setStrength('0' + e.currentTarget.dataset.index);
     }
   },
+  bindStrength1(e) {
+    //diyStrength
+    this.setData({
+      diyStrength: e.currentTarget.dataset.index * 1
+    });
+  },
   setPlay: function(num) {
     if (num < 180) {
       this.setData({
@@ -712,6 +738,15 @@ Page({
       check: false
     });
   },
+  diyEdit(e) {
+    if (timer2) {
+      return mi.toast('执行震动期间不可设置');
+    }
+
+    wx.navigateTo({
+      url: '/pages/massage/index?index=' + e.currentTarget.dataset.index
+    })
+  },
   diyRun(e) {
     if (!app.bleIsConnect) {
       return mi.toast('请先连接蓝牙设备再进行相关操作');
@@ -722,8 +757,8 @@ Page({
     }
     //其他操作
     let diyArr = this.data.diyArr;
-
     let cur = diyArr[e.currentTarget.dataset.index];
+    console.log(cur);
     if (cur.play) {
       cur.play = false;
       diyArr[e.currentTarget.dataset.index] = cur;
@@ -767,12 +802,21 @@ Page({
       _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeTotal * 1000);
     });
   }, //diy播放
+  addDiyStrength(cur) {
+    //cur.shockArr[cur.playStep]
+    let arr = cur.shockArr[cur.playStep].command;
+    let mn = mi.getMode(cur.shockArr[cur.playStep].mode, this.data.diyStrength);
+    let acupoint = cur.shockArr[cur.playStep].acupoint;
+    let position = cur.shockArr[cur.playStep].position;
+    return mi.getCommand(arr, mn, acupoint, position);
+  }, //动态修改diy震动强度
   diyCore(cur, callback) {
     let _this = this;
-    console.log('cur666', cur);
+    let curCommond = _this.addDiyStrength(cur);
+    console.log('curCommond', curCommond);
     _this.command({
       command: 'c5',
-      param: cur.shockArr[cur.playStep].command,
+      param: curCommond,
       check: false,
       success: function() {
         let roundTimes = cur.shockArr[cur.playStep].time;
@@ -832,7 +876,7 @@ Page({
         clearTimeout(timer2);
         timer2 = null;
         console.log('stop', '_this.data.diyIndex', _this.data.diyIndex);
-        if (_this.data.diyArr[_this.data.diyIndex]){
+        if (_this.data.diyArr[_this.data.diyIndex]) {
           _this.data.diyArr[_this.data.diyIndex].play = false;
           _this.data.diyArr[_this.data.diyIndex].timeUsed = 0;
           // let times = 0;

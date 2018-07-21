@@ -577,21 +577,20 @@ Page({
     });
   },
   connect(id) {
-
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
       success: function(res) {
         console.log('关闭蓝牙搜索', res);
-        _this.setData({
-          bleIsShowList: false
-        });
+        // _this.setData({
+        //   bleIsShowList: false
+        // });
       }
     });
-    wx.getBluetoothDevices({
-      success: function(res) {
-        console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
-      }
-    });
+    // wx.getBluetoothDevices({
+    //   success: function(res) {
+    //     console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
+    //   }
+    // });
     console.log('deviceId', id);
     let deviceId = id;
     this.setData({
@@ -601,21 +600,21 @@ Page({
     mi.store.set('bleDeviceId', this.data.bleDeviceId);
     wx.onBLEConnectionStateChange(function(res) {
       console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
-      mi.toast(res.connected ? '连接成功' : '连接失败');
+      mi.toast(res.connected ? '连接成功' : '蓝牙已断开');
       _this.setData({
         bleIsConnect: res.connected
       });
       app.bleIsConnect = res.connected;
       if (!res.connected) {
-        _this.setData({
-          blueRight: false
-        });
+        // _this.setData({
+        //   blueRight: false
+        // });
         //如果蓝牙断开，自动重连
         if (_this.data.available && !_this.data.discovering) {
           wx.stopBluetoothDevicesDiscovery({
             success: function () {
               mi.showLoading('蓝牙重连中');
-              _this.connect(id);
+              _this.bleConnection(id);
             }
           });
           // mi.showLoading('蓝牙重连中');
@@ -624,21 +623,25 @@ Page({
           // mi.toast('蓝牙正忙，连接已断开');
           wx.stopBluetoothDevicesDiscovery({
             success: function() {
-              _this.connect(id);
+              _this.bleConnection(id);
             }
           });
         }
       }
     });
+    _this.bleConnection(deviceId);
+  },
+  bleConnection(deviceId){
+    let _this=this;
     console.log('创建蓝牙连接');
     wx.createBLEConnection({
       deviceId: deviceId,
-      success: function(res) {
+      success: function (res) {
         mi.hideLoading();
         console.log('设备连接成功', res);
         wx.getBLEDeviceServices({
           deviceId: deviceId,
-          success: function(res) {
+          success: function (res) {
             console.log('获取蓝牙设备所有服务', res);
             for (let i = 0; i < res.services.length; i++) {
               if (res.services[i].uuid.indexOf('0000FF92') > -1) { //查找自定义服务
@@ -653,7 +656,7 @@ Page({
             wx.getBLEDeviceCharacteristics({
               deviceId: deviceId,
               serviceId: _this.data.bleServerId,
-              success: function(res) {
+              success: function (res) {
                 console.log('读取蓝牙服务特征值', _this.data.bleServerId, res);
                 let writeId, notifyId;
                 for (let j = 0; j < res.characteristics.length; j++) {
@@ -680,9 +683,9 @@ Page({
                   serviceId: _this.data.bleServerId,
                   characteristicId: _this.data.bleCharNotifyId,
                   state: true,
-                  success: function(res) {
+                  success: function (res) {
                     console.log('特征值订阅开启成功', res);
-                    wx.onBLECharacteristicValueChange(function(res) {
+                    wx.onBLECharacteristicValueChange(function (res) {
                       console.log('检测到特征值发生变化', res);
                       let hex = mi.buf2hex(res.value);
                       console.log('特征值二进制转十六进制后结果', hex);
@@ -692,7 +695,7 @@ Page({
                     let oldPass = mi.store.get('pass');
                     console.log('localstorageoldPass', oldPass);
                     let sendPass = oldPass ? mi.strToHexCharCode(oldPass) : mi.strToHexCharCode('123');
-                    let callFn = function(data) {
+                    let callFn = function (data) {
                       if (data) {
                         //验证通过
                         // if (_this.data.blePass) {
@@ -700,19 +703,19 @@ Page({
                         // }
                         mi.toast('蓝牙密码验证通过');
                         _this.getTempDateList();
-                        setTimeout(function() {
+                        setTimeout(function () {
                           _this.command({
                             command: 'c2',
                             check: false
                           }); //查询电量
                         }, 100);
-                        setTimeout(function() {
+                        setTimeout(function () {
                           _this.command({
                             command: 'c1',
                             check: false
                           }); //查询版本
                         }, 300);
-                        setTimeout(function() {
+                        setTimeout(function () {
                           _this.command({
                             command: 'cc',
                             check: false
@@ -726,7 +729,7 @@ Page({
                     };
                     _this.verify(sendPass, callFn);
                   },
-                  fail: function(res) {
+                  fail: function (res) {
                     console.log('特征值订阅开启失败', res);
                     console.log('特征值订阅开启失败');
                     wx.stopBluetoothDevicesDiscovery();
@@ -737,15 +740,14 @@ Page({
           }
         });
       },
-      fail: function() {
+      fail: function () {
         console.log('创建连接失败,请手动点击连接');
         mi.hideLoading();
-        // mi.toast('设备连接失败');
         //关闭蓝牙搜索
         wx.stopBluetoothDevicesDiscovery();
       }
     });
-  },
+  },//创建蓝牙连接
   confirmBluePass(callback) {
     this.setData({
       blueRight: true
