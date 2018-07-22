@@ -46,6 +46,7 @@ Page({
     down: 63,
     result: '65AA',
     current: 0,
+    currentRt: -1,
     indicatorDots: true,
     indicatorActiveColor: '#12C8C8',
     autoplay: false,
@@ -64,12 +65,13 @@ Page({
         headerUrl: userInfo.avatar
       });
     }
-    if (myBreast){
+    if (myBreast) {
       this.setData({
         up: myBreast.up,
         down: myBreast.down,
         result: myBreast.result,
-        current: myBreast.current
+        current: myBreast.currentRt,
+        currentRt: myBreast.currentRt
       });
     }
   },
@@ -98,27 +100,35 @@ Page({
       isBreast: false
     });
   },
-  changeCurrent(e){
+  changeCurrent(e) {
     console.log(e);
-    if(e.detail.source=='touch'){
+    if (e.detail.source == 'touch') {
       this.setData({
-        current:e.detail.current
+        current: e.detail.current
       });
     }
   },
+  changeBreast(e) {
+    this.setData({
+      currentRt: e.currentTarget.dataset.index
+    });
+  },
   save() {
     console.log(this.data.result);
+    if (this.data.currentRt == -1) {
+      return mi.toast('请选择自己的胸型，点击确认');
+    }
     if (this.data.result == '') {
       return mi.toast('请输入合理的范围');
     }
     let _this = this;
-    let myBreast={
+    let myBreast = {
       up: this.data.up,
       down: this.data.down,
       result: this.data.result,
-      current: this.data.current
+      currentRt: this.data.currentRt
     };
-    mi.store.set('myBreast',myBreast);
+    mi.store.set('myBreast', myBreast);
     mi.ajax({
       url: api.chest,
       method: 'post',
@@ -127,7 +137,7 @@ Page({
         "upSize": this.data.up,
         "downSize": this.data.down,
         "chestSize": this.data.result,
-        "chestType": this.data.imgUrls[this.data.current].title
+        "chestType": this.data.imgUrls[this.data.currentRt].title
       },
       encrypt: true,
       dataPos: false,

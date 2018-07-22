@@ -490,6 +490,10 @@ Page({
     });
   },
   do(callback) {
+    if (!app.bleIsConnect) {
+      return mi.toast('蓝牙断开连接，自动关闭按摩');
+      this.stop();
+    }
     let _this = this;
     let stepArr = null;
     let stepObj = null;
@@ -811,6 +815,10 @@ Page({
     return mi.getCommand(arr, mn, acupoint, position);
   }, //动态修改diy震动强度
   diyCore(cur, callback) {
+    if (!app.bleIsConnect) {
+      return mi.toast('蓝牙断开连接，自动关闭按摩');
+      this.diyStop();
+    }
     let _this = this;
     let curCommond = _this.addDiyStrength(cur);
     console.log('curCommond', curCommond);

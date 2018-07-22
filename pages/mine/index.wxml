@@ -102,10 +102,13 @@
       <!-- <view class='my-breast-slider-type'>
         <text class='my-breast-text'>酥胸</text>
       </view> -->
-      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" previous-margin="30px" bindchange="changeCurrent">
+      <swiper indicator-dots="{{indicatorDots}}" indicator-active-color="{{indicatorActiveColor}}" autoplay="{{autoplay}}" interval="{{interval}}" current="{{current}}" circular="{{circular}}" duration="{{duration}}" bindchange="changeCurrent">
         <block wx:for="{{imgUrls}}" wx:key="{{index}}">
           <swiper-item>
             <image src="{{item.url}}" class="slide-image" mode='widthFix' />
+              <view class='slide-checked-image' data-index='{{index}}' bindtap='changeBreast'>
+              <image src="img/checked.png" class="slide-checked-inner-image" mode='widthFix' wx:if="{{index == currentRt}}"/>
+              </view>
             <view class='my-breast-slider-type'>
               <text class='my-breast-text'>{{item.title}}</text>
             </view>
