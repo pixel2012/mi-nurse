@@ -17,6 +17,7 @@ App({
   verPass:false,
   resetPass: false,
   bleVer:'',//蓝牙硬件版本号
+  ishaking:false,//是否正处于震动状态
   onLaunch() {
     // wx.hideTabBar();
     let _this = this;

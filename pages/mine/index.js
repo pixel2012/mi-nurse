@@ -70,8 +70,8 @@ Page({
         up: myBreast.up,
         down: myBreast.down,
         result: myBreast.result,
-        current: myBreast.currentRt,
-        currentRt: myBreast.currentRt
+        current: myBreast.currentRt ? myBreast.currentRt:0,
+        currentRt: myBreast.currentRt ? myBreast.currentRt:-1
       });
     }
   },

@@ -86,16 +86,21 @@ Page({
   },
   remove(e) {
     let shockArr = this.data.shockArr;
-    shockArr.splice(e.currentTarget.dataset.idx, 1);
-    this.setData({
-      shockArr: shockArr
-    });
+    if (shockArr.length>1){
+      shockArr.splice(e.currentTarget.dataset.idx, 1);
+      this.setData({
+        shockArr: shockArr
+      });
+    }else{
+      this.delete();
+    }
+    
   },//删除穴位
   delete() {
     let _this = this;
     wx.showModal({
       title: '提示',
-      content: '确定要删除吗',
+      content: '确定要删除该组合吗',
       success: function (res) {
         if (res.confirm) {
           let diyArr = mi.store.get('diyArr') ? mi.store.get('diyArr') : [];

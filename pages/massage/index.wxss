@@ -25,7 +25,6 @@
   text-align: center;
   align-items: center;
   border: 1rpx solid #12C8C8;
-  padding: 30rpx;
   border-radius: 4rpx;
   margin-bottom: 20rpx;
 }
@@ -59,6 +58,16 @@
   border-radius: 8rpx;
   font-size: 30rpx;
   color: #FF4578;
+}
+.ble-button.gray{
+  border:1rpx solid #888;
+  color: #888;
+}
+.massag-padding{
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  padding:30rpx 0;
 }
 .massag-item1{
   text-align: left;

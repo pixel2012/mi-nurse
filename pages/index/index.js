@@ -741,10 +741,14 @@ Page({
         });
       },
       fail: function () {
-        console.log('创建连接失败,请手动点击连接');
-        mi.hideLoading();
         //关闭蓝牙搜索
         wx.stopBluetoothDevicesDiscovery();
+        console.log('创建连接失败,请手动点击连接');
+        mi.hideLoading();
+        mi.toast('创建连接失败,请手动点击连接');
+        wx.switchTab({
+          url: "../index/index"
+        });
       }
     });
   },//创建蓝牙连接
@@ -1070,6 +1074,9 @@ Page({
     });
   }, //上传硬件信息
   getTem() {
+    if (app.ishaking){
+      return mi.toast('请先关闭震动模式，再进行测温操作');
+    }
     mi.showLoading('测温中');
     let _this = this;
     //设置测温时间起始节点

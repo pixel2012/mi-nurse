@@ -18,20 +18,20 @@
   <view class='massage-block'>
     <block wx:if='{{shockArr.length>0}}' wx:for='{{shockArr}}' wx:for-index="idx" wx:key='{{idx}}'>
         <view class='massage-block massage-list row' data-idx='{{idx}}' bindtap='edit'>
-          <view class='col-25 massag-item1'>
+          <view class='col-25 massag-padding massag-item1'>
             <view class='order'>{{idx+1}}</view>{{item.acupointName}}
           </view>
-          <view class='col-25 massag-item2'>
+          <view class='col-25 massag-padding massag-item2'>
             {{item.positionName}}
           </view>
-          <view class='col-20 massag-item3'>
+          <view class='col-20 massag-padding massag-item3'>
             {{item.modeName}}
           </view>
-          <view class='col-15 massag-item4'>
+          <view class='col-15 massag-padding massag-item4'>
             {{filterTime.zh(item.time)}}
           </view>
-          <view class='col-15 massag-item5' data-idx='{{idx}}' catchtap='remove'>
-            删除
+          <view class='col-15 massag-padding massag-item5' data-idx='{{idx}}' catchtap='remove'>
+            <image src='img/del.png' mode='widthFit' style='width:26rpx;height:26rpx;vertical-align: middle;'></image>
           </view>
         </view>
     </block>
@@ -41,7 +41,7 @@
     <view class='ble-button' bindtap='save'>保存组合</view>
   </view>
   <view class='ble-button-box' wx:if='{{shockArr.length>0}}'>
-    <view class='ble-button' bindtap='delete'>删除组合</view>
+    <view class='ble-button gray' bindtap='delete'>删除组合</view>
   </view>
 
 

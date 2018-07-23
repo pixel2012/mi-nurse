@@ -334,7 +334,7 @@ Page({
       bleServerId: app.bleServerId, //蓝牙设备的服务id号
       bleCharWriteId: app.bleCharWriteId, //蓝牙设备的服务写入特征值id号
       bleCharNotifyId: app.bleCharNotifyId, //蓝牙设备的服务接收通知特征值id号
-      diyArr: mi.store.get('diyArr') ? mi.store.get('diyArr') : []
+      diyArr: timer2 ? this.data.diyArr : (mi.store.get('diyArr') ? mi.store.get('diyArr') : [])
     });
 
   },
@@ -437,18 +437,18 @@ Page({
     });
   }, //执行
   allLoop(callback) {
+    app.ishaking = true; //设置正在震动状态
     let _this = this;
-    _this.loop(function() {
+    _this.loop(function () {
       console.log('大动画执行' + _this.data.allLoop + '完毕');
       let allLoop = _this.data.allLoop + 1;
       if (allLoop < _this.data.allLoops) {
         _this.setData({
           allLoop: allLoop
         });
-        _this.allLoop();
+        _this.allLoop(callback);
       } else {
         console.log('全部动画执行完毕');
-        console.log('callback', callback);
         _this.setData({
           allLoop: 0,
           nowTime: 0,
@@ -627,6 +627,7 @@ Page({
     //   command: 'c4'
     // });
     //然后
+    app.ishaking = false; //关闭震动状态
     _this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
@@ -793,6 +794,7 @@ Page({
     }
   }, //执行
   diyPlay(cur) {
+    app.ishaking = true; //设置正在震动状态
     //开始执行diy震动
     let _this = this;
     this.diyCore(cur, function() {
@@ -876,6 +878,7 @@ Page({
   diyStop() {
     console.log('====================diyStop开始============================');
     let _this = this;
+    app.ishaking = false; //关闭震动状态
     _this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
