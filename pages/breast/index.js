@@ -744,7 +744,7 @@ Page({
   },
   diyEdit(e) {
     if (timer2) {
-      return mi.toast('执行震动期间不可设置');
+      this.diyStop();
     }
 
     wx.navigateTo({
