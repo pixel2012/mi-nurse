@@ -10,14 +10,14 @@
     <view class='col-50 massage-title-key'>穴位设置</view>
     <view class='col-50 massage-title-value'>
       <navigator url="{{'/pages/acupoint/index?index='+index+'&idx=-1'}}">
+      <image src='img/add.png' style='width:36rpx;height:36rpx;vertical-align: middle;margin-right:6rpx;'></image>
         添加穴位
-        <image src='img/r.png' style='width:23rpx;height:40rpx;vertical-align: middle;margin-left:10rpx;'></image>
       </navigator>
     </view>
   </view>
   <view class='massage-block'>
     <block wx:if='{{shockArr.length>0}}' wx:for='{{shockArr}}' wx:for-index="idx" wx:key='{{idx}}'>
-        <view class='massage-block massage-list row' data-idx='{{idx}}' bindtap='edit'>
+        <view class='massage-block massage-list row no-gutter' data-idx='{{idx}}' bindtap='edit'>
           <view class='col-25 massag-padding massag-item1'>
             <view class='order'>{{idx+1}}</view>{{item.acupointName}}
           </view>
@@ -43,16 +43,5 @@
   <view class='ble-button-box' wx:if='{{shockArr.length>0}}'>
     <view class='ble-button gray' bindtap='delete'>删除组合</view>
   </view>
-
-
-
-
-
-
-
-
-
-
-
 
 </view>

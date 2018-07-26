@@ -818,8 +818,13 @@ Page({
   }, //动态修改diy震动强度
   diyCore(cur, callback) {
     if (!app.bleIsConnect) {
-      return mi.toast('蓝牙断开连接，自动关闭按摩');
       this.diyStop();
+      this.data.diyArr[this.data.diyIndex].play = false;
+      this.setData({
+        diyArr: this.data.diyArr
+      });
+      return mi.toast('蓝牙断开连接，自动关闭按摩');
+
     }
     let _this = this;
     let curCommond = _this.addDiyStrength(cur);
@@ -835,6 +840,10 @@ Page({
         function circleTime(roundTimes) {
           if (!app.bleIsConnect) {
             _this.diyStop();
+            _this.data.diyArr[_this.data.diyIndex].play = false;
+            _this.setData({
+              diyArr: _this.data.diyArr
+            });
             return mi.toast('请先连接蓝牙设备再进行相关操作');
           }
           if (roundTimes == 0) {
