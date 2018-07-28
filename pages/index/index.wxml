@@ -78,7 +78,7 @@
     </view>
     <view class='mi-assess-box2'>
       <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}
-        <text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text>
+        <text wx:if="{{temp_diff_num>=1}}">，温差：<text class="mi-main-color">{{temp_diff_num}}℃</text></text>
       </view>
       <view class='mi-assess-content'>{{temp_diff_detial || '暂无'}}</view>
     </view>
@@ -122,7 +122,7 @@
         <text data-go='0' bindtap='jump'>点击查看详情></text>
       </view>
     </view>
-    <view class='mi-line'>
+    <view class='mi-line' style="width:98%;">
       <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
     </view>
 

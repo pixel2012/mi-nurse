@@ -41,11 +41,11 @@
     </view>
     <view class='mi-assess-box2'>
       <view class="mi-assess-dt {{temp_avg_isNormal?'blue':'yellow'}}">{{temp_avg_title || '暂无'}}</view>
-      <view class='mi-assess-content'>{{temp_avg_detial || '暂无'}}</view>
+      <view class='mi-assess-content'>{{ltpStr || '暂无'}}</view>
     </view>
     <view class='mi-assess-box2'>
       <view class="mi-assess-dt {{temp_diff_isNormal?'blue':'yellow'}}">{{temp_diff_title || '暂无'}}
-        <text wx:if="{{temp_diff_num}}">，温差：<text class="mi-main-color">{{temp_diff_num}}</text>℃</text>
+        <text wx:if="{{temp_diff_num>=1}}">，温差：<text class="mi-main-color">{{temp_diff_num}}℃</text></text>
       </view>
       <view class='mi-assess-content'>{{temp_diff_detial || '暂无'}}</view>
     </view>

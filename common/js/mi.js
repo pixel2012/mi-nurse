@@ -419,15 +419,15 @@ const mi = {
     }; //乳温（四个）
     for (let i = 0; i < charts.length; i++) {
       let time = this.format('dd日\nhh:mm', charts[i].ctime);
-      obj1.x.push(time);
-      obj2.x.push(time);
-      obj3.x.push(time);
-      obj1.y.push(charts[i].healthIndex);
-      obj2.y.push(charts[i].maxDiff / 100);
-      obj3.y1.push(charts[i].tp1 / 100);
-      obj3.y2.push(charts[i].tp2 / 100);
-      obj3.y3.push(charts[i].tp3 / 100);
-      obj3.y4.push(charts[i].tp4 / 100);
+      obj1.x.unshift(time);
+      obj2.x.unshift(time);
+      obj3.x.unshift(time);
+      obj1.y.unshift(charts[i].healthIndex);
+      obj2.y.unshift(charts[i].maxDiff / 100);
+      obj3.y1.unshift(charts[i].tp1 / 100);
+      obj3.y2.unshift(charts[i].tp2 / 100);
+      obj3.y3.unshift(charts[i].tp3 / 100);
+      obj3.y4.unshift(charts[i].tp4 / 100);
       // obj1.x.push();
       // obj1.healthIndex = charts[i].healthIndex;//健康分
       // obj1.healthIndex = charts[i].healthIndex;//健康分
@@ -440,6 +440,7 @@ const mi = {
       // arr2.push(obj2);
       // arr3.push(obj3);
     }
+
     return [obj1, obj2, obj3];
   },
   pass2Hex(str) {

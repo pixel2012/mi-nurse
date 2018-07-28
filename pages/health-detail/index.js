@@ -18,6 +18,7 @@ Page({
     temp_diff_detial: '', //最大温差诊断内容
     temp_diff_num: '', //最大温差值
     currentTime: '', //当前时间
+    ltpStr:'',//平均乳温文案
   },
   onLoad(options) {
     console.log('options', options);
@@ -26,6 +27,7 @@ Page({
       temp_lti: options.tp2 / 100, //左上内
       temp_rti: options.tp3 / 100, //右上内
       temp_rto: options.tp4 / 100, //右上外
+      ltpStr: options.ltpStr,
       currentTime: mi.format('MM月dd日 hh:mm', options.ctime*1)
     });
     this.calcTemp();
@@ -57,7 +59,8 @@ Page({
     let temp_score = this.calcScore(temp_avg, temp_group1_max, temp_group2_max, temp_group3_max);
 
     //计算诊断结果
-    let avg_last = mi.store.get('temp_avg_last') || -1;
+    // let avg_last = mi.store.get('temp_avg_last') || -1;
+    let avg_last = -1;
     this.calcAvgDiagnose(temp_avg, avg_last);
 
     this.calcDiffDiagnose([
@@ -148,6 +151,7 @@ Page({
     return score.toFixed(1); //返回分数值
   }, //计算健康值
   calcAvgDiagnose(curr, last) {
+    let _this=this;
     let avg_isNormal = true;
     let avg_title = '';
     let avg_detial = '';
@@ -228,7 +232,7 @@ Page({
     this.setData({
       temp_avg_isNormal: avg_isNormal,
       temp_avg_title: avg_title,
-      temp_avg_detial: avg_detial,
+      temp_avg_detial: avg_detial
     });
 
   }, //计算平均乳温诊断结果

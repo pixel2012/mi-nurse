@@ -638,6 +638,7 @@ Page({
         });
       }
     });
+    _this.uploadZDMode(1, _this.data.nowTime * 1000);//发送统计数据
     clearTimeout(timer);
     _this.setData({
       play: false
@@ -893,6 +894,7 @@ Page({
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false,
       success: function() {
+        _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeUsed * 1000);//发送统计数据
         clearTimeout(timer2);
         timer2 = null;
         console.log('stop', '_this.data.diyIndex', _this.data.diyIndex);

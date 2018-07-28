@@ -246,6 +246,12 @@ Page({
         start: 0,
         end: 100,
         minSpan: 10,
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleSize: '100%',
+        textStyle:{
+          color:'#888',
+          fontSize:10,
+        },
         filterMode: 'none',
         backgroundColor: '#fff',
         dataBackground: {
@@ -403,8 +409,14 @@ Page({
                   let charArr = mi.switchCharData(obj.data);
                   _this.detch(charArr[0], charArr[1], charArr[2]);
                   _this.setData({
-                    superMonthArr: obj.data
+                    superMonthArr: obj.data.reverse()
                   });
+                  const index = charArr[0].y.length - 1;
+                  _this.assignInitVal(
+                    charArr[0].y[index],
+                    charArr[1].y[index],
+                    [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]]
+                    );
                 } else {
                   // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
                   // _this.detch(charArr[0], charArr[1], charArr[2]);
@@ -428,6 +440,14 @@ Page({
       }
     });
   }, //获取可用的时间列表
+  assignInitVal(t0,t1,t2){
+    console.log('t0,t1,t2', t0, t1, t2);
+    this.setData({
+      echart0: t0,
+      echart1: t1,
+      echart2: t2,
+    });
+  },//赋最新值
   changeMonth(e) {
     this.setData({
       month: e.currentTarget.dataset.month
@@ -448,6 +468,7 @@ Page({
       loading: false,
       callback: function(data) {
         let res = mi.crypto.decode(data);
+        console.log('获取当月数据',res);
         if (callback) {
           callback(res);
         }
@@ -984,6 +1005,13 @@ Page({
           app.bleIsSync = _this.data.bleIsSync;
           mi.store.set('lastTemp', lastTemp); //将温度信息存储到本地
           _this.calcTemp(function() {
+            //变更本地乳温差值
+            mi.store.set('temp_avg_last', _this.data.temp_diff_num);
+            //变更最新值
+            _this.assignInitVal(
+              _this.data.temp_score,
+              _this.data.temp_diff_num,
+              [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto]);
             //计算完所有温度后，提交后台
             _this.uploadTem();
           });
@@ -1412,8 +1440,10 @@ Page({
     if (this.data[jumpIndex]) {
       if (this.data.superMonthArr) {
         let tempInfo = this.data.superMonthArr[this.data[jumpIndex].dataIndex]; //拿到点击那个点的温度详细信息
+        console.log('tempInfo', tempInfo);
+        console.log(this.data.superMonthArr);
         wx.navigateTo({
-          url: `/pages/health-detail/index?tp1=${tempInfo.tp1}&tp2=${tempInfo.tp2}&tp3=${tempInfo.tp3}&tp4=${tempInfo.tp4}&ctime=${tempInfo.ctime}`
+          url: `/pages/health-detail/index?tp1=${tempInfo.tp1}&tp2=${tempInfo.tp2}&tp3=${tempInfo.tp3}&tp4=${tempInfo.tp4}&ctime=${tempInfo.ctime}&ltpStr=${tempInfo.tips2}`
         });
       }
     } else {

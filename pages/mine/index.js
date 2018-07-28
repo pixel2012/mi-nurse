@@ -70,8 +70,8 @@ Page({
         up: myBreast.up,
         down: myBreast.down,
         result: myBreast.result,
-        current: myBreast.currentRt ? myBreast.currentRt:0,
-        currentRt: myBreast.currentRt ? myBreast.currentRt:-1
+        current: myBreast.currentRt ? myBreast.currentRt : 0,
+        currentRt: myBreast.currentRt ? myBreast.currentRt : -1
       });
     }
   },
@@ -91,8 +91,10 @@ Page({
     });
   },
   bindBreastChange: function(e) {
+    let _this = this;
     this.setData({
-      isBreast: true
+      isBreast: true,
+      current: _this.data.currentRt > -1 ? _this.data.currentRt : 0
     });
   },
   closeBreast: function() {
