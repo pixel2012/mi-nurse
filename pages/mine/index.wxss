@@ -76,6 +76,19 @@
 .my-params-item:nth-child(3) .my-params-item-text-box {
   color: #FF4578;
 }
+.my-params-item-text{
+  letter-spacing: 4rpx;
+}
+.my-params-item-text2{
+  display: inline-block;
+  background-color: #f8f3f7;
+  width: 96%;
+  font-size: 60%;
+  color: #888;
+  text-align: center;
+  border-radius: 20px;
+  padding:0 4rpx;
+}
 .my-list-box {
   width: 686rpx;
   background: #f7f7f7;

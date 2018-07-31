@@ -974,12 +974,12 @@ Page({
               success: function(res) {
                 if (res.confirm) {
                   _this.getTem(); //重新获取温度
-                  _this.setData({
-                    temp_lto: '', //左上外
-                    temp_lti: '', //左上内
-                    temp_rti: '', //右上内
-                    temp_rto: '' //右上外
-                  });
+                  // _this.setData({
+                  //   temp_lto: '', //左上外
+                  //   temp_lti: '', //左上内
+                  //   temp_rti: '', //右上内
+                  //   temp_rto: '' //右上外
+                  // });
                 }
               }
             });
@@ -993,7 +993,7 @@ Page({
           count = 0;
           console.log('温度全部校验通过，提交温度信息');
           let lastTemp = {
-            bleIsSync: mi.format('hh:mm'),
+            bleIsSync: mi.format('MM月dd hh:mm'),
             bleSyncInfo: mi.format('MM月dd日 hh:mm'),
             temp_lto: _this.data.temp_cache[0], //左上外
             temp_lti: _this.data.temp_cache[1], //左上内

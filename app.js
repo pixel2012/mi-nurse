@@ -19,7 +19,7 @@ App({
   bleVer:'',//蓝牙硬件版本号
   ishaking:false,//是否正处于震动状态
   onLaunch() {
-    wx.hideTabBar();
+    // wx.hideTabBar();
     let _this = this;
     this.bleDeviceId = mi.store.get('bleDeviceId') || '';
     this.bleServerId = mi.store.get('bleServerId') || '';

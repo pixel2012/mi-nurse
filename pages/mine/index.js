@@ -53,7 +53,14 @@ Page({
     interval: 5000,
     duration: 1000,
     circular: true,
-    displayMultipleItems: 2
+    displayMultipleItems: 2,
+    oldSet:{
+      age:'',
+      height:'',
+      weight:'',
+      shape:'',
+      size:''
+    }
   },
   onLoad() {
     let userInfo = mi.store.get('userInfo');
@@ -74,9 +81,28 @@ Page({
         currentRt: myBreast.currentRt ? myBreast.currentRt : -1
       });
     }
+    this.updateInfo();
+
   },
   onShow() {
-
+  },
+  updateInfo(){
+    let myBreast = mi.store.get('myBreast');
+    let age = mi.store.get('age');
+    let height = mi.store.get('height');
+    let weight = mi.store.get('weight');
+    this.setData({
+      currentDate: age ? age : new Date().getFullYear() + '-01',
+      height: height ? height : '',
+      weight: weight ? weight : '',
+      oldSet: {
+        age: age ? mi.getAge(age) : '',
+        height: height ? height : '',
+        weight: weight ? weight : '',
+        shape: this.data.currentRt > -1 ? this.data.imgUrls[this.data.currentRt].title : '',
+        size: myBreast.result ? myBreast.result : ''
+      }
+    });
   },
   hideAll: function() {
     this.setData({
@@ -149,10 +175,12 @@ Page({
         _this.setData({
           isBreast: false
         });
+        _this.updateInfo();
       }
     });
   },
   bindDateChange: function(e) {
+    let _this=this;
     console.log('picker发送选择改变，携带值为', e.detail.value);
     this.setData({
       currentDate: e.detail.value
@@ -169,6 +197,8 @@ Page({
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         console.log('res', res);
+        mi.store.set('age', _this.data.currentDate);
+        _this.updateInfo();
       }
     });
   }, //生日
@@ -206,6 +236,9 @@ Page({
         _this.setData({
           isFigure: false
         });
+        mi.store.set('height', _this.data.height);
+        mi.store.set('weight', _this.data.weight);
+        _this.updateInfo();
       }
     });
   }, //身高体重

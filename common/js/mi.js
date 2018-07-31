@@ -383,6 +383,12 @@ const mi = {
     }
     return format;
   },
+  getAge(date){
+    let old=new Date(date).getFullYear();
+    let now = new Date().getFullYear();
+    let diff=now-old;
+    return diff;
+  },//根据出生日期得出年龄
   getRadom(min, max) {
     return parseInt(Math.random() * max) + min;
   },

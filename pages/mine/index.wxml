@@ -14,7 +14,8 @@
           <image class='my-params-item-img' src='img/age.png'></image>
         </view>
         <view class='my-params-item-text-box'>
-          <text class='my-params-item-text'>芳龄几何</text>
+          <view class='my-params-item-text'>芳龄几何</view>
+        <view class='my-params-item-text2' wx:if="{{oldSet.age}}">{{oldSet.age}}岁</view>
         </view>
       </picker>
     </view>
@@ -23,15 +24,17 @@
         <image class='my-params-item-img' src='img/chest-size.png'></image>
       </view>
       <view class='my-params-item-text-box'>
-        <text class='my-params-item-text'>窈窕几许</text>
-      </view>
+        <view class='my-params-item-text'>窈窕几许</view>
+        <view class='my-params-item-text2' wx:if="{{oldSet.height && oldSet.weight}}">{{oldSet.height}}cm/{{oldSet.weight}}kg</view>
+        </view>
     </view>
     <view class='my-params-item' bindtap="bindBreastChange">
       <view class='my-params-item-img-box'>
         <image class='my-params-item-img' src='img/chest-form.png'></image>
       </view>
       <view class='my-params-item-text-box'>
-        <text class='my-params-item-text'>酥胸形状</text>
+        <view class='my-params-item-text'>酥胸何状</view>
+        <view class='my-params-item-text2' wx:if="{{oldSet.shape && oldSet.size}}">{{oldSet.shape}}/{{oldSet.size}}</view>
       </view>
     </view>
   </view>
