@@ -1200,16 +1200,16 @@ Page({
           score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1) , (1 / 4) * 6.2);
         }
       }
-      if (group_max == 2) {
+      else if (group_max == 2) {
         if (avg >= 35.8 && avg <= 37) {
-          score = 100 - temp_max * 11.5 - Math.abs(t - (35.8 + 37) / 2) * 9;
+          score = 100 - temp_max * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
         } else if (avg > 32 && avg < 35.8) {
           score = 89.9 - temp_max * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
           score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1) , (1 / 4) * 6.2);
         }
       }
-      if (group_max == 3) {
+      else if (group_max == 3) {
         if (avg >= 35.8 && avg <= 37) {
           score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
         } else if (avg > 32 && avg < 35.8) {
