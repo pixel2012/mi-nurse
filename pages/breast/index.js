@@ -916,7 +916,8 @@ Page({
     console.log('====================diyStop结束============================');
   }, //diy暂停
   uploadZDMode(mode, time) {
-    console.log('url', api.uploadZD);
+    //console.log('url', api.uploadZD);
+    console.log('发送按摩时长', mode,time);
     mi.ajax({
       url: api.uploadZD,
       method: 'post',
@@ -929,7 +930,7 @@ Page({
       },
       dataPos: false,
       callback: function(data) {
-        console.log('data', data);
+        console.log('按摩时长', data);
       }
     });
   }, //上传震动

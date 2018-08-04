@@ -397,11 +397,13 @@ Page({
           //yearOptions, superYears
           _this.formateDate(res.data, function(yearOptions, superYears) {
             _this.setData({
+              year: yearOptions.length - 1,
               yearOptions: yearOptions,
               superYears: superYears,
-              monthOptions: superYears[_this.data.year].months.reverse()
+              monthOptions: superYears[yearOptions.length - 1].months.reverse(),
+              month: superYears[yearOptions.length - 1].months.length-1
             });
-            //如果年份数组大于0，则请求请求第一个月份的数据
+            //如果年份数组大于0，则请求请求第最后一个月份的数据
             if (res.data.length > 0) {
               _this.getMonthHistory(function(res) {
                 let obj = JSON.parse(res);
@@ -449,13 +451,25 @@ Page({
     });
   }, //赋最新值
   changeMonth(e) {
+    let _this=this;
+    console.log('月份下标', e.currentTarget.dataset.month);
     this.setData({
       month: e.currentTarget.dataset.month
     });
-    this.getMonthHistory();
+    this.getMonthHistory(function (res) {
+      let obj = JSON.parse(res);
+      //console.log('temp1111111111111111111111111111', obj);
+      if (obj && obj.data.length > 0) {
+        let charArr = mi.switchCharData(obj.data);
+        _this.detch(charArr[0], charArr[1], charArr[2]);
+        _this.setData({
+          superMonthArr: obj.data
+        });
+      }
+    });
   },
   getMonthHistory(callback) {
-    console.log(this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月');
+    console.log('请求温度年月份温度值',this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月');
     let _this = this;
     mi.ajax({
       url: api.history,
@@ -466,7 +480,6 @@ Page({
       },
       dataPos: false,
       login: true,
-      loading: false,
       callback: function(data) {
         let res = mi.crypto.decode(data);
         //console.log('获取当月数据',res);
@@ -1042,7 +1055,7 @@ Page({
           mi.store.set('lastTemp', lastTemp); //将温度信息存储到本地
           _this.calcTemp(function() {
             //变更本地乳温差值
-            mi.store.set('temp_avg_last', _this.data.temp_diff_num);
+            mi.store.set('temp_avg_last', _this.data.temp_avg);
             //变更最新值
             _this.assignInitVal(
               _this.data.temp_score,
@@ -1193,7 +1206,7 @@ Page({
     let temp_max = mi.getArryMax(group_arr).toFixed(1);
 
     //计算健康分数
-    console.log('temp_score', temp_avg, temp_max, group_arr);
+    // console.log('temp_score', temp_avg, temp_max, group_arr);
     let temp_score = this.calcScore(temp_avg, temp_max, group_arr);
     this.setData({
       temp_score: temp_score, //健康值
@@ -1229,7 +1242,7 @@ Page({
         break;
       }
     }
-    console.log('group_max', group_max);
+    // console.log('group_max', group_max);
     if (temp_max <= 0.4) {
       if (group_max == 1) {
         if (avg >= 35.8 && avg <= 37) {
@@ -1282,10 +1295,11 @@ Page({
       }
     }
 
-    console.log('score', score);
+    // console.log('score', score);
     return score.toFixed(1); //返回分数值
   }, //计算健康值
   calcAvgDiagnose(curr, last) {
+    // console.log('本地乳温：',curr,'上次乳温：', last);
     let avg_isNormal = true;
     let avg_title = '';
     let avg_detial = '';
@@ -1310,7 +1324,8 @@ Page({
     } else {
       //有历史数据
       let diff = curr - last; //与历史比较的温差
-      if (diff <= 0.3) {
+      // console.log('乳温差:', diff);
+      if (diff <= -0.3) {
         if (curr > 37.2) {
           //高于正常范围
           avg_isNormal = false;

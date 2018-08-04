@@ -156,7 +156,14 @@ Page({
       result: this.data.result,
       currentRt: this.data.currentRt
     };
+
     mi.store.set('myBreast', myBreast);
+    console.log('罩杯',{
+      "upSize": this.data.up,
+      "downSize": this.data.down,
+      "chestSize": this.data.result,
+      "chestType": this.data.imgUrls[this.data.currentRt].title
+    });
     mi.ajax({
       url: api.chest,
       method: 'post',
@@ -219,6 +226,10 @@ Page({
     if (!this.data.weight) {
       return mi.toast('请输入合适的体重');
     }
+    console.log('体重', {
+      "height": this.data.height * 10,
+      "weight": this.data.weight * 10
+    });
     let _this = this;
     mi.ajax({
       url: api.wh,
