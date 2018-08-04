@@ -37,9 +37,9 @@ Page({
     // if (!((_this.data.passO.length == 3) || (_this.data.passA.length == 3) || (_this.data.passB.length == 3))) {
     //   return mi.toast('密码仅支持3位长度');
     // }
-    console.log('passO', passO);
-    console.log('passO[0].length == 3', passO[0].length == 3);
-    console.log('!(passO && passO[0].length == 3)', !(passO && passO[0].length == 3));
+    //console.log('passO', passO);
+    //console.log('passO[0].length == 3', passO[0].length == 3);
+    //console.log('!(passO && passO[0].length == 3)', !(passO && passO[0].length == 3));
     if (!(passO && passO[0].length == 3)) {
       return mi.toast('旧密码长度仅支持3位且不能是中文');
     }
@@ -54,20 +54,20 @@ Page({
       return mi.toast('确认密码长度仅支持3位且不能是中文');
     }
     // if (!reg.test(_this.data.passA)) {
-    //   console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
+    //   //console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
     //   return mi.toast('1新密码长度仅支持3位且不能是中文');
     // }
     // if (_this.data.passA.length != 3) {
-    //   console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
+    //   //console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
     //   return mi.toast('2新密码长度仅支持3位且不能是中文');
     // }
     // if (!(reg.test(_this.data.passA) && (_this.data.passA.length == 3))) {
-    //   console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
+    //   //console.log('_this.data.passA', _this.data.passA, reg.test(_this.data.passA), _this.data.passA.length == 3, (reg.test(_this.data.passA) && (_this.data.passA.length == 3)));
     //   return mi.toast('3新密码长度仅支持3位且不能是中文');
     // }
 
     // if (!(reg.test(_this.data.passB) && (_this.data.passB.length == 3))) {
-    //   console.log('_this.data.passB', _this.data.passB);
+    //   //console.log('_this.data.passB', _this.data.passB);
     //   return mi.toast('确认密码长度仅支持3位且不能是中文');
     // }
     if (this.data.passA != this.data.passB) {
@@ -85,7 +85,7 @@ Page({
       param: oldPass.concat(hexPass),
       check: true,
       success: function() {
-        console.log('已设置密码');
+        //console.log('已设置密码');
         setTimeout(function() {
           if (typeof app.setPass == 'string' && app.setPass == '00') {
             app.setPass = false; //恢复原状

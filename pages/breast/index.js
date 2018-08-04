@@ -528,7 +528,7 @@ Page({
       function circleTimes(roundTimes) {
         if (!app.bleIsConnect) {
           _this.stop();
-          return mi.toast('请先连接蓝牙设备再进行相关操作');
+          return mi.toast('蓝牙已断开，自动暂停按摩');
         }
         if (roundTimes == 0) {
           _this.setData({
@@ -755,7 +755,7 @@ Page({
   },
   diyRun(e) {
     if (!app.bleIsConnect) {
-      return mi.toast('请先连接蓝牙设备再进行相关操作');
+      return mi.toast('蓝牙已断开，自动暂停按摩');
     }
     //关闭所有正在执行的震动模式
     if (timer) {
@@ -845,7 +845,7 @@ Page({
             _this.setData({
               diyArr: _this.data.diyArr
             });
-            return mi.toast('请先连接蓝牙设备再进行相关操作');
+            return mi.toast('蓝牙断开连接，自动关闭按摩');
           }
           if (roundTimes == 0) {
             cur.playStep++;
@@ -917,10 +917,6 @@ Page({
   }, //diy暂停
   uploadZDMode(mode, time) {
     console.log('url', api.uploadZD);
-    console.log({
-      "type": mode,
-      "ms": time,
-    });
     mi.ajax({
       url: api.uploadZD,
       method: 'post',

@@ -65,7 +65,7 @@ Page({
   onLoad() {
     let userInfo = mi.store.get('userInfo');
     let myBreast = mi.store.get('myBreast');
-    console.log(userInfo);
+    //console.log(userInfo);
     if (userInfo) {
       this.setData({
         nickName: userInfo.nickName,
@@ -129,7 +129,7 @@ Page({
     });
   },
   changeCurrent(e) {
-    console.log(e);
+    //console.log(e);
     if (e.detail.source == 'touch') {
       this.setData({
         current: e.detail.current
@@ -142,7 +142,7 @@ Page({
     });
   },
   save() {
-    console.log(this.data.result);
+    //console.log(this.data.result);
     if (this.data.currentRt == -1) {
       return mi.toast('请选择自己的胸型，点击确认');
     }
@@ -171,7 +171,7 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
+        //console.log('res', res);
         _this.setData({
           isBreast: false
         });
@@ -181,7 +181,7 @@ Page({
   },
   bindDateChange: function(e) {
     let _this=this;
-    console.log('picker发送选择改变，携带值为', e.detail.value);
+    //console.log('picker发送选择改变，携带值为', e.detail.value);
     this.setData({
       currentDate: e.detail.value
     });
@@ -196,7 +196,7 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
+        //console.log('res', res);
         mi.store.set('age', _this.data.currentDate);
         _this.updateInfo();
       }
@@ -232,7 +232,7 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
+        //console.log('res', res);
         _this.setData({
           isFigure: false
         });
@@ -554,9 +554,9 @@ Page({
         "type": 3
       },
       callback: function(data) {
-        console.log('data', data);
+        //console.log('data', data);
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('版本', res);
+        //console.log('版本', res);
         mi.toast(res.data ? res.data : '未知版本');
 
       }

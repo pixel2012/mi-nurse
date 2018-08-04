@@ -12,7 +12,7 @@ Page({
   },
   onLoad(options) {
     mi.showLoading('加载数据中');
-    console.log('massage-onLoad', options);
+    //console.log('massage-onLoad', options);
     let currentIndex = -1;
     if ('index' in options) {
       currentIndex = options.index
@@ -58,8 +58,8 @@ Page({
   },
   upParam() {
     if (app.result) {
-      console.log('666', 'app.result', app.result);
-      console.log('666', 'app.idx', app.idx);
+      //console.log('666', 'app.result', app.result);
+      //console.log('666', 'app.idx', app.idx);
       let shockArr = this.data.shockArr;
       if (app.idx != -1) {
         shockArr[app.idx] = app.result;
@@ -140,7 +140,7 @@ Page({
     arr.forEach(v => {
       time += v.time
     });
-    console.log('time', time);
+    //console.log('time', time);
     return time;
   }
 });

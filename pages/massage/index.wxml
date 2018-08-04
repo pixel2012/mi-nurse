@@ -10,8 +10,7 @@
     <view class='col-50 massage-title-key'>穴位设置</view>
     <view class='col-50 massage-title-value'>
       <navigator url="{{'/pages/acupoint/index?index='+index+'&idx=-1'}}">
-      <image src='img/add.png' style='width:36rpx;height:36rpx;vertical-align: middle;margin-right:6rpx;'></image>
-        添加穴位
+      <image src='img/add.png' style='width:28rpx;height:28rpx;vertical-align: -4rpx;margin-right:2rpx;'></image>添加穴位
       </navigator>
     </view>
   </view>

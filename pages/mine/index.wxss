@@ -132,14 +132,14 @@
 }
 .my-figure-box{
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   background-color: #fff;
   box-sizing: border-box;
   padding: 20rpx 20rpx;
-  border-top-left-radius: 10rpx;
-  border-top-right-radius: 10rpx;
+  border-bottom-left-radius: 10rpx;
+  border-bottom-right-radius: 10rpx;
 }
 .my-figure-input{
   display: inline-block;

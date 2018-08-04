@@ -19,7 +19,7 @@ App({
   bleVer:'',//蓝牙硬件版本号
   ishaking:false,//是否正处于震动状态
   onLaunch() {
-    wx.hideTabBar();
+    // wx.hideTabBar();
     let _this = this;
     this.bleDeviceId = mi.store.get('bleDeviceId') || '';
     this.bleServerId = mi.store.get('bleServerId') || '';
@@ -27,13 +27,13 @@ App({
     this.bleCharNotifyId = mi.store.get('bleCharNotifyId') || '';
     mi.user.login(function (code) {
       if (code) {
-        console.log('code', code);
+        //console.log('code', code);
         _this.wxCode = code;
       }
     });
     this.systemInfo = wx.getSystemInfoSync();
     mi.store.set('systemInfo', this.systemInfo);
-    console.log(this.systemInfo);
+    //console.log(this.systemInfo);
   },
   param: '',//穴位组合跳转添加穴位传的参数写入全局
   result: '',//创建或者修改穴位后的结果
@@ -57,7 +57,7 @@ App({
     let tempObj = mi.deepMerge({}, obj);
     tempObj.hex = command[obj.command];
     if (obj.command == 'c3' || obj.command == 'c5' || obj.command == 'c8' || obj.command == 'c9') {
-      console.log('obj.param', obj.param);
+      //console.log('obj.param', obj.param);
       obj.param.forEach(v => {
         tempObj.hex += v; //追加上参数
       });
@@ -71,20 +71,20 @@ App({
     }
     //追加包头，开始写入特征值
     tempObj.hex = 'FBFA' + tempObj.hex;
-    console.log('震动命令', tempObj.hex);
+    //console.log('震动命令', tempObj.hex);
     wx.writeBLECharacteristicValue({
       deviceId: this.bleDeviceId,
       serviceId: this.bleServerId,
       characteristicId: this.bleCharWriteId,
       value: mi.hex2buf(tempObj.hex),
       success: function (res) {
-        console.log('特征值写入成功', res);
+        //console.log('特征值写入成功', res);
         if (tempObj.success) {
           tempObj.success(res);
         }
       },
       fail: function (res) {
-        console.log('特征值写入失败', res);
+        //console.log('特征值写入失败', res);
         if (tempObj.fail) {
           tempObj.fail(res);
         }

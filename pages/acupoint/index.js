@@ -13,7 +13,7 @@ Page({
     time: 8
   },
   onLoad(options) {
-    console.log('acupoint-onLoad', options);
+    //console.log('acupoint-onLoad', options);
     if ('edit' in options) {
       let param = app.param;
       app.param = ''; //读完后删除之
@@ -91,8 +91,8 @@ Page({
     };
     app.result = param;
     app.idx = this.data.idx;
-    console.log('app.result', app.result);
-    console.log('app.idx', app.idx);
+    //console.log('app.result', app.result);
+    //console.log('app.idx', app.idx);
     wx.navigateBack(); //返回上一级
   },
   getCommand() {
@@ -101,7 +101,7 @@ Page({
     let ms = this.getMode(this.data.mode);
     let ts = parseInt(this.data.time).toString(16);
     ts = ts[1] ? ts : '0' + ts;
-    console.log('ts', ts);
+    //console.log('ts', ts);
     if (this.data.acupoint == 1 && (this.data.position == 1 || this.data.position == 2)) {
       left = [ms, ts, '00', '00', '00', '00'];
     }
@@ -120,7 +120,7 @@ Page({
     if (this.data.acupoint == 3 && (this.data.position == 1 || this.data.position == 3)) {
       right = ['00', '00', '00', '00', ms, ts];
     }
-    console.log('left.concat(right)', left.concat(right));
+    //console.log('left.concat(right)', left.concat(right));
     return left.concat(right);
   },
   getMode(num) {
