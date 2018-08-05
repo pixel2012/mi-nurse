@@ -1250,7 +1250,7 @@ Page({
         } else if (avg > 32 && avg < 35.8) {
           score = 89.9 - (0.4 - temp_max) * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
-          score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1), (1 / 4) * 6.2);
+          score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
       } else if (group_max == 2) {
         if (avg >= 35.8 && avg <= 37) {
@@ -1258,7 +1258,7 @@ Page({
         } else if (avg > 32 && avg < 35.8) {
           score = 89.9 - temp_max * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
-          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4) * 6.2);
+          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
       } else if (group_max == 3) {
         if (avg >= 35.8 && avg <= 37) {
@@ -1266,7 +1266,7 @@ Page({
         } else if (avg > 32 && avg < 35.8) {
           score = 89.9 - temp_max * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
-          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4) * 6.2);
+          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
       }
     } else if (temp_max > 0.4 && temp_max <= 0.9) {
@@ -1275,7 +1275,7 @@ Page({
       } else if (avg > 32 && avg < 35.8) {
         score = 74.9 - (temp_max - 0.5) * 20 - Math.pow((35.7 - avg), (1 / 2));
       } else if (avg > 37 && avg < 41) {
-        score = 64.9 - (temp_max - 0.5) * 9 - Math.pow((avg - 37.1), (1 / 4) * 4.5);
+        score = 64.9 - (temp_max - 0.5) * 9 - Math.pow((avg - 37.1), (1 / 4)) * 4.5;
       }
     } else if (temp_max > 0.9 && temp_max <= 3.6) {
       if (avg >= 35.8 && avg <= 37) {
@@ -1287,11 +1287,11 @@ Page({
       }
     } else if (temp_max > 3.6) {
       if (avg >= 35.8 && avg <= 37) {
-        score = 4.9 - Math.pow((temp_max - 3.7), (1 / 2) / 1.74) - Math.abs(avg - (35.8 + 37) / 2);
+        score = 4.9 - Math.pow((temp_max - 3.7), (1 / 2)) / 1.74 - Math.abs(avg - (35.8 + 37) / 2);
       } else if (avg > 32 && avg < 35.8) {
-        score = 3.5 - Math.pow((temp_max - 3.7), (1 / 2) / 1.88) - (35.7 - avg) / 12;
+        score = 3.5 - Math.pow((temp_max - 3.7), (1 / 2)) / 1.88 - (35.7 - avg) / 12;
       } else if (avg > 37 && avg < 41) {
-        score = 1.9 - Math.pow((temp_max - 3.7), (1 / 4) / 2.5) - (avg - 37.1) / 12.67;
+        score = 1.9 - Math.pow((temp_max - 3.7), (1 / 4)) / 2.5 - (avg - 37.1) / 12.67;
       }
     }
 
