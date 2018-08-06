@@ -247,7 +247,7 @@ Page({
         start: 0,
         end: 100,
         minSpan: 10,
-        // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
         handleSize: '100%',
         textStyle: {
           color: '#888',
@@ -401,7 +401,7 @@ Page({
               yearOptions: yearOptions,
               superYears: superYears,
               monthOptions: superYears[yearOptions.length - 1].months.reverse(),
-              month: superYears[yearOptions.length - 1].months.length-1
+              month: superYears[yearOptions.length - 1].months.length - 1
             });
             //如果年份数组大于0，则请求请求第最后一个月份的数据
             if (res.data.length > 0) {
@@ -451,12 +451,12 @@ Page({
     });
   }, //赋最新值
   changeMonth(e) {
-    let _this=this;
+    let _this = this;
     console.log('月份下标', e.currentTarget.dataset.month);
     this.setData({
       month: e.currentTarget.dataset.month
     });
-    this.getMonthHistory(function (res) {
+    this.getMonthHistory(function(res) {
       let obj = JSON.parse(res);
       //console.log('temp1111111111111111111111111111', obj);
       if (obj && obj.data.length > 0) {
@@ -469,7 +469,7 @@ Page({
     });
   },
   getMonthHistory(callback) {
-    console.log('请求温度年月份温度值',this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月');
+    console.log('请求温度年月份温度值', this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月');
     let _this = this;
     mi.ajax({
       url: api.history,
@@ -642,7 +642,7 @@ Page({
         });
         app.bleIsConnect = res.connected;
       }
-      setTimeout(function(){
+      setTimeout(function() {
         if (!app.bleIsConnect) {
           if (connectNum < 3) {
             connectNum++;
@@ -650,7 +650,7 @@ Page({
               url: "../index/index"
             });
             wx.stopBluetoothDevicesDiscovery({
-              success: function () {
+              success: function() {
                 mi.showLoading(`蓝牙重连中`);
                 _this.bleConnection(id);
 
@@ -658,7 +658,7 @@ Page({
             });
           } else {
             wx.stopBluetoothDevicesDiscovery({
-              success: function () {
+              success: function() {
                 // mi.hideLoading();
                 mi.toast('连接超出最大次数，请手动点击连接');
               }
@@ -691,7 +691,7 @@ Page({
           connectNum = 0; //连接次数清零
           mi.hideLoading();
         }
-      },500);
+      }, 500);
     });
     _this.bleConnection(deviceId);
   },
@@ -1244,13 +1244,13 @@ Page({
     }
     // console.log('group_max', group_max);
     if (temp_max <= 0.4) {
-      if (group_max == 1) {
+      if (group_max == 3) {
         if (avg >= 35.8 && avg <= 37) {
-          score = 100 - (0.4 - temp_max) * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
+          score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
         } else if (avg > 32 && avg < 35.8) {
-          score = 89.9 - (0.4 - temp_max) * 15.7 - (35.7 - avg);
+          score = 89.9 - temp_max * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
-          score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
+          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
       } else if (group_max == 2) {
         if (avg >= 35.8 && avg <= 37) {
@@ -1260,13 +1260,13 @@ Page({
         } else if (avg > 37 && avg < 41) {
           score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
-      } else if (group_max == 3) {
+      } else if (group_max == 1) {
         if (avg >= 35.8 && avg <= 37) {
-          score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
+          score = 100 - (0.4 - temp_max) * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
         } else if (avg > 32 && avg < 35.8) {
-          score = 89.9 - temp_max * 15.7 - (35.7 - avg);
+          score = 89.9 - (0.4 - temp_max) * 15.7 - (35.7 - avg);
         } else if (avg > 37 && avg < 41) {
-          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
+          score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
       }
     } else if (temp_max > 0.4 && temp_max <= 0.9) {

@@ -698,7 +698,7 @@ Page({
   },
   // diy按摩代码
   longShock(e) {
-    console.log(666);
+    // console.log(666);
     if (timer) {
       this.stop();
     }
