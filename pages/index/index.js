@@ -1202,7 +1202,7 @@ Page({
     let gmax2 = mi.getArryMax(temp_group2_max);
     let gmax3 = mi.getArryMax(temp_group3_max);
     //对三组最大温差值进行比较，得出最大的温差赋予temp
-    let group_arr = [gmax1, gmax2, gmax3];
+    let group_arr = [gmax3, gmax2, gmax1];
     let temp_max = mi.getArryMax(group_arr).toFixed(1);
 
     //计算健康分数
@@ -1244,7 +1244,7 @@ Page({
     }
     // console.log('group_max', group_max);
     if (temp_max <= 0.4) {
-      if (group_max == 3) {
+      if (group_max == 1) {
         if (avg >= 35.8 && avg <= 37) {
           score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
         } else if (avg > 32 && avg < 35.8) {
@@ -1260,7 +1260,7 @@ Page({
         } else if (avg > 37 && avg < 41) {
           score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
-      } else if (group_max == 1) {
+      } else if (group_max == 3) {
         if (avg >= 35.8 && avg <= 37) {
           score = 100 - (0.4 - temp_max) * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
         } else if (avg > 32 && avg < 35.8) {
