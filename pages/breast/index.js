@@ -186,6 +186,8 @@ class Shake {
 let shaker = null; //本地震动对象
 let timer = null; //本地震动定时器
 let timer2 = null; //diy震动定时器
+let shakeTimes = 0; //记录开始震动到暂停/停止的时间（自动）
+let shakeTimes2 = 0; //记录开始震动到暂停/停止的时间（diy）
 const api = {
   uploadZD: mi.ip + 'zhimito/used/post', //获取温度列表
 }
@@ -271,60 +273,18 @@ Page({
       });
       mi.store.set('yet', true);
     }
+    //还原上次震动强度
+    this.setData({
+      strength: mi.store.get('strength') || '01',
+      diyStrength: mi.store.get('diyStrength') * 1 || 1
+    });
+
     this.updateStatus();
-    // var that = this;
-    // var num = 0
-    // setInterval(function () {
-    //   if (num == 360) {
-    //     num = 0;
-    //   } else {
-    //     num += 10;
-    //   }
-    //   that.setPlay(num);
-    // }, 1000);
-    // let test = [{
-    //   title: '组合1',
-    //   timeUsed: 0,
-    //   timeTotal: 120,
-    //   play: false,
-    //   shockArr: [
-    //     {
-    //       acupointName: '乳根穴',
-    //       acupoint: 1,
-    //       positionName: '左右胸同步',
-    //       position: 1,
-    //       modeName: '生如夏花',
-    //       mode: 0,
-    //       time: 8,
-    //       command: ['00', '00', '11', '08', '00', '00', '00', '00', '00', '00', '00', '00'],//左乳中8秒
-    //     }
-    //   ]//执行的动画序列
-    // }];
-    // mi.store.set('diyArr',test);
-    this.uploadZDMode(2, 10000);
   },
   onShow() {
     this.updateStatus();
   },
-  onHide() {
-    // let _this=this;
-    // if(timer){
-    //   wx.showModal({
-    //     title: '提示',
-    //     content: '确定要退出吗？ 还没有完成一次完整的按摩疗程哦！',
-    //     success: function (res) {
-    //       if (res.confirm) {
-    //         return true;
-    //       } else if (res.cancel) {
-    //         return false;
-    //       }
-    //     }
-    //   })
-    // }
-    // if(timer2){
-
-    // }
-  },
+  onHide() {},
   updateStatus() {
     this.setData({
       bleIsConnect: app.bleIsConnect, //是否连接蓝牙
@@ -439,7 +399,7 @@ Page({
   allLoop(callback) {
     app.ishaking = true; //设置正在震动状态
     let _this = this;
-    _this.loop(function () {
+    _this.loop(function() {
       console.log('大动画执行' + _this.data.allLoop + '完毕');
       let allLoop = _this.data.allLoop + 1;
       if (allLoop < _this.data.allLoops) {
@@ -538,9 +498,17 @@ Page({
         } else {
           roundTimes--;
           timer = setTimeout(function() {
-            _this.setData({
-              nowTime: _this.data.nowTime + 1
-            });
+            if (_this.data.nowTime >= _this.data.allTime){
+              _this.setData({
+                nowTime: _this.data.allTime
+              });
+            }else{
+              _this.setData({
+                nowTime: _this.data.nowTime + 1
+              });
+            }
+            
+            shakeTimes++; //记录片段时间
             console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
             _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
             circleTimes(roundTimes);
@@ -638,11 +606,12 @@ Page({
         });
       }
     });
-    _this.uploadZDMode(1, _this.data.nowTime * 1000);//发送统计数据
+    _this.uploadZDMode(1, shakeTimes * 1000); //发送统计数据
     clearTimeout(timer);
     _this.setData({
       play: false
     });
+    shakeTimes = 0; //清空震动片段时间时间
   }, //停止
   bindTab(e) {
     this.setData({
@@ -673,6 +642,7 @@ Page({
     this.setData({
       strength: e.currentTarget.dataset.index
     });
+    mi.store.set('strength', e.currentTarget.dataset.index);
     if (shaker) {
       shaker.setStrength('0' + e.currentTarget.dataset.index);
     }
@@ -682,6 +652,7 @@ Page({
     this.setData({
       diyStrength: e.currentTarget.dataset.index * 1
     });
+    mi.store.set('diyStrength', e.currentTarget.dataset.index);
   },
   setPlay: function(num) {
     if (num < 180) {
@@ -873,8 +844,15 @@ Page({
           } else {
             timer2 = setTimeout(function() {
               roundTimes--;
-              _this.data.diyArr[_this.data.diyIndex].timeUsed++;
-              console.log(' _this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyArr[_this.data.diyIndex].timeUsed);
+              if (_this.data.diyIndex > -1) {
+                if (_this.data.diyArr[_this.data.diyIndex].timeUsed >= _this.data.diyArr[_this.data.diyIndex].timeTotal){
+                  _this.data.diyArr[_this.data.diyIndex].timeUsed = _this.data.diyArr[_this.data.diyIndex].timeTotal;
+                }else{
+                  _this.data.diyArr[_this.data.diyIndex].timeUsed++;
+                  console.log(' _this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyIndex, _this.data.diyArr[_this.data.diyIndex].timeUsed);
+                }
+                shakeTimes2++;
+              }
               _this.setData({
                 diyArr: _this.data.diyArr
               });
@@ -894,19 +872,14 @@ Page({
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false,
       success: function() {
-        _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeUsed * 1000);//发送统计数据
+        _this.uploadZDMode(2, shakeTimes2 * 1000); //发送统计数据
+        shakeTimes2 = 0;
         clearTimeout(timer2);
         timer2 = null;
         console.log('stop', '_this.data.diyIndex', _this.data.diyIndex);
         if (_this.data.diyArr[_this.data.diyIndex]) {
           _this.data.diyArr[_this.data.diyIndex].play = false;
           _this.data.diyArr[_this.data.diyIndex].timeUsed = 0;
-          // let times = 0;
-          // for (let i = 0; i < _this.data.diyArr[_this.data.diyIndex].playStep; i++) {
-          //   times += _this.data.diyArr[_this.data.diyIndex].shockArr[i].time;
-          // }
-          // console.log('stop', '_this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyArr[_this.data.diyIndex].timeUsed, 'times', times);
-          // _this.data.diyArr[_this.data.diyIndex].timeUsed = times;
           _this.setData({
             diyArr: _this.data.diyArr
           });
@@ -917,7 +890,7 @@ Page({
   }, //diy暂停
   uploadZDMode(mode, time) {
     //console.log('url', api.uploadZD);
-    console.log('发送按摩时长', mode,time);
+    console.log('发送按摩时长', mode, time);
     mi.ajax({
       url: api.uploadZD,
       method: 'post',
