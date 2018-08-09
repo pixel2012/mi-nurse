@@ -1059,7 +1059,8 @@ Page({
             //变更最新值
             _this.assignInitVal(
               _this.data.temp_score,
-              _this.data.temp_diff_num, [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto]);
+              _this.data.temp_diff_num, 
+              [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto]); 
             //计算完所有温度后，提交后台
             _this.uploadTem();
           });

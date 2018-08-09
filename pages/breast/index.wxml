@@ -46,6 +46,7 @@
   <!--普通按摩  -->
   <view class='mi-tab-item' wx:if="{{tabIndex==0}}">
     <image src='img/menu.png' class='menu' wx:if="{{!isMenu}}" catchtap='showMenu'></image>
+    <image src='img/menu2.png' class='menu2' wx:if="{{isMenu}}" catchtap='showMenu'></image>
     <view class='mi-tab-menu {{isMenu?"active":""}}'>
       <block wx:for='{{menuList}}' wx:key='item'>
         <view class='mi-tab-menu-item {{menuIndex==item.id?"active":""}}' data-index='{{item.id}}' data-title='{{item.title}}' data-mode='{{item.mode}}' bindtap='showMenuItem'>

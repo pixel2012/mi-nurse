@@ -12,11 +12,16 @@ Page({
     headerUrl: '',
     isFigure: false, //是否显示身材
     isBreast: false, //是否显示胸围
-    height: '', //身高
-    weight: '', //体重
     currentDate: new Date().getFullYear() + '-01',
     dateStart: new Date().getFullYear() - 50 + '-01',
     dataEnd: new Date().getFullYear() + '-12',
+    height: '', //身高
+    weight: '', //体重
+    multiArray: [mi.heightInit(),mi.weightInit()],
+    multiIndex: [40, 20],
+
+
+
     imgUrls: [{
         title: '圆盘型',
         url: 'img/01.jpg'
@@ -85,6 +90,15 @@ Page({
 
   },
   onShow() {
+  },
+  bindMultiPickerChange: function (e) {
+    console.log('picker发送选择改变，携带值为', e.detail.value)
+    this.data.oldSet.height = this.data.multiArray[0][e.detail.value[0]];
+    this.data.oldSet.weight = this.data.multiArray[1][e.detail.value[1]];
+    this.setData({
+      oldSet: this.data.oldSet
+    });
+    // this.bindSave2();
   },
   updateInfo(){
     let myBreast = mi.store.get('myBreast');
@@ -250,6 +264,30 @@ Page({
         mi.store.set('height', _this.data.height);
         mi.store.set('weight', _this.data.weight);
         _this.updateInfo();
+      }
+    });
+  }, //身高体重
+  bindSave2() {
+    let _this = this;
+    mi.ajax({
+      url: api.wh,
+      method: 'post',
+      login: false,
+      data: {
+        "height": this.data.oldSet.height.replace('cm','') * 10,
+        "weight": this.data.oldSet.weight.replace('kg', '') * 10
+      },
+      encrypt: true,
+      dataPos: false,
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('res', res);
+        // _this.setData({
+        //   isFigure: false
+        // });
+        // mi.store.set('height', _this.data.height);
+        // mi.store.set('weight', _this.data.weight);
+        // _this.updateInfo();
       }
     });
   }, //身高体重

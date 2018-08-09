@@ -15,19 +15,30 @@
         </view>
         <view class='my-params-item-text-box'>
           <view class='my-params-item-text'>芳龄几何</view>
-        <view class='my-params-item-text2' wx:if="{{oldSet.age}}">{{oldSet.age}}岁</view>
+          <view class='my-params-item-text2' wx:if="{{oldSet.age}}">{{oldSet.age}}岁</view>
         </view>
       </picker>
     </view>
-    <view class='my-params-item' bindtap="bindFigureChange">
+    <view class='my-params-item'>
+      <picker mode="multiSelector" bindchange="bindMultiPickerChange"  value="{{multiIndex}}" range="{{multiArray}}">
+        <view class='my-params-item-img-box'>
+          <image class='my-params-item-img' src='img/chest-size.png'></image>
+        </view>
+        <view class='my-params-item-text-box'>
+          <view class='my-params-item-text'>窈窕几许</view>
+          <view class='my-params-item-text2' wx:if="{{oldSet.height && oldSet.weight}}">{{oldSet.height}}/{{oldSet.weight}}</view>
+        </view>
+      </picker>
+    </view>
+    <!-- <view class='my-params-item' bindtap="bindFigureChange">
       <view class='my-params-item-img-box'>
         <image class='my-params-item-img' src='img/chest-size.png'></image>
       </view>
       <view class='my-params-item-text-box'>
         <view class='my-params-item-text'>窈窕几许</view>
         <view class='my-params-item-text2' wx:if="{{oldSet.height && oldSet.weight}}">{{oldSet.height}}cm/{{oldSet.weight}}kg</view>
-        </view>
-    </view>
+      </view>
+    </view> -->
     <view class='my-params-item' bindtap="bindBreastChange">
       <view class='my-params-item-img-box'>
         <image class='my-params-item-img' src='img/chest-form.png'></image>
@@ -109,9 +120,9 @@
         <block wx:for="{{imgUrls}}" wx:key="{{index}}">
           <swiper-item>
             <image src="{{item.url}}" class="slide-image" mode='widthFix' />
-              <view class='slide-checked-image' data-index='{{index}}' bindtap='changeBreast'>
-              <image src="img/checked.png" class="slide-checked-inner-image" mode='widthFix' wx:if="{{index == currentRt}}"/>
-              </view>
+            <view class='slide-checked-image' data-index='{{index}}' bindtap='changeBreast'>
+              <image src="img/checked.png" class="slide-checked-inner-image" mode='widthFix' wx:if="{{index == currentRt}}" />
+            </view>
             <view class='my-breast-slider-type'>
               <text class='my-breast-text'>{{item.title}}</text>
             </view>

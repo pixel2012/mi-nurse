@@ -620,7 +620,7 @@ Page({
   },
   showMenu() {
     this.setData({
-      isMenu: true
+      isMenu: !this.data.isMenu
     });
   },
   hideMenu() {

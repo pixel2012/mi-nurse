@@ -532,5 +532,20 @@ const mi = {
     }
     return left.concat(right);
   },
+  heightInit(){
+    let heightArray=[];
+    let x=0;
+    for(let i=120;i<=200;i++){
+      heightArray.push(i+'cm');
+    }
+    return heightArray;
+  },//身高初始化
+  weightInit(){
+    let heightArray = [];
+    for (let i = 30; i <= 100; i++) {
+      heightArray.push(i + 'kg');
+    }
+    return heightArray;
+  },//体重初始化
 }
 module.exports = mi;

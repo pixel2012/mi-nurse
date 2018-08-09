@@ -38,16 +38,22 @@ page{
   position: relative;
 }
 
-.menu {
+.menu,.menu2 {
   position: absolute;
   width: 28rpx;
   height: 53rpx;
-  left: 2%;
   top: 40%;
   transform: translateY(-50%);
   z-index: 100;
   padding: 10rpx;
   background-color: #fff;
+  transform-origin:50% 50%;
+}
+.menu{
+left: 2%;
+}
+.menu2{
+left: 22%;
 }
 
 .mi-tab-menu {
