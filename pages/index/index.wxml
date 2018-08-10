@@ -113,11 +113,11 @@
     </scroll-view>
 
     <view class='mi-assess-box2 row'>
-      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+      <view class='col-60 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>健康指数 </text>
-        <text wx:if="{{echart0 != 0}}"> {{echart0}} 分</text>
+        <text wx:if="{{echart0 != 0}}"> {{echart0Date}} {{echart0}}分</text>
       </view>
-      <view class='col-50 mi-assess-time'>
+      <view class='col-40 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index"></navigator> -->
         <text data-go='0' bindtap='jump'>点击查看详情></text>
       </view>
@@ -127,11 +127,11 @@
     </view>
 
     <view class='mi-assess-box2 row'>
-      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+      <view class='col-60 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>乳温差</text>
-        <text wx:if="{{echart1 != 0}}"> {{echart1}} ℃</text>
+        <text wx:if="{{echart1 != 0}}"> {{echart1Date}} {{echart1}}℃</text>
       </view>
-      <view class='col-50 mi-assess-time'>
+      <view class='col-40 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
         <text data-go='1' bindtap='jump'>点击查看详情></text>
       </view>
@@ -141,10 +141,11 @@
     </view>
 
     <view class='mi-assess-box2 row'>
-      <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
+      <view class='col-60 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>乳温</text>
+        <text wx:if="{{echart2Date != ''}}"> {{echart2Date}}</text>
       </view>
-      <view class='col-50 mi-assess-time'>
+      <view class='col-40 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
         <text data-go='2' bindtap='jump'>点击查看详情></text>
       </view>

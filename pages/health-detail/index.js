@@ -36,126 +36,131 @@ Page({
   onShow() {
 
   },
-    calcTemp(callback) {
-        //平均温度
-        let temp_avg = ((this.data.temp_lto + this.data.temp_lti + this.data.temp_rti + this.data.temp_rto) / 4).toFixed(1);
-        //8种温差组合
-        let temp_lto_lti = this.data.temp_lto - this.data.temp_lti; //左上外,左上内
-        let temp_rto_rti = this.data.temp_rto - this.data.temp_rti; //右上外,右上内
-        let temp_lto_rto = this.data.temp_lto - this.data.temp_rto; //左上外,右上外
-        let temp_lti_rti = this.data.temp_lti - this.data.temp_rti; //左上内,右上内
+  calcTemp(callback) {
+    if (!(this.data.temp_lto && this.data.temp_lti && this.data.temp_rti && this.data.temp_rto)) {
+      return false;
+    }
+    //平均温度
+    let temp_avg = ((this.data.temp_lto + this.data.temp_lti + this.data.temp_rti + this.data.temp_rto) / 4).toFixed(1);
+    //8种温差组合
+    let temp_lto_lti = this.data.temp_lto - this.data.temp_lti; //左上外,左上内
+    let temp_rto_rti = this.data.temp_rto - this.data.temp_rti; //右上外,右上内
+    let temp_lto_rto = this.data.temp_lto - this.data.temp_rto; //左上外,右上外
+    let temp_lti_rti = this.data.temp_lti - this.data.temp_rti; //左上内,右上内
 
-        let temp_lti_lto = this.data.temp_lti - this.data.temp_lto; //左上内,左上外
-        let temp_rti_rto = this.data.temp_rti - this.data.temp_rto; //右上内,右上外
-        let temp_rto_lto = this.data.temp_rto - this.data.temp_lto; //右上外,左上外
-        let temp_rti_lti = this.data.temp_rti - this.data.temp_lti; //右上内,左上内
+    let temp_lti_lto = this.data.temp_lti - this.data.temp_lto; //左上内,左上外
+    let temp_rti_rto = this.data.temp_rti - this.data.temp_rto; //右上内,右上外
+    let temp_rto_lto = this.data.temp_rto - this.data.temp_lto; //右上外,左上外
+    let temp_rti_lti = this.data.temp_rti - this.data.temp_lti; //右上内,左上内
 
-        //列出三组温差值
-        let temp_group1_max = [temp_lto_rto, temp_lti_rti];
-        let temp_group2_max = [temp_lto_lti, temp_lti_lto, temp_rto_rti, temp_rti_rto];
-        let temp_group3_max = [temp_rto_lto, temp_rti_lti];
+    //列出三组温差值
+    let temp_group1_max = [temp_lto_rto, temp_lti_rti];
+    let temp_group2_max = [temp_lto_lti, temp_lti_lto, temp_rto_rti, temp_rti_rto];
+    let temp_group3_max = [temp_rto_lto, temp_rti_lti];
 
-        //分别对数组进行倒序排列，得出最大温差值
-        let gmax1 = mi.getArryMax(temp_group1_max);
-        let gmax2 = mi.getArryMax(temp_group2_max);
-        let gmax3 = mi.getArryMax(temp_group3_max);
-        //对三组最大温差值进行比较，得出最大的温差赋予temp
-        let group_arr = [gmax1, gmax2, gmax3];
-        let temp_max = mi.getArryMax(group_arr).toFixed(1);
+    //分别对数组进行倒序排列，得出最大温差值
+    let gmax1 = mi.getArryMax(temp_group1_max);
+    let gmax2 = mi.getArryMax(temp_group2_max);
+    let gmax3 = mi.getArryMax(temp_group3_max);
+    //对三组最大温差值进行比较，得出最大的温差赋予temp
+    let group_arr = [gmax3, gmax2, gmax1];
+    let temp_max = mi.getArryMax(group_arr).toFixed(1);
 
-        //计算健康分数
-        let temp_score = this.calcScore(temp_avg, temp_max, group_arr);
-        this.setData({
-            temp_score: temp_score, //健康值
-            temp_avg: temp_avg, //平均乳温
-            temp_diff_num: temp_max
-        });
-        //计算诊断结果
-        let avg_last = mi.store.get('temp_avg_last') || -1;
-        this.calcAvgDiagnose(temp_avg, avg_last);
-        this.calcDiffDiagnose([
-            temp_lto_lti,
-            temp_rto_rti,
-            temp_lto_rto,
-            temp_lti_rti,
-            temp_lti_lto,
-            temp_rti_rto,
-            temp_rto_lto,
-            temp_rti_lti
-        ]);
-        //根据蓝牙数据得到温度值
-        if (callback) {
-            callback();
+    //计算健康分数
+    // console.log('temp_score', temp_avg, temp_max, group_arr);
+    let temp_score = this.calcScore(temp_avg, temp_max, group_arr);
+    this.setData({
+      temp_score: temp_score, //健康值
+      temp_avg: temp_avg, //平均乳温
+      temp_diff_num: temp_max
+    });
+    //计算诊断结果
+    let avg_last = mi.store.get('temp_avg_last') || -1;
+    this.calcAvgDiagnose(temp_avg, avg_last);
+    this.calcDiffDiagnose([
+      temp_lto_lti,
+      temp_rto_rti,
+      temp_lto_rto,
+      temp_lti_rti,
+      temp_lti_lto,
+      temp_rti_rto,
+      temp_rto_lto,
+      temp_rti_lti
+    ]);
+    //根据蓝牙数据得到温度值
+    if (callback) {
+      callback();
+    }
+
+  }, //计算温度，蓝牙得到温度后触发
+  calcScore(avg, temp_max, group_arr) {
+    let score = ''; //所得分数
+
+    let group_max = 0; //最大温差的那个组合序号
+    for (let i = 0; i < group_arr.length; i++) {
+      if (temp_max == group_arr[i].toFixed(1)) {
+        group_max = i + 1;
+        break;
+      }
+    }
+    // console.log('group_max', group_max);
+    if (temp_max <= 0.4) {
+      if (group_max == 1) {
+        if (avg >= 35.8 && avg <= 37) {
+          score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
+        } else if (avg > 32 && avg < 35.8) {
+          score = 89.9 - temp_max * 15.7 - (35.7 - avg);
+        } else if (avg > 37 && avg < 41) {
+          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
-
-    }, //计算温度，蓝牙得到温度后触发
-    calcScore(avg, temp_max,group_arr) {
-        let score = ''; //所得分数
-
-        let group_max = ''; //最大温差的那个组合序号
-        for (let i = 0; i < group_arr.length; i++) {
-            if (temp_max == group_arr[i]) {
-                group_max = i + 1;
-                break;
-            }
+      } else if (group_max == 2) {
+        if (avg >= 35.8 && avg <= 37) {
+          score = 100 - temp_max * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
+        } else if (avg > 32 && avg < 35.8) {
+          score = 89.9 - temp_max * 15.7 - (35.7 - avg);
+        } else if (avg > 37 && avg < 41) {
+          score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
-        if (temp_max <= 0.4) {
-            if (group_max == 1) {
-                if (avg >= 35.8 && avg <= 37) {
-                    score = 100 - (0.4 - temp_max) * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
-                } else if (avg > 32 && avg < 35.8) {
-                    score = 89.9 - (0.4 - temp_max) * 15.7 - (35.7 - avg);
-                } else if (avg > 37 && avg < 41) {
-                    score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1) , (1 / 4) * 6.2);
-                }
-            }
-            else if (group_max == 2) {
-                if (avg >= 35.8 && avg <= 37) {
-                    score = 100 - temp_max * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
-                } else if (avg > 32 && avg < 35.8) {
-                    score = 89.9 - temp_max * 15.7 - (35.7 - avg);
-                } else if (avg > 37 && avg < 41) {
-                    score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1) , (1 / 4) * 6.2);
-                }
-            }
-            else if (group_max == 3) {
-                if (avg >= 35.8 && avg <= 37) {
-                    score = 95 - temp_max * 13 - Math.abs(avg - (35.8 + 37) / 2) * 8;
-                } else if (avg > 32 && avg < 35.8) {
-                    score = 89.9 - temp_max * 15.7 - (35.7 - avg);
-                } else if (avg > 37 && avg < 41) {
-                    score = 74.9 - temp_max * 3 - Math.pow((avg - 37.1) , (1 / 4) * 6.2);
-                }
-            }
-        } else if (temp_max > 0.4 && temp_max <= 0.9) {
-            if (avg >= 35.8 && avg <= 37) {
-                score = 85 - (temp_max - 0.5) * 19 - Math.abs(avg - (35.8 + 37) / 2) * 4;
-            } else if (avg > 32 && avg < 35.8) {
-                score = 74.9 - (temp_max - 0.5) * 20 - Math.pow((35.7 - avg) , (1 / 2));
-            } else if (avg > 37 && avg < 41) {
-                score = 64.9 - (temp_max - 0.5) * 9 - Math.pow((avg - 37.1) , (1 / 4) * 4.5);
-            }
-        } else if (temp_max > 0.9 && temp_max <= 3.6) {
-            if (avg >= 35.8 && avg <= 37) {
-                score = 59.9 - (temp_max - 1) * 15 - Math.abs(avg - (35.8 + 37) / 2) * 1.5;
-            } else if (avg > 32 && avg < 35.8) {
-                score = 49.9 - (temp_max - 1) * 13.81 - (35.7 - avg) * 1.11;
-            } else if (avg > 37 && avg < 41) {
-                score = 39.9 - (temp_max - 1) * 9.39 - (avg - 37.1) * 2.76;
-            }
-        } else if (temp_max > 3.6) {
-            if (avg >= 35.8 && avg <= 37) {
-                score = 4.9 - Math.pow((temp_max - 3.7) , (1 / 2) / 1.74) - Math.abs(avg - (35.8 + 37) / 2);
-            } else if (avg > 32 && avg < 35.8) {
-                score = 3.5 - Math.pow((temp_max - 3.7) , (1 / 2) / 1.88) - (35.7 - avg) / 12;
-            } else if (avg > 37 && avg < 41) {
-                score = 1.9 - Math.pow((temp_max - 3.7) , (1 / 4) / 2.5) - (avg - 37.1) / 12.67;
-            }
+      } else if (group_max == 3) {
+        if (avg >= 35.8 && avg <= 37) {
+          score = 100 - (0.4 - temp_max) * 11.5 - Math.abs(avg - (35.8 + 37) / 2) * 9;
+        } else if (avg > 32 && avg < 35.8) {
+          score = 89.9 - (0.4 - temp_max) * 15.7 - (35.7 - avg);
+        } else if (avg > 37 && avg < 41) {
+          score = 74.9 - (0.4 - temp_max) * 3 - Math.pow((avg - 37.1), (1 / 4)) * 6.2;
         }
-        return score.toFixed(1); //返回分数值
-    }, //计算健康值
+      }
+    } else if (temp_max > 0.4 && temp_max <= 0.9) {
+      if (avg >= 35.8 && avg <= 37) {
+        score = 85 - (temp_max - 0.5) * 19 - Math.abs(avg - (35.8 + 37) / 2) * 4;
+      } else if (avg > 32 && avg < 35.8) {
+        score = 74.9 - (temp_max - 0.5) * 20 - Math.pow((35.7 - avg), (1 / 2));
+      } else if (avg > 37 && avg < 41) {
+        score = 64.9 - (temp_max - 0.5) * 9 - Math.pow((avg - 37.1), (1 / 4)) * 4.5;
+      }
+    } else if (temp_max > 0.9 && temp_max <= 3.6) {
+      if (avg >= 35.8 && avg <= 37) {
+        score = 59.9 - (temp_max - 1) * 15 - Math.abs(avg - (35.8 + 37) / 2) * 1.5;
+      } else if (avg > 32 && avg < 35.8) {
+        score = 49.9 - (temp_max - 1) * 13.81 - (35.7 - avg) * 1.11;
+      } else if (avg > 37 && avg < 41) {
+        score = 39.9 - (temp_max - 1) * 9.39 - (avg - 37.1) * 2.76;
+      }
+    } else if (temp_max > 3.6) {
+      if (avg >= 35.8 && avg <= 37) {
+        score = 4.9 - Math.pow((temp_max - 3.7), (1 / 2)) / 1.74 - Math.abs(avg - (35.8 + 37) / 2);
+      } else if (avg > 32 && avg < 35.8) {
+        score = 3.5 - Math.pow((temp_max - 3.7), (1 / 2)) / 1.88 - (35.7 - avg) / 12;
+      } else if (avg > 37 && avg < 41) {
+        score = 1.9 - Math.pow((temp_max - 3.7), (1 / 4)) / 2.5 - (avg - 37.1) / 12.67;
+      }
+    }
+
+    // console.log('score', score);
+    return score.toFixed(1); //返回分数值
+  }, //计算健康值
   calcAvgDiagnose(curr, last) {
-    let _this=this;
+    // console.log('本地乳温：',curr,'上次乳温：', last);
     let avg_isNormal = true;
     let avg_title = '';
     let avg_detial = '';
@@ -180,7 +185,8 @@ Page({
     } else {
       //有历史数据
       let diff = curr - last; //与历史比较的温差
-      if (diff <= 0.3) {
+      // console.log('乳温差:', diff);
+      if (diff <= -0.3) {
         if (curr > 37.2) {
           //高于正常范围
           avg_isNormal = false;
@@ -236,7 +242,7 @@ Page({
     this.setData({
       temp_avg_isNormal: avg_isNormal,
       temp_avg_title: avg_title,
-      temp_avg_detial: avg_detial
+      temp_avg_detial: avg_detial,
     });
 
   }, //计算平均乳温诊断结果

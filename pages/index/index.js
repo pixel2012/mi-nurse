@@ -89,9 +89,12 @@ Page({
     superYears: [], //时间备选合集
     year: 0,
     month: 0,
-    echart0: 0,
-    echart1: 0,
-    echart2: [0, 0, 0, 0],
+    echart0: 0, //表0健康值
+    echart1: 0, //表1温差
+    echart2: [0, 0, 0, 0], //表2温度
+    echart0Date: '', //表0日期
+    echart1Date: '', //表1日期
+    echart2Date: '', //表2日期
     measurementTime: 0, //测温时长
     jump0: null, //健康
     jump1: null, //温差
@@ -271,18 +274,20 @@ Page({
         axisPointer: {
           label: {
             formatter: function(params) {
-              //console.log(params);
+              console.log(params);
               // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
               if (opts.target == 'echart2') {
                 //console.log('当前图表点击了' + opts.jump);
                 _this.setData({
                   [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value],
+                  [opts.target + 'Date']: params.seriesData[0].name.replace('\n', ''),
                   [opts.jump]: params.seriesData[0]
                 });
               } else {
                 //console.log('当前图表点击了' + opts.jump);
                 _this.setData({
                   [opts.target]: params.seriesData[0].value,
+                  [opts.target+'Date']: params.seriesData[0].name.replace('\n',''),
                   [opts.jump]: params.seriesData[0]
                 });
               }
@@ -407,17 +412,22 @@ Page({
             if (res.data.length > 0) {
               _this.getMonthHistory(function(res) {
                 let obj = JSON.parse(res);
-                //console.log('temp1111111111111111111111111111', obj);
+                // console.log('temp1111111111111111111111111111', obj);
                 if (obj && obj.data.length > 0) {
                   let charArr = mi.switchCharData(obj.data);
+                  // console.log('charArr', charArr);
                   _this.detch(charArr[0], charArr[1], charArr[2]);
                   _this.setData({
                     superMonthArr: obj.data.reverse()
                   });
                   const index = charArr[0].y.length - 1;
+                  // let date = mi.format();
                   _this.assignInitVal(
                     charArr[0].y[index],
-                    charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]]
+                    charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]],
+                    charArr[0].x[index],
+                    charArr[1].x[index],
+                    charArr[2].x[index]
                   );
                 } else {
                   // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
@@ -442,12 +452,15 @@ Page({
       }
     });
   }, //获取可用的时间列表
-  assignInitVal(t0, t1, t2) {
+  assignInitVal(t0, t1, t2, d0, d1, d2) {
     //console.log('t0,t1,t2', t0, t1, t2);
     this.setData({
       echart0: t0,
       echart1: t1,
       echart2: t2,
+      echart0Date: d0.replace('\n',''), //表0日期
+      echart1Date: d1.replace('\n', ''), //表1日期
+      echart2Date: d2.replace('\n', '') //表2日期
     });
   }, //赋最新值
   changeMonth(e) {
@@ -465,6 +478,18 @@ Page({
         _this.setData({
           superMonthArr: obj.data
         });
+
+        //渲染附加信息
+        const index = charArr[0].y.length - 1;
+        // let date = mi.format();
+        _this.assignInitVal(
+          charArr[0].y[index],
+          charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]],
+          charArr[0].x[index],
+          charArr[1].x[index],
+          charArr[2].x[index]
+        );
+
       }
     });
   },
@@ -1041,9 +1066,11 @@ Page({
         if (count == 4) {
           count = 0;
           //console.log('温度全部校验通过，提交温度信息');
+          let date1 = mi.format('MM月dd hh:mm');
+          let date2 = mi.format('dd日hh:mm');
           let lastTemp = {
-            bleIsSync: mi.format('MM月dd hh:mm'),
-            bleSyncInfo: mi.format('MM月dd日 hh:mm'),
+            bleIsSync: date1,
+            bleSyncInfo: date1,
             temp_lto: _this.data.temp_cache[0], //左上外
             temp_lti: _this.data.temp_cache[1], //左上内
             temp_rti: _this.data.temp_cache[2], //右上内
@@ -1060,7 +1087,11 @@ Page({
             _this.assignInitVal(
               _this.data.temp_score,
               _this.data.temp_diff_num, 
-              [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto]); 
+              [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto],
+              date2,
+              date2,
+              date2
+              );
             //计算完所有温度后，提交后台
             _this.uploadTem();
           });
@@ -1176,7 +1207,6 @@ Page({
     }, 1000);
   },
   calcTemp(callback) {
-    console.log('四个乳温', this.data.temp_lto, this.data.temp_lti, this.data.temp_rti, this.data.temp_rto);
     if (!(this.data.temp_lto && this.data.temp_lti && this.data.temp_rti && this.data.temp_rto)) {
       return false;
     }
@@ -1465,21 +1495,26 @@ Page({
         let res = JSON.parse(mi.crypto.decode(data));
         //console.log('res', res);
         // _this.tempUpdate(); //图表同步更新
-        _this.getMonthHistory(function(res) {
-          let obj = JSON.parse(res);
-          //console.log('temp1111111111111111111111111111', obj);
-          if (obj && obj.data.length > 0) {
-            let charArr = mi.switchCharData(obj.data);
-            _this.detch(charArr[0], charArr[1], charArr[2]);
-            _this.setData({
-              superMonthArr: obj.data
-            });
-          } else {
-            // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
-            // _this.detch(charArr[0], charArr[1], charArr[2]);
-            // mi.toast('您当月还没有任何测试数据');
-          }
-        });
+        if (_this.data.yearOptions.length > 0) {
+          _this.getMonthHistory(function(res) {
+            let obj = JSON.parse(res);
+            //console.log('temp1111111111111111111111111111', obj);
+            if (obj && obj.data.length > 0) {
+              let charArr = mi.switchCharData(obj.data);
+              _this.detch(charArr[0], charArr[1], charArr[2]);
+              _this.setData({
+                superMonthArr: obj.data
+              });
+            } else {
+              // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
+              // _this.detch(charArr[0], charArr[1], charArr[2]);
+              // mi.toast('您当月还没有任何测试数据');
+            }
+          });
+        } else {
+          //第一次测温，重新拉取日期
+          _this.getTempDateList();
+        }
       }
     });
   }, //上传温度信息
