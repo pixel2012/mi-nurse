@@ -205,6 +205,8 @@ const mi = {
           // mi.store.set('openId', res.openId);
           mi.store.set('signature', res.signature);
           mi.store.set('userInfo', res.userInfo);
+          // mi.store.set('encryptedData', res.encryptedData);
+          // mi.store.set('iv', res.iv);
           // res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
           callback(res);
           // mi.ajax({

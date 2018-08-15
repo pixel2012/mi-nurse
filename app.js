@@ -27,7 +27,7 @@ App({
     this.bleCharNotifyId = mi.store.get('bleCharNotifyId') || '';
     mi.user.login(function (code) {
       if (code) {
-        //console.log('code', code);
+        console.log('code', code);
         _this.wxCode = code;
       }
     });

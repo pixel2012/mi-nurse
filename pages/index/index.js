@@ -356,13 +356,15 @@ Page({
               "signature": res.signature,
               "province": res.userInfo.province,
               "city": res.userInfo.city,
-              "wxxcxCode": app.wxCode
+              "wxxcxCode": app.wxCode,
+              "wxxcxEncryptedData": res.encryptedData,
+              "wxxcxIV": res.iv
             },
             encrypt: true,
             dataPos: false,
             callback: function(data) {
               let res = JSON.parse(mi.crypto.decode(data));
-              //console.log('res', res);
+              console.log('res', res);
               //将信息存储到本地缓存中
               mi.store.set('myId', res.data.myId);
               mi.store.set('myToken', res.data.myToken, res.data.outTime + 1000 * 60 * 60 * 24);
