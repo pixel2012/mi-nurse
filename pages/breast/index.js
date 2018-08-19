@@ -188,6 +188,8 @@ let timer = null; //本地震动定时器
 let timer2 = null; //diy震动定时器
 let shakeTimes = 0; //记录开始震动到暂停/停止的时间（自动）
 let shakeTimes2 = 0; //记录开始震动到暂停/停止的时间（diy）
+let diyCurContext=null;//存储当前diy震动上下文
+let diyUsedTime=0;//当前震动步骤的已用时间，切换下一步时重置为01,存到这里方便修改
 const api = {
   uploadZD: mi.ip + 'zhimito/used/post', //获取温度列表
 }
@@ -648,11 +650,21 @@ Page({
     }
   },
   bindStrength1(e) {
+    let _this=this;
     //diyStrength
     this.setData({
       diyStrength: e.currentTarget.dataset.index * 1
     });
     mi.store.set('diyStrength', e.currentTarget.dataset.index);
+    if (timer2 && diyCurContext){
+      //如果是正在震动则立即调整震动模式
+      this.diyRun(diyCurContext);//立即暂停
+      setTimeout(function(){
+        _this.diyRun(diyCurContext);//立即开始
+      },100);
+      
+      
+    }
   },
   setPlay: function(num) {
     if (num < 180) {
@@ -733,6 +745,7 @@ Page({
       this.stop();
     }
     //其他操作
+    diyCurContext = e;//当前上下文存储到全局，方便修改震动模式使用
     let diyArr = this.data.diyArr;
     let cur = diyArr[e.currentTarget.dataset.index];
     console.log(cur);
@@ -771,6 +784,9 @@ Page({
     let _this = this;
     this.diyCore(cur, function() {
       wx.vibrateLong();
+      diyUsedTime=0;
+      diyCurContext=null;
+      _this.diyStop();//立即暂停
       wx.showModal({
         title: '恭喜您',
         content: cur.title + '执行完毕',
@@ -806,7 +822,7 @@ Page({
       param: curCommond,
       check: false,
       success: function() {
-        let roundTimes = cur.shockArr[cur.playStep].time;
+        let roundTimes = cur.shockArr[cur.playStep].time - diyUsedTime;//步骤总时间-可能已用的震动时间
         circleTime(roundTimes);
 
         function circleTime(roundTimes) {
@@ -819,7 +835,8 @@ Page({
             return mi.toast('蓝牙断开连接，自动关闭按摩');
           }
           if (roundTimes == 0) {
-            cur.playStep++;
+            diyUsedTime=0;//步骤已用时间清零
+            cur.playStep++;//震动步骤跳到下一步
             _this.data.diyArr[_this.data.diyIndex].playStep++;
             _this.setData({
               diyArr: _this.data.diyArr
@@ -843,7 +860,8 @@ Page({
             }
           } else {
             timer2 = setTimeout(function() {
-              roundTimes--;
+              diyUsedTime++;//震动步骤时间累加
+              roundTimes--;//震动步骤总时间累减
               if (_this.data.diyIndex > -1) {
                 if (_this.data.diyArr[_this.data.diyIndex].timeUsed >= _this.data.diyArr[_this.data.diyIndex].timeTotal){
                   _this.data.diyArr[_this.data.diyIndex].timeUsed = _this.data.diyArr[_this.data.diyIndex].timeTotal;

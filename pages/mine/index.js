@@ -5,6 +5,7 @@ const api = {
   chest: mi.ip + 'user/updateChest', //胸围
   birthday: mi.ip + 'user/updateBirthday', //生日
   version: mi.ip + 'open/getNewVersion', //获取最新版本
+  info: mi.ip +'user/queryById'//获取用户信息
 };
 Page({
   data: {
@@ -68,47 +69,117 @@ Page({
     }
   },
   onLoad() {
-    let userInfo = mi.store.get('userInfo');
-    let myBreast = mi.store.get('myBreast');
+    let _this=this;
+    let userInfo = mi.store.get('userInfo') || {};
+    let age = mi.store.get('age') || '';
+    let height = mi.store.get('height') || '';
+    let weight = mi.store.get('weight') || '';
+    let myBreast = mi.store.get('myBreast') || {};
+
+    this.getInfo(function(data){
+      userInfo = Object.assign(userInfo, {
+        nickName: data.nickName || '未知',
+        avatar: data.avatar || ''
+      });
+      mi.store.set('userInfo', userInfo);
+      
+      if (data.birthday){
+        mi.store.set('age',data.birthday);
+      }
+      if (data.height) {
+        mi.store.set('height', parseInt(data.height/10));
+      }
+      if (data.weight) {
+        mi.store.set('weight', parseInt(data.weight/10));
+      }
+      if (data.birthday) {
+        mi.store.set('age', data.birthday);
+      }
+      myBreast = Object.assign(myBreast, {
+        up: data.up || 70,
+        down: data.down || 63,
+        result: data.result || '65AA',
+        current: data.currentRt ? data.currentRt : 0,
+        currentRt: data.currentRt ? data.currentRt : -1
+      });
+      mi.store.set('myBreast', myBreast);
+      _this.updateInfo();
+
+      // _this.setData({
+      //   currentDate: data.birthday || age || new Date().getFullYear() + '-01',
+      //   nickName: data.nickName || ('nickName' in userInfo && userInfo.nickName) || '未知',
+      //   headerUrl: data.avatar || ('avatar' in userInfo && userInfo.avatar) || '',
+      // });
+    });
     //console.log(userInfo);
-    if (userInfo) {
-      this.setData({
-        nickName: userInfo.nickName,
-        headerUrl: userInfo.avatar
-      });
-    }
-    if (myBreast) {
-      this.setData({
-        up: myBreast.up,
-        down: myBreast.down,
-        result: myBreast.result,
-        current: myBreast.currentRt ? myBreast.currentRt : 0,
-        currentRt: myBreast.currentRt ? myBreast.currentRt : -1
-      });
-    }
-    this.updateInfo();
+    // if (userInfo) {
+    //   this.setData({
+    //     nickName: userInfo.nickName,
+    //     headerUrl: userInfo.avatar
+    //   });
+    // }
+    // if (myBreast) {
+    //   this.setData({
+    //     up: myBreast.up,
+    //     down: myBreast.down,
+    //     result: myBreast.result,
+    //     current: myBreast.currentRt ? myBreast.currentRt : 0,
+    //     currentRt: myBreast.currentRt ? myBreast.currentRt : -1
+    //   });
+    // }
 
   },
   onShow() {
   },
+  getInfo(callback){
+    mi.ajax({
+      url: api.info,
+      method: 'get',
+      login: false,
+      data: {
+        "userId": mi.store.get('myId')
+      },
+      encrypt: true,
+      callback: function (data) {
+        let res = JSON.parse(mi.crypto.decode(data));
+        console.log('用户信息', res.data);
+        if(callback){
+          callback(res.data);
+        }
+      }
+    });
+  },
   bindMultiPickerChange: function (e) {
-    console.log('picker发送选择改变，携带值为', e.detail.value)
+    console.log('picker发送选择改变，携带值为', e.detail.value);
+    this.data.height = this.data.multiArray[0][e.detail.value[0]];
+    this.data.weight = this.data.multiArray[1][e.detail.value[1]];
     this.data.oldSet.height = this.data.multiArray[0][e.detail.value[0]];
     this.data.oldSet.weight = this.data.multiArray[1][e.detail.value[1]];
     this.setData({
+      height: this.data.height,
+      weight: this.data.weight,
       oldSet: this.data.oldSet
     });
-    // this.bindSave2();
+    this.bindSave2();
   },
   updateInfo(){
+    let userInfo = mi.store.get('userInfo');
     let myBreast = mi.store.get('myBreast');
     let age = mi.store.get('age');
     let height = mi.store.get('height');
     let weight = mi.store.get('weight');
     this.setData({
+      nickName: userInfo.nickName,
+      avatar: userInfo.avatar,
       currentDate: age ? age : new Date().getFullYear() + '-01',
       height: height ? height : '',
       weight: weight ? weight : '',
+      multiIndex: [mi.getIndex(this.data.multiArray[0], height, 'cm'), mi.getIndex(this.data.multiArray[1], weight, 'kg')],
+      up: myBreast.up,
+      down: myBreast.down,
+      result: myBreast.result,
+      current: myBreast.currentRt ? myBreast.currentRt : 0,
+      currentRt: myBreast.currentRt ? myBreast.currentRt : -1,
       oldSet: {
         age: age ? mi.getAge(age) : '',
         height: height ? height : '',
@@ -117,7 +188,7 @@ Page({
         size: myBreast.result ? myBreast.result : ''
       }
     });
-  },
+  },//废弃
   hideAll: function() {
     this.setData({
       isFigure: false,

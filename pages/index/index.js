@@ -665,7 +665,8 @@ Page({
       if (!res.connected) {
         mi.toast(res.connected ? '连接成功' : '蓝牙已断开');
         _this.setData({
-          bleIsConnect: res.connected
+          bleIsConnect: res.connected,
+          blueRight: false,//关闭蓝牙密码输入框
         });
         app.bleIsConnect = res.connected;
       }
@@ -868,6 +869,12 @@ Page({
     this.verify(bluePass, verifyFn);
   }, //先验证蓝牙密码是否符合规则，再去通过硬件验证
   verify(pass, callback) {
+    if (!app.bleIsConnect){
+      this.setData({
+        blueRight:false
+      });
+      return mi.toast('请先连接蓝牙设备');
+    }
     mi.showLoading('校验密码中...');
     let _this = this;
     app.command({
@@ -1533,7 +1540,7 @@ Page({
     if (this.data[jumpIndex]) {
       if (this.data.superMonthArr) {
         let tempInfo = this.data.superMonthArr[this.data[jumpIndex].dataIndex]; //拿到点击那个点的温度详细信息
-        //console.log('tempInfo', tempInfo);
+        console.log('tempInfo', tempInfo);
         //console.log(this.data.superMonthArr);
         wx.navigateTo({
           url: `/pages/health-detail/index?tp1=${tempInfo.tp1}&tp2=${tempInfo.tp2}&tp3=${tempInfo.tp3}&tp4=${tempInfo.tp4}&ctime=${tempInfo.ctime}&ltpStr=${tempInfo.tips2}`

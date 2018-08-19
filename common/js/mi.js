@@ -549,5 +549,23 @@ const mi = {
     }
     return heightArray;
   },//体重初始化
+  getIndex(arr,val,unit){
+    let index=-1;
+    for(let i=0;i<arr.length;i++){
+      if (arr[i].replace(unit,'')==val){
+        index=i;
+        break;
+      }
+    }
+    if(index>-1){
+      return index;
+    }else{
+      if(unit=='cm'){
+        return 40;
+      }else{
+        return 20;
+      }
+    }
+  }
 }
 module.exports = mi;

@@ -8,6 +8,7 @@
         <text class='mi-score'>{{temp_score?temp_score:'00.0'}}</text>
         <text class='mi-score-unit'>分</text>
       </view>
+      <view class='mi-dots' wx:if="{{temp_score}}" style="transform: rotate({{temp_score*180/100}}deg);"></view>
     </view>
   </view>
   <!--乳温  -->

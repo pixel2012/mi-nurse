@@ -21,12 +21,13 @@
       </view>
     </view>
     <view class='mi-meter'>
-      <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;'></image>
+      <image src="img/{{temp_score == ''?'meter.png':'meter-active.png'}}" style='width:462rpx;height:243rpx;vertical-algin:middle;'></image>
       <view class='mi-score-box'>
         <view class='mi-score-title'>健康指数</view>
         <text class="mi-score {{temp_score?'active':''}}">{{temp_score ? temp_score:'00.0'}}</text>
         <text class='mi-score-unit'>分</text>
       </view>
+      <view class='mi-dots' wx:if="{{temp_score}}" style="transform: rotate({{temp_score*180/100}}deg);"></view>
     </view>
     <view class='mi-block row no-gutter'>
       <view class='col-25' wx:if='{{temp_avg}}'>

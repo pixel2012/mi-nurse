@@ -16,12 +16,25 @@ page {
   position: relative;
 }
 
+.mi-dots {
+  position: absolute;
+  left:14.2%;
+  bottom:0;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background-color: #ff4578;
+  z-index: 10;
+  transform-origin: 250rpx 0;
+}
+
 .mi-score-box {
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   margin: 0 auto;
+  z-index: 1;
 }
 
 .mi-score-title {
