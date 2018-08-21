@@ -89,8 +89,8 @@ Page({
     superYears: [], //时间备选合集
     year: 0,
     month: 0,
-    echart0: 0, //表0健康值
-    echart1: 0, //表1温差
+    echart0: -1, //表0健康值
+    echart1: -1, //表1温差
     echart2: [0, 0, 0, 0], //表2温度
     echart0Date: '', //表0日期
     echart1Date: '', //表1日期

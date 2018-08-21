@@ -96,12 +96,15 @@ Page({
         mi.store.set('age', data.birthday);
       }
       myBreast = Object.assign(myBreast, {
-        up: data.up || 70,
-        down: data.down || 63,
-        result: data.result || '65AA',
-        current: data.currentRt ? data.currentRt : 0,
-        currentRt: data.currentRt ? data.currentRt : -1
+        shape: data.extChestType || '',
+        size: data.extChestSize || '',
+        up: data.extChestUp || 70,
+        down: data.extChestDown || 63,
+        result: data.extChestSize || '65AA',
+        current: data.extChestType ? mi.getBreastIndex(_this.data.imgUrls,data.extChestType) : 0,
+        currentRt: data.extChestType ? mi.getBreastIndex(_this.data.imgUrls, data.extChestType) : -1
       });
+      console.log('myBreast', myBreast);
       mi.store.set('myBreast', myBreast);
       _this.updateInfo();
 
@@ -168,6 +171,7 @@ Page({
     let age = mi.store.get('age');
     let height = mi.store.get('height');
     let weight = mi.store.get('weight');
+    console.log('myBreast2', myBreast);
     this.setData({
       nickName: userInfo.nickName,
       avatar: userInfo.avatar,
@@ -178,14 +182,14 @@ Page({
       up: myBreast.up,
       down: myBreast.down,
       result: myBreast.result,
-      current: myBreast.currentRt ? myBreast.currentRt : 0,
-      currentRt: myBreast.currentRt ? myBreast.currentRt : -1,
+      current: myBreast.currentRt,
+      currentRt: myBreast.currentRt,
       oldSet: {
         age: age ? mi.getAge(age) : '',
-        height: height ? height : '',
-        weight: weight ? weight : '',
-        shape: this.data.currentRt > -1 ? this.data.imgUrls[this.data.currentRt].title : '',
-        size: myBreast.result ? myBreast.result : ''
+        height: height ? height + 'cm' : '',
+        weight: weight ? weight + 'kg' : '',
+        shape: myBreast.shape,
+        size: myBreast.size
       }
     });
   },//废弃
@@ -236,6 +240,8 @@ Page({
     }
     let _this = this;
     let myBreast = {
+      shape: this.data.imgUrls[this.data.currentRt].title,
+      size: this.data.result,
       up: this.data.up,
       down: this.data.down,
       result: this.data.result,

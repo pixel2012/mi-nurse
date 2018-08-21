@@ -385,12 +385,12 @@ const mi = {
     }
     return format;
   },
-  getAge(date){
-    let old=new Date(date).getFullYear();
+  getAge(date) {
+    let old = new Date(date).getFullYear();
     let now = new Date().getFullYear();
-    let diff=now-old;
+    let diff = now - old;
     return diff;
-  },//根据出生日期得出年龄
+  }, //根据出生日期得出年龄
   getRadom(min, max) {
     return parseInt(Math.random() * max) + min;
   },
@@ -515,7 +515,7 @@ const mi = {
     let left = [arr[0], arr[1], arr[2], arr[3], arr[4], arr[5]];
     let right = [arr[6], arr[7], arr[8], arr[9], arr[10], arr[11]];
     if (acupoint == 1 && (position == 1 || position == 2)) {
-      left[0]=mn;
+      left[0] = mn;
     }
     if (acupoint == 2 && (position == 1 || position == 2)) {
       left[2] = mn;
@@ -534,38 +534,49 @@ const mi = {
     }
     return left.concat(right);
   },
-  heightInit(){
-    let heightArray=[];
-    let x=0;
-    for(let i=120;i<=200;i++){
-      heightArray.push(i+'cm');
+  heightInit() {
+    let heightArray = [];
+    let x = 0;
+    for (let i = 120; i <= 200; i++) {
+      heightArray.push(i + 'cm');
     }
     return heightArray;
-  },//身高初始化
-  weightInit(){
+  }, //身高初始化
+  weightInit() {
     let heightArray = [];
     for (let i = 30; i <= 100; i++) {
       heightArray.push(i + 'kg');
     }
     return heightArray;
-  },//体重初始化
-  getIndex(arr,val,unit){
-    let index=-1;
-    for(let i=0;i<arr.length;i++){
-      if (arr[i].replace(unit,'')==val){
-        index=i;
+  }, //体重初始化
+  getIndex(arr, val, unit) {
+    let index = -1;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].replace(unit, '') == val) {
+        index = i;
         break;
       }
     }
-    if(index>-1){
+    if (index > -1) {
       return index;
-    }else{
-      if(unit=='cm'){
+    } else {
+      if (unit == 'cm') {
         return 40;
-      }else{
+      } else {
         return 20;
       }
     }
-  }
+  },
+  getBreastIndex(arr, val) {
+    let index = -1;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].title == val) {
+        index = i;
+        break;
+      }
+    }
+    console.log('胸型',index);
+    return index;
+  } //获取胸型索引
 }
 module.exports = mi;
