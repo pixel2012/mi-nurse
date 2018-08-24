@@ -294,6 +294,11 @@ swiper-item {
   position: relative;
 }
 
+.massage-dots{
+  border: 20rpx rgba(255,255,255,0) solid;
+  /* border: 20rpx green solid; */
+}
+
 .l-01, .l-02, .l-03, .l-04, .r-01, .r-02, .r-03, .r-04 {
   position: absolute;
   width: 40rpx;

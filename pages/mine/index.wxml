@@ -20,7 +20,7 @@
       </picker>
     </view>
     <view class='my-params-item'>
-      <picker mode="multiSelector" bindchange="bindMultiPickerChange"  value="{{multiIndex}}" range="{{multiArray}}">
+      <picker mode="multiSelector" bindchange="bindMultiPickerChange" value="{{multiIndex}}" range="{{multiArray}}">
         <view class='my-params-item-img-box'>
           <image class='my-params-item-img' src='img/chest-size.png'></image>
         </view>

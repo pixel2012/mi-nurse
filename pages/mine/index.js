@@ -104,33 +104,9 @@ Page({
         current: data.extChestType ? mi.getBreastIndex(_this.data.imgUrls,data.extChestType) : 0,
         currentRt: data.extChestType ? mi.getBreastIndex(_this.data.imgUrls, data.extChestType) : -1
       });
-      console.log('myBreast', myBreast);
       mi.store.set('myBreast', myBreast);
       _this.updateInfo();
-
-      // _this.setData({
-      //   currentDate: data.birthday || age || new Date().getFullYear() + '-01',
-      //   nickName: data.nickName || ('nickName' in userInfo && userInfo.nickName) || '未知',
-      //   headerUrl: data.avatar || ('avatar' in userInfo && userInfo.avatar) || '',
-      // });
     });
-    //console.log(userInfo);
-    // if (userInfo) {
-    //   this.setData({
-    //     nickName: userInfo.nickName,
-    //     headerUrl: userInfo.avatar
-    //   });
-    // }
-    // if (myBreast) {
-    //   this.setData({
-    //     up: myBreast.up,
-    //     down: myBreast.down,
-    //     result: myBreast.result,
-    //     current: myBreast.currentRt ? myBreast.currentRt : 0,
-    //     currentRt: myBreast.currentRt ? myBreast.currentRt : -1
-    //   });
-    // }
-
   },
   onShow() {
   },
@@ -145,7 +121,6 @@ Page({
       encrypt: true,
       callback: function (data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('用户信息', res.data);
         if(callback){
           callback(res.data);
         }
@@ -153,7 +128,6 @@ Page({
     });
   },
   bindMultiPickerChange: function (e) {
-    console.log('picker发送选择改变，携带值为', e.detail.value);
     this.data.height = this.data.multiArray[0][e.detail.value[0]];
     this.data.weight = this.data.multiArray[1][e.detail.value[1]];
     this.data.oldSet.height = this.data.multiArray[0][e.detail.value[0]];
@@ -171,7 +145,6 @@ Page({
     let age = mi.store.get('age');
     let height = mi.store.get('height');
     let weight = mi.store.get('weight');
-    console.log('myBreast2', myBreast);
     this.setData({
       nickName: userInfo.nickName,
       avatar: userInfo.avatar,
@@ -218,7 +191,6 @@ Page({
     });
   },
   changeCurrent(e) {
-    //console.log(e);
     if (e.detail.source == 'touch') {
       this.setData({
         current: e.detail.current
@@ -231,7 +203,6 @@ Page({
     });
   },
   save() {
-    //console.log(this.data.result);
     if (this.data.currentRt == -1) {
       return mi.toast('请选择自己的胸型，点击确认');
     }
@@ -249,12 +220,6 @@ Page({
     };
 
     mi.store.set('myBreast', myBreast);
-    console.log('罩杯',{
-      "upSize": this.data.up,
-      "downSize": this.data.down,
-      "chestSize": this.data.result,
-      "chestType": this.data.imgUrls[this.data.currentRt].title
-    });
     mi.ajax({
       url: api.chest,
       method: 'post',
@@ -269,7 +234,6 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('res', res);
         _this.setData({
           isBreast: false
         });
@@ -279,7 +243,6 @@ Page({
   },
   bindDateChange: function(e) {
     let _this=this;
-    //console.log('picker发送选择改变，携带值为', e.detail.value);
     this.setData({
       currentDate: e.detail.value
     });
@@ -294,7 +257,6 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('res', res);
         mi.store.set('age', _this.data.currentDate);
         _this.updateInfo();
       }
@@ -317,10 +279,6 @@ Page({
     if (!this.data.weight) {
       return mi.toast('请输入合适的体重');
     }
-    console.log('体重', {
-      "height": this.data.height * 10,
-      "weight": this.data.weight * 10
-    });
     let _this = this;
     mi.ajax({
       url: api.wh,
@@ -334,7 +292,6 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('res', res);
         _this.setData({
           isFigure: false
         });
@@ -358,13 +315,6 @@ Page({
       dataPos: false,
       callback: function (data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        console.log('res', res);
-        // _this.setData({
-        //   isFigure: false
-        // });
-        // mi.store.set('height', _this.data.height);
-        // mi.store.set('weight', _this.data.weight);
-        // _this.updateInfo();
       }
     });
   }, //身高体重
@@ -680,9 +630,7 @@ Page({
         "type": 3
       },
       callback: function(data) {
-        //console.log('data', data);
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('版本', res);
         mi.toast(res.data ? res.data : '未知版本');
 
       }

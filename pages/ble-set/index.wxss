@@ -1,34 +1,40 @@
-.ble-container{
-  padding:30rpx;
+.ble-container {
+  padding: 30rpx;
 }
-.ble-li{
+
+.ble-li {
   padding: 20rpx 30rpx;
-  border-bottom: 1rpx solid #D7D7D7;
+  border-bottom: 1rpx solid #d7d7d7;
   font-size: 28rpx;
-  color: #D7D7D7;
+  color: #d7d7d7;
 }
-.ble-li input{
+
+.ble-li input {
   color: #333;
 }
-.ble-li:first-child{
-  padding-top:0;
+
+.ble-li:first-child {
+  padding-top: 0;
 }
-.ble-button-box{
+
+.ble-button-box {
   display: block;
   width: 100%;
   text-align: center;
   margin-top: 80rpx;
 }
-.ble-button{
+
+.ble-button {
   display: inline-block;
   width: 307rpx;
-  padding:20rpx;
-  border:1rpx solid #FF4578;
+  padding: 20rpx;
+  border: 1rpx solid #ff4578;
   border-radius: 8rpx;
   font-size: 30rpx;
-  color: #FF4578;
+  color: #ff4578;
 }
-.sm-placeholder{
+
+.sm-placeholder {
   text-align: center;
   font-size: 24rpx;
   color: #888;

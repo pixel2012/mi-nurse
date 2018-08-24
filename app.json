@@ -2,16 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/breast/index",
-    
     "pages/mine/index",
-    
-    
-    
-    
-    
     "pages/acupoint/index",
     "pages/massage/index",
-    
     "pages/feedback/index",
     "pages/ble-set/index",
     "pages/ble-config/index",

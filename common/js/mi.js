@@ -83,7 +83,6 @@ const mi = {
         },
         data: sendData,
         success: function(res) {
-          console.log(res);
           if (res.statusCode == 200) {
             //成功回调
             if (params.callback) {
@@ -201,24 +200,9 @@ const mi = {
     getInfo: function(callback) {
       wx.getUserInfo({
         success: function(res) {
-          console.log(res);
-          // mi.store.set('openId', res.openId);
           mi.store.set('signature', res.signature);
           mi.store.set('userInfo', res.userInfo);
-          // mi.store.set('encryptedData', res.encryptedData);
-          // mi.store.set('iv', res.iv);
-          // res.openId = 'oXGyD1VK6GnPVbUrcul8Wtp0FuWE';//定义openId
           callback(res);
-          // mi.ajax({
-          //   url: api.bindThirdAccount,
-          //   method:'post',
-          //   data:{
-
-          //   },
-          //   success:function(){
-
-          //   }
-          // });
         },
         fail: function() {
           wx.toast('获取用户信息失败');
@@ -345,10 +329,8 @@ const mi = {
     let data = hex.replace('fbfa', '').slice(0, -2);
     let check = hex.replace('fbfa' + data, '');
     if (mi.check(data) == check) {
-      console.log('数据传输完整，校验通过', data, check, mi.check(data));
       return true;
     } else {
-      console.log('数据传输不完整，校验不通过', data, check, mi.check(data));
       return false;
     }
   },
@@ -575,7 +557,6 @@ const mi = {
         break;
       }
     }
-    console.log('胸型',index);
     return index;
   } //获取胸型索引
 }

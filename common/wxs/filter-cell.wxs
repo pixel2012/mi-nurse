@@ -1,7 +1,4 @@
 module.exports = function (con, num) {
-  // return 'cell-active-100.png';
-  console.log('cell', con, num);
-  console.log('num', typeof num);
   if (!con) {
     console.log('未连接');
     return 'cell.png';

@@ -46,7 +46,6 @@ Page({
       check: false,
       success:function(){
         setTimeout(function () {
-          //console.log('app.resetPass', app.resetPass);
           if (typeof app.resetPass == 'string' && app.resetPass == '00') {
             app.resetPass = false;//恢复原状
             mi.store.set('pass', '123');

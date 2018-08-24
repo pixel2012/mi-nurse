@@ -3,7 +3,6 @@
 <wxs module="filterTime" src="../../common/wxs/filter-time.wxs"></wxs>
 <wxs module="filterCell" src="../../common/wxs/filter-cell.wxs"></wxs>
 
-
 <!--主框架  -->
 <view class='mi-box' style='padding-bottom:10rpx;'>
   <view class='row'>
@@ -34,13 +33,6 @@
   </view>
 </view>
 <view class='mi-tab-content' bindtap='hideMenu'>
-
-
-
-
-
-
-
 
 
   <!--普通按摩  -->
@@ -312,15 +304,6 @@
   </view>
 
 
-
-
-
-
-
-
-
-
-
   <!--DIY按摩  -->
   <view class='mi-tab-item' wx:if="{{tabIndex==1}}">
     <view class='mi-c'>
@@ -331,16 +314,16 @@
         <image src='img/massage-left.png' style='width:322rpx;height:322rpx;'></image>
         <!--01-鹰窗，02-天溪，03-乳中，04-乳根  -->
         <view class='l-01' bind:touchstart='longShock' data-code='2' bind:touchend='closeShock'></view>
-        <view class='l-02' bind:touchstart='longShock' data-code='3' bind:touchend='closeShock'></view>
+        <view class='massage-dots l-02' bind:touchstart='longShock' data-code='3' bind:touchend='closeShock'></view>
         <view class='l-03' bind:touchstart='longShock' data-code='2' bind:touchend='closeShock'></view>
-        <view class='l-04' bind:touchstart='longShock' data-code='1' bind:touchend='closeShock'></view>
+        <view class='massage-dots l-04' bind:touchstart='longShock' data-code='1' bind:touchend='closeShock'></view>
       </view>
       <view class='col-50 massage-box-right'>
         <image src='img/massage-right.png' style='width:322rpx;height:322rpx;'></image>
         <view class='r-01' bind:touchstart='longShock' data-code='5' bind:touchend='closeShock'></view>
-        <view class='r-02' bind:touchstart='longShock' data-code='6' bind:touchend='closeShock'></view>
+        <view class='massage-dots r-02' bind:touchstart='longShock' data-code='6' bind:touchend='closeShock'></view>
         <view class='r-03' bind:touchstart='longShock' data-code='5' bind:touchend='closeShock'></view>
-        <view class='r-04' bind:touchstart='longShock' data-code='4' bind:touchend='closeShock'></view>
+        <view class='massage-dots r-04' bind:touchstart='longShock' data-code='4' bind:touchend='closeShock'></view>
       </view>
     </view>
     <view class='massage-box mi-tab-diy'>
@@ -361,7 +344,7 @@
               <image src="img/{{item.play?'pause.png':'play.png'}}" style='width:48rpx;height:48rpx;'></image>
             </view>
             <view class='col-25 massage-item' data-index='{{index}}' bindtap='diyEdit'>
-            <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
+              <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
               <!-- <navigator url="{{'/pages/massage/index?index='+index}}">
                 <image src='img/edit.png' style='width:44rpx;height:44rpx;'></image>
               </navigator> -->

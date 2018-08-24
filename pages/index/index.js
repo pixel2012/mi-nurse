@@ -110,7 +110,6 @@ Page({
     this.tempUpdate(function() {
       //先授权，后蓝牙
       _this.updateStore(function() {
-        //console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
         if (_this.data.bleDeviceId) {
           _this.bluetoothInit(_this.data.bleDeviceId);
         }
@@ -122,7 +121,6 @@ Page({
   },
   updateLastTemp() {
     let lastTemp = mi.store.get('lastTemp');
-    //console.log('lastTemp', lastTemp);
     if (lastTemp) {
       this.setData({
         bleIsSync: lastTemp.bleIsSync,
@@ -274,24 +272,19 @@ Page({
         axisPointer: {
           label: {
             formatter: function(params) {
-              console.log(params);
-              // mi.toast(params.seriesData[0].seriesName + ':' + params.seriesData[0].name + '-' + params.seriesData[0].value + unit);
               if (opts.target == 'echart2') {
-                //console.log('当前图表点击了' + opts.jump);
                 _this.setData({
                   [opts.target]: [params.seriesData[0].value, params.seriesData[1].value, params.seriesData[2].value, params.seriesData[3].value],
                   [opts.target + 'Date']: params.seriesData[0].name.replace('\n', ''),
                   [opts.jump]: params.seriesData[0]
                 });
               } else {
-                //console.log('当前图表点击了' + opts.jump);
                 _this.setData({
                   [opts.target]: params.seriesData[0].value,
                   [opts.target+'Date']: params.seriesData[0].name.replace('\n',''),
                   [opts.jump]: params.seriesData[0]
                 });
               }
-              //console.log('superYears', _this.data.superYears);
             }
           }
         },
@@ -307,7 +300,6 @@ Page({
       }]
     };
     option = mi.deepMerge(option, opts);
-    // //console.log(option);
     chart.resize();
     chart.setOption(option);
   },
@@ -332,11 +324,9 @@ Page({
         });
         //授权成功，开始连接蓝牙
         if (callback && typeof callback.constructor == 'Function') {
-          //console.log(callback);
           callback();
         } else {
           _this.updateStore(function() {
-            //console.log('_this.data.bleDeviceId', _this.data.bleDeviceId);
             if (_this.data.bleDeviceId) {
               _this.bluetoothInit(_this.data.bleDeviceId);
             }
@@ -364,7 +354,6 @@ Page({
             dataPos: false,
             callback: function(data) {
               let res = JSON.parse(mi.crypto.decode(data));
-              console.log('res', res);
               //将信息存储到本地缓存中
               mi.store.set('myId', res.data.myId);
               mi.store.set('myToken', res.data.myToken, res.data.outTime + 1000 * 60 * 60 * 24);
@@ -391,12 +380,6 @@ Page({
       loading: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('res88888888888888888888888', res);
-        // res.data = [
-        //   "2017-03",
-        //   "2017-02",
-        //   "2016-08"
-        // ];
         let yearOptions = [];
         let superYears = [];
 
@@ -414,16 +397,13 @@ Page({
             if (res.data.length > 0) {
               _this.getMonthHistory(function(res) {
                 let obj = JSON.parse(res);
-                // console.log('temp1111111111111111111111111111', obj);
                 if (obj && obj.data.length > 0) {
                   let charArr = mi.switchCharData(obj.data);
-                  // console.log('charArr', charArr);
                   _this.detch(charArr[0], charArr[1], charArr[2]);
                   _this.setData({
                     superMonthArr: obj.data.reverse()
                   });
                   const index = charArr[0].y.length - 1;
-                  // let date = mi.format();
                   _this.assignInitVal(
                     charArr[0].y[index],
                     charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]],
@@ -455,7 +435,6 @@ Page({
     });
   }, //获取可用的时间列表
   assignInitVal(t0, t1, t2, d0, d1, d2) {
-    //console.log('t0,t1,t2', t0, t1, t2);
     this.setData({
       echart0: t0,
       echart1: t1,
@@ -467,13 +446,11 @@ Page({
   }, //赋最新值
   changeMonth(e) {
     let _this = this;
-    console.log('月份下标', e.currentTarget.dataset.month);
     this.setData({
       month: e.currentTarget.dataset.month
     });
     this.getMonthHistory(function(res) {
       let obj = JSON.parse(res);
-      //console.log('temp1111111111111111111111111111', obj);
       if (obj && obj.data.length > 0) {
         let charArr = mi.switchCharData(obj.data);
         _this.detch(charArr[0], charArr[1], charArr[2]);
@@ -496,7 +473,6 @@ Page({
     });
   },
   getMonthHistory(callback) {
-    console.log('请求温度年月份温度值', this.data.yearOptions[this.data.year] + '年' + this.data.monthOptions[this.data.month] + '月');
     let _this = this;
     mi.ajax({
       url: api.history,
@@ -509,7 +485,6 @@ Page({
       login: true,
       callback: function(data) {
         let res = mi.crypto.decode(data);
-        //console.log('获取当月数据',res);
         if (callback) {
           callback(res);
         }
@@ -554,14 +529,11 @@ Page({
     wx.openBluetoothAdapter({
       success: function(res) {
         mi.showLoading('蓝牙已打开');
-        //console.log('打开蓝牙适配器', res);
         //检测蓝牙此时的状态
         wx.getBluetoothAdapterState({
           success: function(res) {
-            //console.log('获取蓝牙适配器状态成功', res);
             //监听蓝牙适配器状态
             wx.onBluetoothAdapterStateChange(function(res) {
-              //console.log(`adapterState changed, now is`, res);
               _this.setData({
                 available: res.available, //蓝牙是否可用
                 discovering: res.discovering, //蓝牙是否处于搜索
@@ -570,9 +542,7 @@ Page({
             //如果蓝牙此时处于空闲，则可以
             if (res.available && !res.discovering) {
               mi.showLoading('蓝牙搜索中');
-              //console.log('蓝牙处于空闲，开启蓝牙搜索...');
               if (oldId && typeof oldId == 'string') {
-                //console.log('oldId', oldId);
                 _this.connect(oldId);
               } else {
                 //开启蓝牙搜索模式
@@ -590,14 +560,8 @@ Page({
                         });
                       }
                     }, 60000);
-                    //console.log('蓝牙搜索的结果列表', res);
-                    // _this.setData({
-                    //   bleIsShowList:true
-                    // });
 
                     wx.onBluetoothDeviceFound(function(res) {
-                      //console.log('new device list has founded');
-                      //console.log(res);
                       if (res.devices[0].name.indexOf('mito-Smart') > -1) {
                         //发现蜜桃设备直接连接
                         _this.connect(res.devices[0].deviceId);
@@ -605,13 +569,10 @@ Page({
                     })
                   },
                   fail: function(res) {
-                    //console.log(res);
                   }
                 });
               }
             } else {
-              //console.log('蓝牙正忙');
-              // mi.toast('蓝牙正忙');
               mi.hideLoading();
               wx.stopBluetoothDevicesDiscovery({
                 success: function() {
@@ -623,7 +584,6 @@ Page({
 
           },
           fail: function(res) {
-            //console.log('获取蓝牙适配器状态失败', res);
             mi.toast('获取蓝牙适配器状态失败');
             mi.hideLoading();
           }
@@ -632,7 +592,6 @@ Page({
 
       },
       fail: function(res) {
-        //console.log('蓝牙未打开');
         mi.toast('蓝牙未打开');
         mi.hideLoading();
       }
@@ -642,18 +601,8 @@ Page({
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
       success: function(res) {
-        //console.log('关闭蓝牙搜索', res);
-        // _this.setData({
-        //   bleIsShowList: false
-        // });
       }
     });
-    // wx.getBluetoothDevices({
-    //   success: function(res) {
-    //     //console.log('尝试获取蓝牙搜索期间搜索到的设备', res);
-    //   }
-    // });
-    //console.log('deviceId', id);
     let deviceId = id;
     this.setData({
       bleDeviceId: deviceId
@@ -661,7 +610,6 @@ Page({
     app.bleDeviceId = this.data.bleDeviceId;
     mi.store.set('bleDeviceId', this.data.bleDeviceId);
     wx.onBLEConnectionStateChange(function(res) {
-      console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`);
       if (!res.connected) {
         mi.toast(res.connected ? '连接成功' : '蓝牙已断开');
         _this.setData({
@@ -692,29 +640,6 @@ Page({
               }
             });
           }
-          //如果蓝牙断开，自动重连
-          // if (_this.data.available && !_this.data.discovering) {
-          //   wx.stopBluetoothDevicesDiscovery({
-          //     success: function () {
-          //       mi.showLoading('蓝牙重连中');
-          //       _this.bleConnection(id);
-          //       wx.switchTab({
-          //         url: "../index/index"
-          //       });
-          //     }
-          //   });
-          //   // mi.showLoading('蓝牙重连中');
-          //   // _this.connect(id);
-          // } else {
-          //   wx.stopBluetoothDevicesDiscovery({
-          //     success: function() {
-          //       // _this.bleConnection(id);
-          //       wx.switchTab({
-          //         url: "../index/index"
-          //       });
-          //     }
-          //   });
-          // }
         } else {
           connectNum = 0; //连接次数清零
           mi.hideLoading();
@@ -725,12 +650,10 @@ Page({
   },
   bleConnection(deviceId) {
     let _this = this;
-    //console.log('创建蓝牙连接');
     wx.createBLEConnection({
       deviceId: deviceId,
       success: function(res) {
         // mi.hideLoading();
-        console.log('创建蓝牙连接设备连接成功', res);
         mi.toast('蓝牙连接成功');
         _this.setData({
           bleIsConnect: true
@@ -739,7 +662,6 @@ Page({
         wx.getBLEDeviceServices({
           deviceId: deviceId,
           success: function(res) {
-            //console.log('获取蓝牙设备所有服务', res);
             for (let i = 0; i < res.services.length; i++) {
               if (res.services[i].uuid.indexOf('0000FF92') > -1) { //查找自定义服务
                 _this.setData({
@@ -754,7 +676,6 @@ Page({
               deviceId: deviceId,
               serviceId: _this.data.bleServerId,
               success: function(res) {
-                //console.log('读取蓝牙服务特征值', _this.data.bleServerId, res);
                 let writeId, notifyId;
                 for (let j = 0; j < res.characteristics.length; j++) {
                   if (res.characteristics[j].uuid.indexOf('9600') > -1) {
@@ -763,8 +684,6 @@ Page({
                   if (res.characteristics[j].uuid.indexOf('9601')) {
                     notifyId = res.characteristics[j].uuid;
                   }
-                  //console.log('writeId', writeId);
-                  //console.log('notifyId', notifyId);
                   _this.setData({
                     bleCharWriteId: writeId,
                     bleCharNotifyId: notifyId,
@@ -781,23 +700,15 @@ Page({
                   characteristicId: _this.data.bleCharNotifyId,
                   state: true,
                   success: function(res) {
-                    //console.log('特征值订阅开启成功', res);
                     wx.onBLECharacteristicValueChange(function(res) {
-                      //console.log('检测到特征值发生变化', res);
                       let hex = mi.buf2hex(res.value);
-                      //console.log('特征值二进制转十六进制后结果', hex);
                       _this.deal(hex);
                     });
                     //验证蓝牙密码
                     let oldPass = mi.store.get('pass');
-                    //console.log('localstorageoldPass', oldPass);
                     let sendPass = oldPass ? mi.strToHexCharCode(oldPass) : mi.strToHexCharCode('123');
                     let callFn = function(data) {
                       if (data) {
-                        //验证通过
-                        // if (_this.data.blePass) {
-                        //   mi.toast('蓝牙密码验证通过');
-                        // }
                         mi.toast('蓝牙密码验证通过');
                         _this.getTempDateList();
                         setTimeout(function() {
@@ -827,8 +738,6 @@ Page({
                     _this.verify(sendPass, callFn);
                   },
                   fail: function(res) {
-                    //console.log('特征值订阅开启失败', res);
-                    //console.log('特征值订阅开启失败');
                     wx.stopBluetoothDevicesDiscovery();
                   }
                 });
@@ -838,15 +747,12 @@ Page({
         });
       },
       fail: function() {
-        console.log('蓝牙连接失败');
         mi.toast('蓝牙连接失败');
         _this.setData({
           bleIsConnect: false
         });
         app.bleIsConnect = false;
-        //console.log('创建连接失败,请手动点击连接');
         mi.hideLoading();
-        // mi.toast('蓝牙连接失败,请手动点击连接');
       }
     });
   }, //创建蓝牙连接
@@ -955,13 +861,11 @@ Page({
       characteristicId: this.data.bleCharWriteId,
       value: mi.hex2buf(tempObj.hex),
       success: function(res) {
-        //console.log('特征值写入成功', res);
         if (tempObj.success) {
           tempObj.success(res);
         }
       },
       fail: function(res) {
-        //console.log('特征值写入失败', res);
         if (tempObj.fail) {
           tempObj.fail(res);
         }
@@ -973,23 +877,20 @@ Page({
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('c1返回数据不完整');
+        return ;
       }
       let pkg = hex.split('01c1')[1].slice(0, -2);
-      //console.log(pkg);
       let result = mi.hexCharCodeToStr(pkg);
-      //console.log('结果c1', result);
       app.bleVer = result;
       return result;
     }
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('c2返回数据不完整');
+        return ;
       }
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
-      //console.log('结果c2', result);
       _this.setData({
         bleEnergy: result
       });
@@ -1020,16 +921,14 @@ Page({
     //查询温度命令（0xC3）
     if (hex.indexOf('01c3') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('返回数据不完整');
+        return ;
       }
       let pkg = hex.split('01c3')[1].slice(0, -2);
-      //console.log(pkg);
       let result = {
         slot: pkg.slice(0, 2),
         temp1: parseInt(pkg.slice(2, 6), 16) / 100,
         temp2: parseInt(pkg.slice(6), 16) / 100,
-      }; //parseInt(pkg, 16);
-      //console.log('结果c3', result);
+      };
       mi.hideLoading();
       //先判断是否是传感器断开或者短路
       if (result.temp1 == '167.05' || result.temp2 == '167.05' || result.temp1 == '169.62' || result.temp2 == '169.62') {
@@ -1057,12 +956,6 @@ Page({
               success: function(res) {
                 if (res.confirm) {
                   _this.getTem(); //重新获取温度
-                  // _this.setData({
-                  //   temp_lto: '', //左上外
-                  //   temp_lti: '', //左上内
-                  //   temp_rti: '', //右上内
-                  //   temp_rto: '' //右上外
-                  // });
                 }
               }
             });
@@ -1074,7 +967,6 @@ Page({
         }
         if (count == 4) {
           count = 0;
-          //console.log('温度全部校验通过，提交温度信息');
           let date1 = mi.format('MM月dd hh:mm');
           let date2 = mi.format('dd日hh:mm');
           let lastTemp = {
@@ -1111,27 +1003,22 @@ Page({
     //查询工作模式（0xC4）
     if (hex.indexOf('01c4') > -1) {
       let pkg = hex.split('01c4')[1].slice(0, -2);
-      //console.log(pkg);
       let result = pkg; //parseInt(pkg, 16);
-      //console.log('结果c4', result);
       return result;
     }
     //查询震动模式（0xC6）
     if (hex.indexOf('01c6') > -1) {
       let pkg = hex.split('01c6')[1].slice(0, -2);
       let result = pkg; //parseInt(pkg, 16);
-      //console.log('结果c6', result);
       return result;
     }
     //设置密码是否设置成功（0xC8）
     if (hex.indexOf('01c8') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('c8返回数据不完整');
+        return ;
       }
       let pkg = '0x' + hex.split('01c8')[1].substr(0, 2);
-      //console.log('c8', pkg);
       let result = parseInt(pkg, 16);
-      //console.log('结果c8', result);
       if (result == 0) {
         app.setPass = '00';
       } else {
@@ -1143,11 +1030,10 @@ Page({
     //查询密码是否设置成功（0xC9）
     if (hex.indexOf('01c9') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('c8返回数据不完整');
+        return ;
       }
       let pkg = '0x' + hex.split('01c9')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
-      //console.log('结果c9', result);
       if (result == 0) {
         app.verPass = '00';
       } else {
@@ -1158,18 +1044,17 @@ Page({
     //恢复出厂设置
     if (hex.indexOf('01cb') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('cb返回数据不完整');
+        return ;
       }
       app.resetPass = '00';
     }
     //读取硬件id
     if (hex.indexOf('01cc') > -1) {
       if (!mi.isRight(hex)) {
-        return //console.log('cc返回数据不完整');
+        return ;
       }
       let pkg = hex.split('01cc')[1].slice(8, -2);
       let result = 'Toys' + pkg;
-      //console.log('cc', result);
       _this.setData({
         blehdid: result
       });
@@ -1246,7 +1131,6 @@ Page({
     let temp_max = mi.getArryMax(group_arr).toFixed(1);
 
     //计算健康分数
-    // console.log('temp_score', temp_avg, temp_max, group_arr);
     let temp_score = this.calcScore(temp_avg, temp_max, group_arr);
     this.setData({
       temp_score: temp_score, //健康值
@@ -1282,7 +1166,6 @@ Page({
         break;
       }
     }
-    // console.log('group_max', group_max);
     if (temp_max <= 0.4) {
       if (group_max == 1) {
         if (avg >= 35.8 && avg <= 37) {
@@ -1335,11 +1218,9 @@ Page({
       }
     }
 
-    // console.log('score', score);
     return score.toFixed(1); //返回分数值
   }, //计算健康值
   calcAvgDiagnose(curr, last) {
-    // console.log('本地乳温：',curr,'上次乳温：', last);
     let avg_isNormal = true;
     let avg_title = '';
     let avg_detial = '';
@@ -1364,7 +1245,6 @@ Page({
     } else {
       //有历史数据
       let diff = curr - last; //与历史比较的温差
-      // console.log('乳温差:', diff);
       if (diff <= -0.3) {
         if (curr > 37.2) {
           //高于正常范围
@@ -1463,12 +1343,10 @@ Page({
     }
   }, //计算乳温差值诊断结果
   getDiffMaxObj(a, b) {
-    //console.log('a,b', a, b);
     const tempDiffText = ['左乳上外', '左乳上内', '右乳上内', '右乳上外'];
     let anum = tempDiffText.indexOf(a) + 1;
     let bnum = tempDiffText.indexOf(b) + 1;
     let result = anum > bnum ? bnum.toString() + anum.toString() : anum.toString() + bnum.toString();
-    //console.log('result00000000000000000000000000000', result);
     return result;
 
   }, //得到最大乳温差是谁
@@ -1491,7 +1369,6 @@ Page({
       "endIdx": 0,
       "healthIndex": this.data.temp_score * 1
     }
-    //console.log(opt);
     mi.ajax({
       url: api.tempUpload,
       method: 'post',
@@ -1502,12 +1379,9 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        //console.log('res', res);
-        // _this.tempUpdate(); //图表同步更新
         if (_this.data.yearOptions.length > 0) {
           _this.getMonthHistory(function(res) {
             let obj = JSON.parse(res);
-            //console.log('temp1111111111111111111111111111', obj);
             if (obj && obj.data.length > 0) {
               let charArr = mi.switchCharData(obj.data);
               _this.detch(charArr[0], charArr[1], charArr[2]);
@@ -1515,9 +1389,6 @@ Page({
                 superMonthArr: obj.data
               });
             } else {
-              // let charArr = [{ x: [], y: [] }, { x: [], y: [] }, { x: [], y: [] }];
-              // _this.detch(charArr[0], charArr[1], charArr[2]);
-              // mi.toast('您当月还没有任何测试数据');
             }
           });
         } else {
@@ -1536,12 +1407,9 @@ Page({
   jump(e) {
     let index = e.currentTarget.dataset.go;
     let jumpIndex = 'jump' + index;
-    //console.log('jumpIndex', jumpIndex);
     if (this.data[jumpIndex]) {
       if (this.data.superMonthArr) {
         let tempInfo = this.data.superMonthArr[this.data[jumpIndex].dataIndex]; //拿到点击那个点的温度详细信息
-        console.log('tempInfo', tempInfo);
-        //console.log(this.data.superMonthArr);
         wx.navigateTo({
           url: `/pages/health-detail/index?tp1=${tempInfo.tp1}&tp2=${tempInfo.tp2}&tp3=${tempInfo.tp3}&tp4=${tempInfo.tp4}&ctime=${tempInfo.ctime}&ltpStr=${tempInfo.tips2}`
         });

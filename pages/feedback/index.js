@@ -29,7 +29,6 @@ Page({
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function(res) {
           // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-          //console.log(res);
           let tempFilePaths = res.tempFilePaths
           _this.data.imgs = _this.data.imgs.concat(tempFilePaths);
           _this.setData({
@@ -49,7 +48,6 @@ Page({
     });
   },
   submit() {
-    //console.log(this.data);
     if (!this.data.advice && !this.data.email && this.data.imgs.length == 0) {
       return mi.toast('请至少填写一项');
     }
@@ -65,25 +63,8 @@ Page({
       },
       dataPos: false,
       callback: function(data) {
-        //console.log(data);
         mi.toast('上传成功');
       }
     });
-    // wx.uploadFile({
-    //   url: api.feedback, //仅为示例，非真实的接口地址
-    //   method: 'post',
-    //   filePath: this.data.imgs[0],
-    //   name: 'picture',
-    //   formData: {
-    //     "content": this.data.advice,
-    //     "email": this.data.email,
-    //   },
-    //   success: function (res) {
-    //     //console.log(res);
-    //     var data = res.data
-
-    //     //do something
-    //   }
-    // });
   } //提交
 });

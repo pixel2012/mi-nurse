@@ -21,7 +21,6 @@ Page({
     ltpStr:'',//平均乳温文案
   },
   onLoad(options) {
-    //console.log('options', options);
     this.setData({
       temp_lto: options.tp1 / 100, //左上外
       temp_lti: options.tp2 / 100, //左上内
@@ -67,7 +66,6 @@ Page({
     let temp_max = mi.getArryMax(group_arr).toFixed(1);
 
     //计算健康分数
-    // console.log('temp_score', temp_avg, temp_max, group_arr);
     let temp_score = this.calcScore(temp_avg, temp_max, group_arr);
     this.setData({
       temp_score: temp_score, //健康值
@@ -103,7 +101,6 @@ Page({
         break;
       }
     }
-    // console.log('group_max', group_max);
     if (temp_max <= 0.4) {
       if (group_max == 1) {
         if (avg >= 35.8 && avg <= 37) {
@@ -156,11 +153,9 @@ Page({
       }
     }
 
-    // console.log('score', score);
     return score.toFixed(1); //返回分数值
   }, //计算健康值
   calcAvgDiagnose(curr, last) {
-    // console.log('本地乳温：',curr,'上次乳温：', last);
     let avg_isNormal = true;
     let avg_title = '';
     let avg_detial = '';
@@ -185,7 +180,6 @@ Page({
     } else {
       //有历史数据
       let diff = curr - last; //与历史比较的温差
-      // console.log('乳温差:', diff);
       if (diff <= -0.3) {
         if (curr > 37.2) {
           //高于正常范围

@@ -1,17 +1,20 @@
-.ble-container{
-  padding:30rpx;
-}
-.ble-li{
+.ble-container {
   padding: 30rpx;
-  border-bottom: 1rpx solid #D7D7D7;
 }
-.ble-title{
+
+.ble-li {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #d7d7d7;
+}
+
+.ble-title {
   font-size: 28rpx;
-  color: #5E5E5E;
+  color: #5e5e5e;
   font-weight: bolder;
 }
-.ble-text{
+
+.ble-text {
   text-align: right;
   font-size: 28rpx;
-  color: #D7D7D7;
+  color: #d7d7d7;
 }

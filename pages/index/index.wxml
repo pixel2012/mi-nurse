@@ -99,18 +99,6 @@
     </view>
     <scroll-view wx:if="{{monthOptions.length>0}}" class="scroll-view_H" scroll-x='true' style="width: 100%">
       <view class="scroll-view-item_H {{index==month?'active':''}}" wx:for="{{monthOptions}}" wx:key="{{index}}" data-month="{{index}}" bindtap='changeMonth'>{{item}}月</view>
-      <!-- <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('01')>-1}}">1月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('02')>-1}}">2月</view>
-      <view class="scroll-view-item_H active" wx:if="{{monthOptions.indexOf('03')>-1}}">3月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('04')>-1}}">4月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('05')>-1}}">5月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('06')>-1}}">6月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('07')>-1}}">7月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('08')>-1}}">8月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('09')>-1}}">9月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('10')>-1}}">10月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('11')>-1}}">11月</view>
-      <view class="scroll-view-item_H" wx:if="{{monthOptions.indexOf('12')>-1}}">12月</view> -->
     </scroll-view>
 
     <view class='mi-assess-box2 row'>
@@ -131,11 +119,11 @@
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;margin-right:20rpx;'>乳温差</text>
-        <text wx:if="{{echart1 > 0}}" class="mi-main-color">{{echart1}}℃</text>
+        <text wx:if="{{echart1 > -1}}" class="mi-main-color">{{echart1}}℃</text>
       </view>
       <view class='col-50 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
-        <text wx:if="{{echart1 > 0}}" style="margin-right:20rpx;">{{echart1Date}}</text>
+        <text wx:if="{{echart1 > -1}}" style="margin-right:20rpx;">{{echart1Date}}</text>
         <text data-go='1' bindtap='jump'>点击查看详情></text>
       </view>
     </view>
@@ -146,7 +134,7 @@
     <view class='mi-assess-box2 row'>
       <view class='col-50 mi-assess-dt yellow' style='font-weight:normal;'>
         <text style='color:#ff4578;'>乳温</text>
-        
+
       </view>
       <view class='col-50 mi-assess-time'>
         <!-- <navigator url="/pages/health-detail/index">点击查看详情></navigator> -->
@@ -189,7 +177,7 @@
 
   </view>
 
-  
+
   <view class='mi-ble-list' wx:if="{{!isAuthorize}}">
     <view class='mi-ble-content'>
       <view class='mi-ble-title'>咪小护需要取得您的授权</view>
@@ -204,5 +192,5 @@
       <button class='mi-button' bindtap="toVerify">确 定</button>
     </view>
   </view>
-  
+
 </view>

@@ -22,8 +22,6 @@ Page({
       },
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-
-        //console.log('data', data);
         _this.setData({
           title:res.data.title,
           content:res.data.content

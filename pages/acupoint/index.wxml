@@ -78,9 +78,10 @@
       </view>
       <view class='col-80'>
         <view class='how-long-title'>
-          按摩时长<text class='how-long-time'> {{filterTime.zh(time)}}</text>
+          按摩时长
+          <text class='how-long-time'> {{filterTime.zh(time)}}</text>
           <view class='hong-long-box'>
-            <slider bindchanging="sliderChange" min="1" max="60" value="{{time}}" block-size="16" style="display:inline-block;width:70%;vertical-align: middle;"/>60秒
+            <slider bindchanging="sliderChange" min="1" max="60" value="{{time}}" block-size="16" style="display:inline-block;width:70%;vertical-align: middle;" />60秒
           </view>
         </view>
       </view>

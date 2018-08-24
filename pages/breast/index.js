@@ -7,7 +7,6 @@ class Shake {
     this.loop = 0; //循环次数
   }
   getStep0() {
-    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -31,7 +30,6 @@ class Shake {
     }];
   }
   getStep1() {
-    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -55,7 +53,6 @@ class Shake {
     }];
   }
   getStep2() {
-    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
         index: 0,
@@ -79,7 +76,6 @@ class Shake {
     }];
   }
   getStep3() {
-    console.log('mode', this.mode, 'strength', this.strength);
     var ms = mi.hexMerge(this.mode, this.strength);
     var stepA = [{
         index: 0,
@@ -174,13 +170,11 @@ class Shake {
     if (mode) {
       this.mode = mode;
     }
-    console.log('setmode', mode);
   }
   setStrength(strength) {
     if (strength) {
       this.strength = strength;
     }
-    console.log('setstrength', strength);
   }
 }
 let shaker = null; //本地震动对象
@@ -327,7 +321,6 @@ Page({
     let tempObj = mi.deepMerge({}, obj);
     tempObj.hex = command[obj.command];
     if (obj.command == 'c3' || obj.command == 'c5') {
-      console.log('obj.param', obj.param);
       obj.param.forEach(v => {
         tempObj.hex += v; //追加上参数
       });
@@ -341,20 +334,17 @@ Page({
     }
     //追加包头，开始写入特征值
     tempObj.hex = 'FBFA' + tempObj.hex;
-    console.log('震动命令', tempObj.hex);
     wx.writeBLECharacteristicValue({
       deviceId: this.data.bleDeviceId,
       serviceId: this.data.bleServerId,
       characteristicId: this.data.bleCharWriteId,
       value: mi.hex2buf(tempObj.hex),
       success: function(res) {
-        console.log('特征值写入成功', res);
         if (tempObj.success) {
           tempObj.success(res);
         }
       },
       fail: function(res) {
-        console.log('特征值写入失败', res);
         if (tempObj.fail) {
           tempObj.fail(res);
         }
@@ -400,14 +390,13 @@ Page({
       shakeTimes = 0; //重置
       _this.stop();
       //提交后台按摩数据（自动模式）
-      _this.uploadZDMode(1, _this.data.allTime * 1000);
+      // _this.uploadZDMode(1, _this.data.allTime * 1000);
     });
   }, //执行
   allLoop(callback) {
     app.ishaking = true; //设置正在震动状态
     let _this = this;
     _this.loop(function() {
-      console.log('大动画执行' + _this.data.allLoop + '完毕');
       let allLoop = _this.data.allLoop + 1;
       if (allLoop < _this.data.allLoops) {
         _this.setData({
@@ -415,7 +404,6 @@ Page({
         });
         _this.allLoop(callback);
       } else {
-        console.log('全部动画执行完毕');
         _this.setData({
           allLoop: 0,
           nowTime: 0,
@@ -424,7 +412,6 @@ Page({
         shaker = null;
         timer = null;
         if (callback) {
-          console.log('callback进来了');
           callback();
         }
       }
@@ -434,7 +421,6 @@ Page({
   loop(callback) {
     let _this = this;
     _this.do(function() {
-      console.log('第' + _this.data.current + '大段执行' + _this.data.stepLoop + '轮完毕');
       let current = _this.data.current + 1;
       if (current < 4) {
         _this.setData({
@@ -464,17 +450,13 @@ Page({
     let _this = this;
     let stepArr = null;
     let stepObj = null;
-    console.log('doooo', _this.data.current, _this.data.stepIndex, _this.data.index);
     stepArr = shaker['getStep' + _this.data.current]();
     stepObj = stepArr[_this.data.stepIndex];
 
     //判断是否是自动模式
-    console.log('_this.data.mode', _this.data.mode);
     if (_this.data.menuIndex == 6) {
       let num = mi.getRadom(1, 6);
-      // console.log('num', num);
       let mode = num + '0';
-      // console.log('mode', strength);
       shaker.setMode(mode);
     }
 
@@ -518,21 +500,11 @@ Page({
             }
 
             shakeTimes++; //记录片段时间
-            console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
             _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
             circleTimes(roundTimes);
           }, 1000);
         }
       }
-      // timer = setTimeout(function () {
-      //   _this.setData({
-      //     index: _this.data.index + 1,
-      //     nowTime: _this.data.nowTime + stepObj.step[_this.data.index].time
-      //   });
-      //   console.log('已用时间/总时间', _this.data.nowTime, _this.data.allTime, parseInt(_this.data.nowTime * 360 / _this.data.allTime));
-      //   _this.setPlay(parseInt(_this.data.nowTime * 360 / _this.data.allTime));
-      //   _this.do(callback);
-      // }, 1000 * stepObj.step[_this.data.index].time + 500);
     } else {
       _this.setData({
         index: 0,
@@ -594,7 +566,6 @@ Page({
       }
       allTime += time * step3[i].loop;
     }
-    console.log('allTime', allTime * this.data.allLoops);
     return allTime * this.data.allLoops
   },
   stop() {
@@ -638,7 +609,6 @@ Page({
     });
   },
   showMenuItem(e) {
-    console.log('e.currentTarget.dataset', e.currentTarget.dataset);
     this.setData({
       menuIndex: e.currentTarget.dataset.index,
       mode: e.currentTarget.dataset.index == 6 ? mi.getRadom(1, 6) + '0' : e.currentTarget.dataset.mode
@@ -691,17 +661,14 @@ Page({
   },
   // diy按摩代码
   longShock(e) {
-    // console.log(666);
     if (timer) {
       this.stop();
     }
     if (timer2) {
       this.diyStop();
     }
-    console.log('e', e);
     let code = e.currentTarget.dataset.code;
     let ms = mi.hexMerge('10', '0' + (this.data.diyStrength || '1'));
-    console.log('ms', ms);
     let shock = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
     if (code == 1) {
       shock = [ms, 'F0', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'];
@@ -721,8 +688,6 @@ Page({
     if (code == 6) {
       shock = ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', ms, 'F0'];
     }
-    console.log('code', code);
-    console.log('shock', shock);
     this.command({
       command: 'c5',
       param: shock,
@@ -730,7 +695,6 @@ Page({
     });
   },
   closeShock() {
-    console.log(777);
     this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
@@ -758,7 +722,6 @@ Page({
     diyCurContext = e; //当前上下文存储到全局，方便修改震动模式使用
     let diyArr = this.data.diyArr;
     let cur = diyArr[e.currentTarget.dataset.index];
-    console.log(cur);
     if (cur.play) {
       cur.play = false;
       diyArr[e.currentTarget.dataset.index] = cur;
@@ -778,7 +741,6 @@ Page({
           diyArr[i].timeUsed = 0;
         }
       }
-      console.log('cur', cur);
       cur.play = true;
       diyArr[e.currentTarget.dataset.index] = cur;
       this.setData({
@@ -803,7 +765,7 @@ Page({
         showCancel: false
       });
       //震动完毕，上传后台震动数据
-      _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeTotal * 1000);
+      // _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeTotal * 1000);
     });
   }, //diy播放
   addDiyStrength(cur) {
@@ -826,7 +788,6 @@ Page({
     }
     let _this = this;
     let curCommond = _this.addDiyStrength(cur);
-    console.log('curCommond', curCommond);
     _this.command({
       command: 'c5',
       param: curCommond,
@@ -879,7 +840,6 @@ Page({
                   _this.data.diyArr[_this.data.diyIndex].timeUsed = _this.data.diyArr[_this.data.diyIndex].timeTotal;
                 } else {
                   _this.data.diyArr[_this.data.diyIndex].timeUsed++;
-                  console.log(' _this.data.diyArr[_this.data.diyIndex].timeUsed', _this.data.diyIndex, _this.data.diyArr[_this.data.diyIndex].timeUsed);
                 }
                 shakeTimes2++;
               }
@@ -894,7 +854,6 @@ Page({
     });
   }, //diy执行核心代码
   diyStop() {
-    console.log('====================diyStop开始============================');
     let _this = this;
     app.ishaking = false; //关闭震动状态
     _this.command({
@@ -906,7 +865,6 @@ Page({
         shakeTimes2 = 0;
         clearTimeout(timer2);
         timer2 = null;
-        console.log('stop', '_this.data.diyIndex', _this.data.diyIndex);
         if (_this.data.diyArr[_this.data.diyIndex]) {
           _this.data.diyArr[_this.data.diyIndex].play = false;
           _this.data.diyArr[_this.data.diyIndex].timeUsed = 0;
@@ -916,11 +874,8 @@ Page({
         }
       }
     });
-    console.log('====================diyStop结束============================');
   }, //diy暂停
   uploadZDMode(mode, time) {
-    //console.log('url', api.uploadZD);
-    console.log('发送按摩时长', mode, time);
     mi.ajax({
       url: api.uploadZD,
       method: 'post',
@@ -933,7 +888,6 @@ Page({
       },
       dataPos: false,
       callback: function(data) {
-        console.log('按摩时长', data);
       }
     });
   }, //上传震动
