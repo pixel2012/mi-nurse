@@ -147,7 +147,7 @@ Page({
     let weight = mi.store.get('weight');
     this.setData({
       nickName: userInfo.nickName,
-      avatar: userInfo.avatar,
+      headerUrl: userInfo.avatar,
       currentDate: age ? age : new Date().getFullYear() + '-01',
       height: height ? height : '',
       weight: weight ? weight : '',
