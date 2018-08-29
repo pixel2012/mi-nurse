@@ -386,9 +386,9 @@ Page({
         confirmText: '我会加油',
         showCancel: false
       });
+      _this.stop();
       autoUsedTime = 0; //重置
       shakeTimes = 0; //重置
-      _this.stop();
       //提交后台按摩数据（自动模式）
       // _this.uploadZDMode(1, _this.data.allTime * 1000);
     });
@@ -576,6 +576,7 @@ Page({
     // });
     //然后
     app.ishaking = false; //关闭震动状态
+    _this.uploadZDMode(1, shakeTimes * 1000); //发送统计数据
     _this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
@@ -586,7 +587,6 @@ Page({
         });
       }
     });
-    _this.uploadZDMode(1, shakeTimes * 1000); //发送统计数据
     clearTimeout(timer);
     _this.setData({
       play: false

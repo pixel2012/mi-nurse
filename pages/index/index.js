@@ -526,6 +526,7 @@ Page({
   bluetoothInit: function(oldId) {
     let _this = this;
     //检测蓝牙是否打开
+    wx.closeBluetoothAdapter();
     wx.openBluetoothAdapter({
       success: function(res) {
         mi.showLoading('蓝牙已打开');
@@ -542,13 +543,18 @@ Page({
             //如果蓝牙此时处于空闲，则可以
             if (res.available && !res.discovering) {
               mi.showLoading('蓝牙搜索中');
+              console.log('oldId', oldId, typeof oldId == 'string');
               if (oldId && typeof oldId == 'string') {
+                console.log('开启连接');
                 _this.connect(oldId);
               } else {
+                console.log('开启搜索');
                 //开启蓝牙搜索模式
                 wx.startBluetoothDevicesDiscovery({
                   services: [],
+                  allowDuplicatesKey:true,
                   success: function(res) {
+                    console.log(res);
                     //开启定时器，一分钟后没有搜索，自动关闭蓝牙搜索
                     setTimeout(function() {
                       if (!_this.data.bleIsConnect) {
@@ -562,6 +568,7 @@ Page({
                     }, 60000);
 
                     wx.onBluetoothDeviceFound(function(res) {
+                      console.log('发现设备',res);
                       if (res.devices[0].name.indexOf('mito-Smart') > -1) {
                         //发现蜜桃设备直接连接
                         _this.connect(res.devices[0].deviceId);
@@ -569,6 +576,8 @@ Page({
                     })
                   },
                   fail: function(res) {
+                    console.log('失败设备', res);
+                    wx.stopBluetoothDevicesDiscovery();
                   }
                 });
               }
@@ -584,20 +593,22 @@ Page({
 
           },
           fail: function(res) {
-            mi.toast('获取蓝牙适配器状态失败');
+            console.log('失败,res',res);
             mi.hideLoading();
+            mi.toast('获取蓝牙适配器状态失败');
           }
         });
 
 
       },
       fail: function(res) {
-        mi.toast('蓝牙未打开');
         mi.hideLoading();
+        mi.toast('蓝牙未打开');
       }
     });
   },
   connect(id) {
+    console.log('连接蓝牙');
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
       success: function(res) {
@@ -746,13 +757,14 @@ Page({
           }
         });
       },
-      fail: function() {
+      fail: function(res) {
+        console.log('蓝牙连接失败',res);
+        mi.hideLoading();
         mi.toast('蓝牙连接失败');
         _this.setData({
           bleIsConnect: false
         });
         app.bleIsConnect = false;
-        mi.hideLoading();
       }
     });
   }, //创建蓝牙连接
