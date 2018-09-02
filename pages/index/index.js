@@ -101,6 +101,7 @@ Page({
     jump2: null, //乳温
     superMonthArr: null, //当月的所有温度信息
     cellTime: '', //电池测量时间
+    verPassing:false,//正在校验密码
     blePass: '', //蓝牙密码
     blueRight: false, //是否让用户输入蓝牙密码
   },
@@ -385,12 +386,12 @@ Page({
 
         if (res.data.length > 0) {
           //yearOptions, superYears
-          _this.formateDate(res.data, function(yearOptions, superYears) {
+          mi.formateDate(res.data.reverse(), function(yearOptions, superYears) {
             _this.setData({
               year: yearOptions.length - 1,
               yearOptions: yearOptions,
               superYears: superYears,
-              monthOptions: superYears[yearOptions.length - 1].months.reverse(),
+              monthOptions: superYears[yearOptions.length - 1].months,
               month: superYears[yearOptions.length - 1].months.length - 1
             });
             //如果年份数组大于0，则请求请求第最后一个月份的数据
@@ -398,12 +399,12 @@ Page({
               _this.getMonthHistory(function(res) {
                 let obj = JSON.parse(res);
                 if (obj && obj.data.length > 0) {
-                  let charArr = mi.switchCharData(obj.data);
+                  let charArr = mi.switchCharData(obj.data.reverse());
                   _this.detch(charArr[0], charArr[1], charArr[2]);
                   _this.setData({
-                    superMonthArr: obj.data.reverse()
+                    superMonthArr: obj.data
                   });
-                  const index = charArr[0].y.length - 1;
+                  const index = 0;//charArr[0].y.length - 1;
                   _this.assignInitVal(
                     charArr[0].y[index],
                     charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]],
@@ -452,14 +453,14 @@ Page({
     this.getMonthHistory(function(res) {
       let obj = JSON.parse(res);
       if (obj && obj.data.length > 0) {
-        let charArr = mi.switchCharData(obj.data);
+        let charArr = mi.switchCharData(obj.data.reverse());
         _this.detch(charArr[0], charArr[1], charArr[2]);
         _this.setData({
           superMonthArr: obj.data
         });
 
         //渲染附加信息
-        const index = charArr[0].y.length - 1;
+        const index = 0;//charArr[0].y.length - 1;
         // let date = mi.format();
         _this.assignInitVal(
           charArr[0].y[index],
@@ -491,38 +492,6 @@ Page({
       }
     });
   }, //获取当月的数据
-  formateDate(date, callback) {
-    let yearOptions = [];
-    let superYears = [];
-    let curr = {
-      year: '',
-      months: []
-    };
-    for (let i = 0; i < date.length; i++) {
-      let cache = date[i].split('-');
-      if (i == 0) {
-        yearOptions.push(cache[0]);
-        curr.year = cache[0];
-        curr.months.push(cache[1]);
-
-      } else {
-        if (yearOptions.indexOf(cache[0]) > -1) {
-          curr.months.push(cache[1]);
-        } else {
-          superYears.push(JSON.parse(JSON.stringify(curr)));
-          curr.months = [];
-          yearOptions.push(cache[0]);
-          curr.year = cache[0];
-          curr.months.push(cache[1]);
-        }
-      }
-
-    }
-    superYears.push(JSON.parse(JSON.stringify(curr)));
-    if (callback) {
-      callback(yearOptions, superYears);
-    }
-  }, //格式化时间
   bluetoothInit: function(oldId) {
     let _this = this;
     //检测蓝牙是否打开
@@ -603,7 +572,7 @@ Page({
       },
       fail: function(res) {
         mi.hideLoading();
-        mi.toast('蓝牙未打开');
+        mi.toast('手机蓝牙未打开');
       }
     });
   },
@@ -634,7 +603,7 @@ Page({
           if (connectNum < 3) {
             connectNum++;
             wx.switchTab({
-              url: "../index/index"
+              url: "/pages/index/index"
             });
             wx.stopBluetoothDevicesDiscovery({
               success: function() {
@@ -746,7 +715,9 @@ Page({
                         _this.confirmBluePass(callFn);
                       }
                     };
-                    _this.verify(sendPass, callFn);
+                    if (!_this.data.verPassing){
+                      _this.verify(sendPass, callFn);
+                    }
                   },
                   fail: function(res) {
                     wx.stopBluetoothDevicesDiscovery();
@@ -765,6 +736,9 @@ Page({
           bleIsConnect: false
         });
         app.bleIsConnect = false;
+        wx.closeBLEConnection({
+          deviceId: app.bleDeviceId
+        });
       }
     });
   }, //创建蓝牙连接
@@ -794,6 +768,9 @@ Page({
       return mi.toast('请先连接蓝牙设备');
     }
     mi.showLoading('校验密码中...');
+    this.setData({
+      verPassing:true
+    });
     let _this = this;
     app.command({
       command: 'c9',
@@ -801,6 +778,9 @@ Page({
       check: true,
       success: function() {
         setTimeout(function() {
+          _this.setData({
+            verPassing: true
+          });
           if (typeof app.verPass == 'string' && app.verPass == '00') {
             app.verPass = false; //恢复原状
             mi.hideLoading();
@@ -828,7 +808,7 @@ Page({
               callback(false);
             }
           }
-        }, 1000);
+        }, 1500);
       }
     });
   },
@@ -843,11 +823,11 @@ Page({
       c2: '000500C2C7',
       c3: '000600C3', //后面需追加两位机位和两位校验码
       c4: '000500C4C1',
-      c5: '',
+      c5: '001100C5',
       c6: '000500C6C3',
       c7: '',
-      c8: '',
-      C9: '',
+      c8: '000B00C8',
+      c9: '000800C9',
       ca: '',
       cb: '000500CBCE',
       cc: '000500CCC9'
@@ -1395,7 +1375,7 @@ Page({
           _this.getMonthHistory(function(res) {
             let obj = JSON.parse(res);
             if (obj && obj.data.length > 0) {
-              let charArr = mi.switchCharData(obj.data);
+              let charArr = mi.switchCharData(obj.data.reverse());
               _this.detch(charArr[0], charArr[1], charArr[2]);
               _this.setData({
                 superMonthArr: obj.data
