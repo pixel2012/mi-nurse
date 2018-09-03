@@ -1373,10 +1373,10 @@ Page({
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
         let currentDate = new Date();
-        let currentYear = currentDate.getFullYear();
+        let currentYear = currentDate.getFullYear() + '';
         let currentMonth = currentDate.getMonth() + 1;
 
-        if (_this.data.yearOptions.join('-').indexOf(currentYear) > -1 && _this.data.monthOptions.join('-').indexOf(currentMonth > 9 ? currentMonth : '0' + currentMonth) > -1){
+        if (_this.data.yearOptions.indexOf(currentYear) > -1 && _this.data.monthOptions.indexOf(currentMonth > 9 ? '' + currentMonth : '0' + currentMonth) > -1) {
           _this.getMonthHistory(function(res) {
             let obj = JSON.parse(res);
             if (obj && obj.data.length > 0) {
