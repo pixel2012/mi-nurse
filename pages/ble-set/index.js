@@ -34,7 +34,7 @@ Page({
     if (!(passO && passO[0].length == 3)) {
       return mi.toast('旧密码长度仅支持3位且不能是中文');
     }
-    let oldP = mi.store.get('pass');
+    let oldP = mi.store.get('pass') || '123';
     if (passO != oldP) {
       return mi.toast('旧密码错误');
     }

@@ -686,6 +686,9 @@ Page({
                     });
                     //验证蓝牙密码
                     let oldPass = mi.store.get('pass');
+                    if (!oldPass){
+                      mi.store.set('pass', '123');
+                    }//初次附上默认蓝牙密码
                     let sendPass = oldPass ? mi.strToHexCharCode(oldPass) : mi.strToHexCharCode('123');
                     let callFn = function(data) {
                       if (data) {
@@ -1371,7 +1374,11 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        if (_this.data.yearOptions.length > 0) {
+        let currentDate=new Date();
+        let currentYear = currentDate.getFullYear();
+        let currentMonth = currentDate.getMonth()+1;
+        
+        if (_this.data.yearOptions.join('-').indexOf(currentYear)>-1 && _this.data.monthOptions.join('-').indexOf(currentMonth)>-1) {
           _this.getMonthHistory(function(res) {
             let obj = JSON.parse(res);
             if (obj && obj.data.length > 0) {
