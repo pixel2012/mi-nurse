@@ -101,7 +101,7 @@ Page({
     jump2: null, //乳温
     superMonthArr: null, //当月的所有温度信息
     cellTime: '', //电池测量时间
-    verPassing:false,//正在校验密码
+    verPassing: false, //正在校验密码
     blePass: '', //蓝牙密码
     blueRight: false, //是否让用户输入蓝牙密码
   },
@@ -282,7 +282,7 @@ Page({
               } else {
                 _this.setData({
                   [opts.target]: params.seriesData[0].value,
-                  [opts.target+'Date']: params.seriesData[0].name.replace('\n',''),
+                  [opts.target + 'Date']: params.seriesData[0].name.replace('\n', ''),
                   [opts.jump]: params.seriesData[0]
                 });
               }
@@ -404,7 +404,7 @@ Page({
                   _this.setData({
                     superMonthArr: obj.data
                   });
-                  const index = 0;//charArr[0].y.length - 1;
+                  const index = 0; //charArr[0].y.length - 1;
                   _this.assignInitVal(
                     charArr[0].y[index],
                     charArr[1].y[index], [charArr[2].y1[index], charArr[2].y2[index], charArr[2].y3[index], charArr[2].y4[index]],
@@ -440,7 +440,7 @@ Page({
       echart0: t0,
       echart1: t1,
       echart2: t2,
-      echart0Date: d0.replace('\n',''), //表0日期
+      echart0Date: d0.replace('\n', ''), //表0日期
       echart1Date: d1.replace('\n', ''), //表1日期
       echart2Date: d2.replace('\n', '') //表2日期
     });
@@ -460,7 +460,7 @@ Page({
         });
 
         //渲染附加信息
-        const index = 0;//charArr[0].y.length - 1;
+        const index = 0; //charArr[0].y.length - 1;
         // let date = mi.format();
         _this.assignInitVal(
           charArr[0].y[index],
@@ -521,7 +521,7 @@ Page({
                 //开启蓝牙搜索模式
                 wx.startBluetoothDevicesDiscovery({
                   services: [],
-                  allowDuplicatesKey:true,
+                  allowDuplicatesKey: true,
                   success: function(res) {
                     console.log(res);
                     //开启定时器，一分钟后没有搜索，自动关闭蓝牙搜索
@@ -537,7 +537,7 @@ Page({
                     }, 60000);
 
                     wx.onBluetoothDeviceFound(function(res) {
-                      console.log('发现设备',res);
+                      console.log('发现设备', res);
                       if (res.devices[0].name.indexOf('mito-Smart') > -1) {
                         //发现蜜桃设备直接连接
                         _this.connect(res.devices[0].deviceId);
@@ -562,7 +562,7 @@ Page({
 
           },
           fail: function(res) {
-            console.log('失败,res',res);
+            console.log('失败,res', res);
             mi.hideLoading();
             mi.toast('获取蓝牙适配器状态失败');
           }
@@ -580,8 +580,7 @@ Page({
     console.log('连接蓝牙');
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
-      success: function(res) {
-      }
+      success: function(res) {}
     });
     let deviceId = id;
     this.setData({
@@ -594,7 +593,7 @@ Page({
         mi.toast(res.connected ? '连接成功' : '蓝牙已断开');
         _this.setData({
           bleIsConnect: res.connected,
-          blueRight: false,//关闭蓝牙密码输入框
+          blueRight: false, //关闭蓝牙密码输入框
         });
         app.bleIsConnect = res.connected;
       }
@@ -686,9 +685,9 @@ Page({
                     });
                     //验证蓝牙密码
                     let oldPass = mi.store.get('pass');
-                    if (!oldPass){
+                    if (!oldPass) {
                       mi.store.set('pass', '123');
-                    }//初次附上默认蓝牙密码
+                    } //初次附上默认蓝牙密码
                     let sendPass = oldPass ? mi.strToHexCharCode(oldPass) : mi.strToHexCharCode('123');
                     let callFn = function(data) {
                       if (data) {
@@ -718,7 +717,7 @@ Page({
                         _this.confirmBluePass(callFn);
                       }
                     };
-                    if (!_this.data.verPassing){
+                    if (!_this.data.verPassing) {
                       _this.verify(sendPass, callFn);
                     }
                   },
@@ -732,7 +731,7 @@ Page({
         });
       },
       fail: function(res) {
-        console.log('蓝牙连接失败',res);
+        console.log('蓝牙连接失败', res);
         mi.hideLoading();
         mi.toast('蓝牙连接失败');
         _this.setData({
@@ -764,15 +763,15 @@ Page({
     this.verify(bluePass, verifyFn);
   }, //先验证蓝牙密码是否符合规则，再去通过硬件验证
   verify(pass, callback) {
-    if (!app.bleIsConnect){
+    if (!app.bleIsConnect) {
       this.setData({
-        blueRight:false
+        blueRight: false
       });
       return mi.toast('请先连接蓝牙设备');
     }
     mi.showLoading('校验密码中...');
     this.setData({
-      verPassing:true
+      verPassing: true
     });
     let _this = this;
     app.command({
@@ -872,7 +871,7 @@ Page({
     //查询模块版本号命令（0xC1）
     if (hex.indexOf('01c1') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = hex.split('01c1')[1].slice(0, -2);
       let result = mi.hexCharCodeToStr(pkg);
@@ -882,7 +881,7 @@ Page({
     //查询电池电量命令（0xC2）
     if (hex.indexOf('01c2') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = '0x' + hex.split('01c2')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
@@ -916,7 +915,7 @@ Page({
     //查询温度命令（0xC3）
     if (hex.indexOf('01c3') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = hex.split('01c3')[1].slice(0, -2);
       let result = {
@@ -982,12 +981,11 @@ Page({
             //变更最新值
             _this.assignInitVal(
               _this.data.temp_score,
-              _this.data.temp_diff_num, 
-              [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto],
+              _this.data.temp_diff_num, [_this.data.temp_lto, _this.data.temp_lti, _this.data.temp_rti, _this.data.temp_rto],
               date2,
               date2,
               date2
-              );
+            );
             //计算完所有温度后，提交后台
             _this.uploadTem();
           });
@@ -1010,7 +1008,7 @@ Page({
     //设置密码是否设置成功（0xC8）
     if (hex.indexOf('01c8') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = '0x' + hex.split('01c8')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
@@ -1025,7 +1023,7 @@ Page({
     //查询密码是否设置成功（0xC9）
     if (hex.indexOf('01c9') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = '0x' + hex.split('01c9')[1].substr(0, 2);
       let result = parseInt(pkg, 16);
@@ -1039,14 +1037,14 @@ Page({
     //恢复出厂设置
     if (hex.indexOf('01cb') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       app.resetPass = '00';
     }
     //读取硬件id
     if (hex.indexOf('01cc') > -1) {
       if (!mi.isRight(hex)) {
-        return ;
+        return;
       }
       let pkg = hex.split('01cc')[1].slice(8, -2);
       let result = 'Toys' + pkg;
@@ -1374,11 +1372,11 @@ Page({
       dataPos: false,
       callback: function(data) {
         let res = JSON.parse(mi.crypto.decode(data));
-        let currentDate=new Date();
+        let currentDate = new Date();
         let currentYear = currentDate.getFullYear();
-        let currentMonth = currentDate.getMonth()+1;
-        
-        if (_this.data.yearOptions.join('-').indexOf(currentYear)>-1 && _this.data.monthOptions.join('-').indexOf(currentMonth)>-1) {
+        let currentMonth = currentDate.getMonth() + 1;
+
+        if (_this.data.yearOptions.join('-').indexOf(currentYear) > -1 && _this.data.monthOptions.join('-').indexOf(currentMonth > 9 ? currentMonth : '0' + currentMonth) > -1){
           _this.getMonthHistory(function(res) {
             let obj = JSON.parse(res);
             if (obj && obj.data.length > 0) {
@@ -1387,8 +1385,7 @@ Page({
               _this.setData({
                 superMonthArr: obj.data
               });
-            } else {
-            }
+            } else {}
           });
         } else {
           //第一次测温，重新拉取日期
