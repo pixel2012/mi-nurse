@@ -137,6 +137,8 @@ Page({
       weight: this.data.weight,
       oldSet: this.data.oldSet
     });
+    mi.store.set('height', _this.data.height);
+    mi.store.set('weight', _this.data.weight);
     this.bindSave2();
   },
   updateInfo(){
@@ -314,7 +316,7 @@ Page({
       encrypt: true,
       dataPos: false,
       callback: function (data) {
-        let res = JSON.parse(mi.crypto.decode(data));
+        // let res = JSON.parse(mi.crypto.decode(data));
       }
     });
   }, //身高体重
