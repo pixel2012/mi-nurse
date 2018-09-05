@@ -355,7 +355,7 @@ Page({
             dataPos: false,
             callback: function(data) {
               let res = JSON.parse(mi.crypto.decode(data));
-              console.log('登录:' + res);
+              console.log('登录:' + JSON.stringify(res));
               if (res.status == 0) {
                 //将信息存储到本地缓存中
                 mi.store.set('myId', res.data.myId);

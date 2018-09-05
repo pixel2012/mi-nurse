@@ -137,8 +137,8 @@ Page({
       weight: this.data.weight,
       oldSet: this.data.oldSet
     });
-    mi.store.set('height', _this.data.height);
-    mi.store.set('weight', _this.data.weight);
+    mi.store.set('height', this.data.height);
+    mi.store.set('weight', this.data.weight);
     this.bindSave2();
   },
   updateInfo(){
