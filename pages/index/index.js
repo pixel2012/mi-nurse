@@ -134,7 +134,7 @@ Page({
       app.bleIsSync = lastTemp.bleIsSync;
       this.calcTemp();
     }
-  },
+  },//将上一次测得的温度还原到界面上
   tempUpdate(callback) {
     let _this = this;
     // this.lineInit();
@@ -145,7 +145,7 @@ Page({
         callback();
       }
     }
-  },
+  },//拉取用户数据
   detch(char1, char2, char3) {
     let timer = null;
     let _this = this;
@@ -217,7 +217,7 @@ Page({
         detch();
       }
     }, 1000);
-  },
+  },//实例化折线图
   chartRender(chart, opts, unit) {
     let _this = this;
     let option = {
@@ -303,7 +303,7 @@ Page({
     option = mi.deepMerge(option, opts);
     chart.resize();
     chart.setOption(option);
-  },
+  },//初始化折线图
   updateStore(callback) {
     this.setData({
       bleDeviceId: app.bleDeviceId, //蓝牙设备的id号
@@ -314,7 +314,7 @@ Page({
     if (callback) {
       callback();
     }
-  },
+  },//从本地缓存更新数据到视图
   getUserInfo(callback) {
     let _this = this;
     //获取用户信息
@@ -477,7 +477,7 @@ Page({
 
       }
     });
-  },
+  },//给折线图关键位置赋值
   getMonthHistory(callback) {
     let _this = this;
     mi.ajax({
@@ -573,7 +573,7 @@ Page({
         mi.toast('手机蓝牙未打开');
       }
     });
-  },
+  },//蓝牙初始化，每次打开小程序会执行连接蓝牙
   connect(id) {
     let _this = this;
     wx.stopBluetoothDevicesDiscovery({
@@ -623,7 +623,7 @@ Page({
       }, 500);
     });
     _this.bleConnection(deviceId);
-  },
+  },//根据ID，连接对应蓝牙设备，监听蓝牙连接成功与失败
   bleConnection(deviceId) {
     let _this = this;
     wx.createBLEConnection({
@@ -861,7 +861,7 @@ Page({
         }
       }
     });
-  },
+  },//写入特征值的命令封装
   deal(hex) {
     let _this = this;
     //查询模块版本号命令（0xC1）
@@ -1050,7 +1050,7 @@ Page({
       app.blehdid = result;
       _this.uploadDeviceId();
     }
-  },
+  },//处理蓝牙设备返回的特征值
   uploadDeviceId() {
     mi.ajax({
       url: api.bindLog,
@@ -1088,7 +1088,7 @@ Page({
         check: true
       }); //右胸
     }, 1000);
-  },
+  },//测温
   calcTemp(callback) {
     if (!(this.data.temp_lto && this.data.temp_lti && this.data.temp_rti && this.data.temp_rto)) {
       return false;
@@ -1395,7 +1395,7 @@ Page({
       year: e.detail.value,
       monthOptions: this.data.superYears[e.detail.value * 1].months.reverse()
     });
-  },
+  },//切换年份
   jump(e) {
     let index = e.currentTarget.dataset.go;
     let jumpIndex = 'jump' + index;
@@ -1409,5 +1409,5 @@ Page({
     } else {
       mi.toast('请点击图表中具体的节点，再点详情');
     }
-  },
+  },//跳转详情
 });

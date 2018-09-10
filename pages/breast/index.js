@@ -176,7 +176,7 @@ class Shake {
       this.strength = strength;
     }
   }
-}
+}//自动震动模式震动流程构建的类
 let shaker = null; //本地震动对象
 let timer = null; //本地震动定时器
 let timer2 = null; //diy震动定时器
@@ -295,14 +295,14 @@ Page({
       diyArr: timer2 ? this.data.diyArr : (mi.store.get('diyArr') ? mi.store.get('diyArr') : [])
     });
 
-  },
+  },//同步咪小护页面的数据
   test() {
     this.command({
       command: 'c5',
       param: [mi.hexMerge('10', '01'), '08', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false
     });
-  },
+  },//无用，测试
   command(obj, hexStr) {
     const command = {
       c1: '000500C1C4',
@@ -350,7 +350,7 @@ Page({
         }
       }
     });
-  },
+  },//蓝牙震动命令封装
   bindPlay() {
     if (!this.data.play) {
       if (timer2) {
@@ -365,7 +365,7 @@ Page({
     } else {
       this.stop();
     }
-  },
+  },//自动震动模式开始/暂停
   run() {
     let _this = this;
     // this.test();
@@ -392,7 +392,7 @@ Page({
       //提交后台按摩数据（自动模式）
       // _this.uploadZDMode(1, _this.data.allTime * 1000);
     });
-  }, //执行
+  }, //执行自动震动
   allLoop(callback) {
     app.ishaking = true; //设置正在震动状态
     let _this = this;
@@ -417,7 +417,7 @@ Page({
       }
 
     });
-  },
+  },//自动震动模式完整5轮大流程函数
   loop(callback) {
     let _this = this;
     _this.do(function() {
@@ -441,7 +441,7 @@ Page({
         }
       }
     });
-  },
+  },//5个大流程中的1轮流程函数
   do(callback) {
     if (!app.bleIsConnect) {
       return mi.toast('蓝牙断开连接，自动关闭按摩');
@@ -531,7 +531,7 @@ Page({
         }
       }
     }
-  }, //每次执行一小段
+  }, //1轮流程中1小段震动
   setAllTime(shaker) {
     let step0 = shaker.getStep0();
     let step1 = shaker.getStep1();
@@ -567,7 +567,7 @@ Page({
       allTime += time * step3[i].loop;
     }
     return allTime * this.data.allLoops
-  },
+  },//根据震动进度实时更新视图中的进度条函数
   stop() {
     let _this = this;
     //先查询当前的播放状态
@@ -592,22 +592,22 @@ Page({
       play: false
     });
     shakeTimes = 0; //清空震动片段时间时间
-  }, //停止
+  }, //停止自动震动模式
   bindTab(e) {
     this.setData({
       tabIndex: e.currentTarget.dataset.index
     });
-  },
+  },//切换自动与diy
   showMenu() {
     this.setData({
       isMenu: !this.data.isMenu
     });
-  },
+  },//显示震动模式菜单
   hideMenu() {
     this.setData({
       isMenu: false
     });
-  },
+  },//隐藏菜单
   showMenuItem(e) {
     this.setData({
       menuIndex: e.currentTarget.dataset.index,
@@ -616,7 +616,7 @@ Page({
     if (shaker) {
       shaker.setMode(this.data.mode);
     }
-  },
+  },//选中震动模式
   bindStrength(e) {
     this.setData({
       strength: e.currentTarget.dataset.index
@@ -630,7 +630,7 @@ Page({
       clearTimeout(timer); //立即停止
       this.run(); //立即开始
     }
-  },
+  },//设置自动震动强度
   bindStrength1(e) {
     let _this = this;
     //diyStrength
@@ -645,7 +645,7 @@ Page({
       let cur = this.data.diyArr[diyCurContext.currentTarget.dataset.index];
       _this.diyPlay(cur); //立即开始
     }
-  },
+  },//设置diy震动强度
   setPlay: function(num) {
     if (num < 180) {
       this.setData({
@@ -658,7 +658,7 @@ Page({
         playBgc: '#12C8C8', //播放进度条背景色
       });
     }
-  },
+  },//设置进度条
   // diy按摩代码
   longShock(e) {
     if (timer) {
@@ -693,14 +693,14 @@ Page({
       param: shock,
       check: false
     });
-  },
+  },//diy长按震动
   closeShock() {
     this.command({
       command: 'c5',
       param: ['00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00', '00'],
       check: false
     });
-  },
+  },//diy关闭震动
   diyEdit(e) {
     if (timer2) {
       this.diyStop();
@@ -709,7 +709,7 @@ Page({
     wx.navigateTo({
       url: '/pages/massage/index?index=' + e.currentTarget.dataset.index
     })
-  },
+  },//diy编辑
   diyRun(e) {
     if (!app.bleIsConnect) {
       return mi.toast('蓝牙已断开，自动暂停按摩');
@@ -749,7 +749,7 @@ Page({
       });
       this.diyPlay(cur);
     }
-  }, //执行
+  }, //执行/关闭diy震动
   diyPlay(cur) {
     app.ishaking = true; //设置正在震动状态
     //开始执行diy震动
@@ -767,7 +767,7 @@ Page({
       //震动完毕，上传后台震动数据
       // _this.uploadZDMode(2, _this.data.diyArr[_this.data.diyIndex].timeTotal * 1000);
     });
-  }, //diy播放
+  }, //diy震动
   addDiyStrength(cur) {
     //cur.shockArr[cur.playStep]
     let arr = cur.shockArr[cur.playStep].command;
