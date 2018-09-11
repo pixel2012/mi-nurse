@@ -2,9 +2,9 @@ var app = getApp();
 const mi = require('../../common/js/mi.js');
 Page({
   data: {
-    passO: '',
-    passA: '',
-    passB: ''
+    passO: '',//旧密码
+    passA: '',//新密码
+    passB: ''//确认密码
   },
   onLoad() {
     let oldPass = mi.store.get('pass');
@@ -21,7 +21,7 @@ Page({
     this.setData({
       ['pass' + e.currentTarget.dataset.pos]: e.detail.value
     });
-  },
+  },//修改密码的封装函数
   savePass() {
     let _this = this;
     if (this.data.passO == '' || this.data.passA == '' || this.data.passB == '') {
@@ -79,7 +79,7 @@ Page({
       }
 
     });
-  },
+  },//校验密码格式是否正确，保存新密码
   verify(hexPass) {
     let _this = this;
     app.command({
@@ -107,5 +107,5 @@ Page({
       }
 
     });
-  }
+  }//验证密码是否设置成功
 });

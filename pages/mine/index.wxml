@@ -95,7 +95,7 @@
   </view>
   <!--芳龄几何弹框  -->
   <!--窈窕几许弹框  -->
-  <view class='my-alert-box' wx:if="{{isFigure}}" bindtap="hideAll">
+  <!-- <view class='my-alert-box' wx:if="{{isFigure}}" bindtap="hideAll">
     <view class='my-figure-box row no-gutter' catchtap="preventBubble">
       <view class='col-40'>
         <input placeholder="身高" type="number" class="my-figure-input" value="{{height}}" bindinput="inputHeight" auto-focus/>
@@ -109,7 +109,7 @@
         <button class='my-figure-save' bindtap='bindSave'>保存</button>
       </view>
     </view>
-  </view>
+  </view> -->
   <!--酥胸形状弹框  -->
   <view class='my-alert-box' wx:if="{{isBreast}}">
     <view class='my-breast-box'>

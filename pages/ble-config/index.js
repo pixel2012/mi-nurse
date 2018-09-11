@@ -2,7 +2,7 @@ var app = getApp();
 const mi = require('../../common/js/mi.js');
 Page({
   data: {
-    pass: '123'
+    pass: '123'//蓝牙密码
   },
   onLoad() {
     this.init();
@@ -17,7 +17,7 @@ Page({
         pass: oldPass
       });
     }
-  },
+  },//读取缓存中的蓝牙密码
   verify(){
     mi.showLoading('验证密码123');
     app.command({
@@ -37,7 +37,7 @@ Page({
         }, 1000);
       }
     });
-  },
+  },//验证蓝牙密码
   factoryReset(){
     let _this=this;
     mi.showLoading('正在恢复中..');
@@ -61,5 +61,5 @@ Page({
         },5000);
       }
     });
-  }
+  }//恢复出厂设置
 });

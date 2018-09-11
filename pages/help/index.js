@@ -5,12 +5,7 @@ const api = {
   help: mi.ip + 'singlePage/info' //意见反馈
 };
 Page({
-  data: {
-    title: '',
-    content: '',
-    description: '',
-    article: ''
-  },
+  data: {},
   onLoad() {
     let _this = this;
     mi.ajax({

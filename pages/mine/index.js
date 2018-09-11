@@ -9,20 +9,17 @@ const api = {
 };
 Page({
   data: {
-    nickName: '',
-    headerUrl: '',
+    nickName: '',//昵称
+    headerUrl: '',//头像
     isFigure: false, //是否显示身材
     isBreast: false, //是否显示胸围
-    currentDate: new Date().getFullYear() + '-01',
-    dateStart: new Date().getFullYear() - 50 + '-01',
-    dataEnd: new Date().getFullYear() + '-12',
+    currentDate: new Date().getFullYear() + '-01',//当前时间
+    dateStart: new Date().getFullYear() - 50 + '-01',//年龄起始时间
+    dataEnd: new Date().getFullYear() + '-12',//年龄结束时间
     height: '', //身高
     weight: '', //体重
-    multiArray: [mi.heightInit(),mi.weightInit()],
-    multiIndex: [40, 20],
-
-
-
+    multiArray: [mi.heightInit(),mi.weightInit()],//身高体重生成备选json数组
+    multiIndex: [40, 20],//身高体重初始化索引值
     imgUrls: [{
         title: '圆盘型',
         url: 'img/01.jpg'
@@ -47,12 +44,12 @@ Page({
         title: '下垂型',
         url: 'img/06.jpg'
       },
-    ],
-    up: 70,
-    down: 63,
-    result: '65AA',
-    current: 0,
-    currentRt: -1,
+    ],//胸型备选值
+    up: 70,//上胸围
+    down: 63,//下胸围
+    result: '65AA',//胸型
+    current: 0,//显示胸型的索引值
+    currentRt: -1,//勾选胸型的索引值
     indicatorDots: true,
     indicatorActiveColor: '#12C8C8',
     autoplay: false,
@@ -66,7 +63,7 @@ Page({
       weight:'',
       shape:'',
       size:''
-    }
+    }//视图中显示的年龄，身高体重，胸型数据
   },
   onLoad() {
     let _this=this;
@@ -126,7 +123,7 @@ Page({
         }
       }
     });
-  },
+  },//拉取用户个人信息
   bindMultiPickerChange: function (e) {
     this.data.height = this.data.multiArray[0][e.detail.value[0]];
     this.data.weight = this.data.multiArray[1][e.detail.value[1]];
@@ -140,7 +137,7 @@ Page({
     mi.store.set('height', this.data.height);
     mi.store.set('weight', this.data.weight);
     this.bindSave2();
-  },
+  },//选择身高体重
   updateInfo(){
     let userInfo = mi.store.get('userInfo');
     let myBreast = mi.store.get('myBreast');
@@ -173,37 +170,37 @@ Page({
       isFigure: false,
       isBreast: false
     });
-  },
-  preventBubble: function() {},
+  },//废弃
+  preventBubble: function() {},//废弃
   bindFigureChange: function(e) {
     this.setData({
       isFigure: true
     });
-  },
+  },//废弃
   bindBreastChange: function(e) {
     let _this = this;
     this.setData({
       isBreast: true,
       current: _this.data.currentRt > -1 ? _this.data.currentRt : 0
     });
-  },
+  },//显示胸型设置界面
   closeBreast: function() {
     this.setData({
       isBreast: false
     });
-  },
+  },//关闭胸型设置界面
   changeCurrent(e) {
     if (e.detail.source == 'touch') {
       this.setData({
         current: e.detail.current
       });
     }
-  },
+  },//切换胸型轮播图
   changeBreast(e) {
     this.setData({
       currentRt: e.currentTarget.dataset.index
     });
-  },
+  },//选中勾选指定胸型
   save() {
     if (this.data.currentRt == -1) {
       return mi.toast('请选择自己的胸型，点击确认');
@@ -242,7 +239,7 @@ Page({
         _this.updateInfo();
       }
     });
-  },
+  },//保存胸型数据
   bindDateChange: function(e) {
     let _this=this;
     this.setData({
@@ -263,17 +260,17 @@ Page({
         _this.updateInfo();
       }
     });
-  }, //生日
+  }, //选择保存生日
   inputHeight(e) {
     this.setData({
       height: e.detail.value
     });
-  }, //身高
+  }, //身高，废弃
   inputWeight(e) {
     this.setData({
       weight: e.detail.value
     });
-  }, //体重
+  }, //体重,废弃
   bindSave() {
     if (!this.data.height) {
       return mi.toast('请输入合适的身高');
@@ -302,7 +299,7 @@ Page({
         _this.updateInfo();
       }
     });
-  }, //身高体重
+  }, //选择保存身高体重
   bindSave2() {
     let _this = this;
     mi.ajax({
@@ -319,7 +316,7 @@ Page({
         // let res = JSON.parse(mi.crypto.decode(data));
       }
     });
-  }, //身高体重
+  }, //提交后台身高体重数据
   bindsliderChange1: function(e) {
     this.setData({
       up: e.detail.value
@@ -330,7 +327,7 @@ Page({
         result: val
       });
     });
-  }, //上胸围
+  }, //选择上胸围
   bindsliderChange2: function(e) {
     this.setData({
       down: e.detail.value
@@ -341,7 +338,7 @@ Page({
         result: val
       });
     });
-  }, //下胸围
+  }, //选择下胸围
   calc(callback) {
     let up = this.data.up; //上胸围
     let down = this.data.down; //下胸围
@@ -622,7 +619,7 @@ Page({
       callback('');
     }
     callback(val);
-  },
+  },//根据上胸围和下胸围计算胸型
   searchVer() {
     mi.ajax({
       url: api.version,

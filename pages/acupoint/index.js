@@ -2,15 +2,15 @@ var app = getApp();
 const mi = require('../../common/js/mi.js');
 Page({
   data: {
-    index: -1,
-    idx: -1,
+    index: -1,//按摩组合的索引位置，由上一个页面（massage）传入，主要用于判断是添加还是编辑
+    idx: -1,//按摩组合的索引位置，由上一个页面（massage）shockArr的循环索引传入，主要用于判断是添加还是编辑
     acupointName: '乳根穴',
-    acupoint: 1,
+    acupoint: 1,//穴位索引
     positionName: '左右胸同步',
-    position: 1,
+    position: 1,//位置索引
     modeName: '生如夏花',
-    mode: 0,
-    time: 8
+    mode: 0,//震动模式
+    time: 8//震动时间
   },
   onLoad(options) {
     if ('edit' in options) {
@@ -49,7 +49,7 @@ Page({
       acupointName: name,
       acupoint: e.detail.value
     });
-  },
+  },//选择穴位
   radioChange2(e) {
     let name = '';
     if (e.detail.value == 1) {
@@ -65,18 +65,18 @@ Page({
       positionName: name,
       position: e.detail.value
     });
-  },
+  },//选择位置
   modeChange(e) {
     this.setData({
       modeName: e.currentTarget.dataset.name,
       mode: e.currentTarget.dataset.mode
     });
-  },
+  },//选择震动模式
   sliderChange(e) {
     this.setData({
       time: e.detail.value
     });
-  },
+  },//选择按摩时长
   save() {
     let param = {
       acupointName: this.data.acupointName,
@@ -91,7 +91,7 @@ Page({
     app.result = param;
     app.idx = this.data.idx;
     wx.navigateBack(); //返回上一级
-  },
+  },//保存按摩设置
   getCommand() {
     let left = ['00', '00', '00', '00', '00', '00'];
     let right = ['00', '00', '00', '00', '00', '00'];
@@ -117,7 +117,7 @@ Page({
       right = ['00', '00', '00', '00', ms, ts];
     }
     return left.concat(right);
-  },
+  },//根据设置的参数，生成穴位组合，可以打印查看具体格式
   getMode(num) {
     let result = '';
     if (num == 0) {
@@ -139,6 +139,6 @@ Page({
       result = '61';
     }
     return result;
-  }
+  }//得到震动模式数值
 
 });

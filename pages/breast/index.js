@@ -28,7 +28,7 @@ class Shake {
       step: step,
       loop: 1
     }];
-  }
+  }//步骤一
   getStep1() {
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
@@ -51,7 +51,7 @@ class Shake {
       step: step,
       loop: 1
     }];
-  }
+  }//步骤二
   getStep2() {
     var ms = mi.hexMerge(this.mode, this.strength);
     var step = [{
@@ -74,7 +74,7 @@ class Shake {
       step: step,
       loop: 1
     }];
-  }
+  }//步骤三
   getStep3() {
     var ms = mi.hexMerge(this.mode, this.strength);
     var stepA = [{
@@ -165,17 +165,17 @@ class Shake {
         loop: 1
       }
     ];
-  }
+  }//步骤四
   setMode(mode) {
     if (mode) {
       this.mode = mode;
     }
-  }
+  }//设置震动模式
   setStrength(strength) {
     if (strength) {
       this.strength = strength;
     }
-  }
+  }//设置震动强度
 }//自动震动模式震动流程构建的类
 let shaker = null; //本地震动对象
 let timer = null; //本地震动定时器
